@@ -1,0 +1,13 @@
+.latest-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.latest-card-text {
+    margin-left: 1.5rem;
+}
+
+.chart {
+    margin-top: 1.5rem;
+}

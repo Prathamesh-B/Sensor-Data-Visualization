@@ -1,0 +1,13 @@
+.nav-top {
+    flex: 1;
+}
+.nav-bottom {
+    border-top: calc(0.0625rem) solid #dee2e6;
+}
+.contentWrapper {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}

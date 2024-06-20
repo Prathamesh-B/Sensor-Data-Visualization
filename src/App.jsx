@@ -6,6 +6,20 @@ import { useDisclosure } from "@mantine/hooks";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Navbar from "./components/Navbar/Navbar";
 function App() {
+    // remove rechart errors
+    // useEffect(() => {
+    //     const originalConsoleError = console.error;
+    //     console.error = (...args) => {
+    //         if (typeof args[0] === "string" && /defaultProps/.test(args[0])) {
+    //             return;
+    //         }
+    //         originalConsoleError(...args);
+    //     };
+    //     return () => {
+    //         console.error = originalConsoleError;
+    //     };
+    // }, []);
+
     const [opened, { toggle }] = useDisclosure();
     return (
         <MantineProvider theme={theme}>
@@ -29,10 +43,10 @@ function App() {
                         <div>Logo</div>
                     </Group>
                 </AppShell.Header>
-                <AppShell.Navbar p="md" className="navbar">
+                <AppShell.Navbar p="md">
                     <Navbar />
                 </AppShell.Navbar>
-                <AppShell.Main>
+                <AppShell.Main className="main">
                     <Dashboard />
                 </AppShell.Main>
             </AppShell>

@@ -1,30 +1,25 @@
-import React from 'react'
-import "./Login.css"
+import "./Login.css";
 
 const Login = () => {
-  return (
-    <div class="container">
+    return (
+        <div className="container">
             <h2>Login</h2>
             <form>
-                <div class="group">
-                    <label for="username">Username:</label>
-                    <input 
-                        type="text" 
-                        required 
-                    />
+                <div className="group">
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" required />
                 </div>
-                <div class="group">
-                    <label for="password">Password:</label>
-                    <input
-                        type="password"
-                        required
-                    />
+                <div className="group">
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" required />
                 </div>
-                <button type="submit" class="btn">Login</button>
+                <button type="submit" className="btn">
+                    Login
+                </button>
             </form>
-            <p>Don't have an account? Register here</p>
+            <p>Don&apos;t have an account? Register here</p>
         </div>
-  )
-}
+    );
+};
 
-export default Login
+export default Login;

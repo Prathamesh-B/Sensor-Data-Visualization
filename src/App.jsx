@@ -1,28 +1,13 @@
-import "@mantine/core/styles.css";
-import { Group, MantineProvider } from "@mantine/core";
-import { theme } from "./theme";
+import { Group } from "@mantine/core";
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Dashboard from "./components/Dashboard/Dashboard";
 import Navbar from "./components/Navbar/Navbar";
-function App() {
-    // remove rechart errors
-    // useEffect(() => {
-    //     const originalConsoleError = console.error;
-    //     console.error = (...args) => {
-    //         if (typeof args[0] === "string" && /defaultProps/.test(args[0])) {
-    //             return;
-    //         }
-    //         originalConsoleError(...args);
-    //     };
-    //     return () => {
-    //         console.error = originalConsoleError;
-    //     };
-    // }, []);
+import AppRoutes from "./routerConfig"; // Import your Routes component
 
+function App() {
     const [opened, { toggle }] = useDisclosure();
     return (
-        <MantineProvider theme={theme}>
+        <>
             <AppShell
                 header={{ height: 60 }}
                 navbar={{
@@ -47,10 +32,10 @@ function App() {
                     <Navbar />
                 </AppShell.Navbar>
                 <AppShell.Main className="main">
-                    <Dashboard />
+                    <AppRoutes />
                 </AppShell.Main>
             </AppShell>
-        </MantineProvider>
+        </>
     );
 }
 

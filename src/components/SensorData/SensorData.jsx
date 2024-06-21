@@ -1,74 +1,80 @@
-import {
-    Container,
-    Grid,
-    Button,
-    Table,
-    Text,
-    Center,
-    Title,
-    Paper,
-} from "@mantine/core";
+import { useEffect, useState } from "react";
+import { Container, Center, Grid, Button, Text, Table } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { formatDate } from "../../utils";
 
 const SensorData = () => {
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [sensorData, setSensorData] = useState([]);
     const [error, setError] = useState(null);
 
     const handleFetchData = async () => {
         try {
-            const formattedStartTime = startTime
-                ? dayjs(startTime).toISOString()
-                : null;
-            const formattedEndTime = endTime
-                ? dayjs(endTime).toISOString()
-                : null;
+            const formattedStartDate =
+                startDate && dayjs(startDate).toISOString();
+            const formattedEndDate = endDate && dayjs(endDate).toISOString();
 
-            const response = await fetch("http://localhost:8000/api/sensors/", {
-                params: {
-                    start_time: formattedStartTime,
-                    end_time: formattedEndTime,
-                },
-            });
+            const url = new URL("http://localhost:8000/api/sensors/");
+            if (formattedStartDate) {
+                url.searchParams.append("start_date", formattedStartDate);
+            }
+            if (formattedEndDate) {
+                url.searchParams.append("end_date", formattedEndDate);
+            }
+
+            const response = await fetch(url.toString());
+            if (!response.ok) {
+                throw new Error("Failed to fetch sensor data");
+            }
             const json = await response.json();
-            console.log(json);
             setSensorData(json);
             setError(null);
         } catch (error) {
             setError("Failed to fetch sensor data");
             console.error(error);
+            setSensorData([]); // Clear sensorData on error
         }
     };
 
     const setPresetRange = (days) => {
         const now = dayjs();
-        setEndTime(now.toDate());
-        setStartTime(now.subtract(days, "day").toDate());
+        setEndDate(now.toDate());
+        setStartDate(now.subtract(days, "day").startOf("day").toDate());
     };
+
+    const rows = sensorData.map((data) => (
+        <Table.Tr key={data.id}>
+            <Table.Td>{formatDate(data.timestamp)}</Table.Td>
+            <Table.Td>{data.pressure}</Table.Td>
+            <Table.Td>{data.voltage}</Table.Td>
+            <Table.Td>{data.humidity}</Table.Td>
+            <Table.Td>{data.temperature}</Table.Td>
+        </Table.Tr>
+    ));
+
+    useEffect(() => {
+        handleFetchData();
+    }, []);
 
     return (
         <Container>
-            <Center>
-                <Title>Fetch Sensor Data</Title>
-            </Center>
             <Grid align="center" gutter="md">
                 <Grid.Col span={6}>
                     <DateTimePicker
-                        label="Start Time"
-                        value={startTime}
-                        onChange={setStartTime}
+                        label="Start Date:"
+                        value={startDate}
+                        onChange={(date) => setStartDate(date)}
                         placeholder="Pick start date and time"
                         mx="auto"
                     />
                 </Grid.Col>
                 <Grid.Col span={6}>
                     <DateTimePicker
-                        label="End Time"
-                        value={endTime}
-                        onChange={setEndTime}
+                        label="End Date:"
+                        value={endDate}
+                        onChange={(date) => setEndDate(date)}
                         placeholder="Pick end date and time"
                         mx="auto"
                     />
@@ -76,13 +82,10 @@ const SensorData = () => {
                 <Grid.Col span={12}>
                     <Center>
                         <Button onClick={handleFetchData}>Fetch Data</Button>
-                    </Center>
-                </Grid.Col>
-                <Grid.Col span={12}>
-                    <Center>
                         <Button
                             variant="outline"
                             onClick={() => setPresetRange(0)}
+                            style={{ marginLeft: "10px" }}
                         >
                             Today
                         </Button>
@@ -103,31 +106,31 @@ const SensorData = () => {
                     </Center>
                 </Grid.Col>
             </Grid>
-            {error && <Text color="red">{error}</Text>}
-            <Paper shadow="sm" p="md" mt="md">
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>Timestamp</th>
-                            <th>Pressure (hPa)</th>
-                            <th>Voltage (V)</th>
-                            <th>Humidity (%)</th>
-                            <th>Temperature (°C)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sensorData.map((sensor) => (
-                            <tr key={sensor.id}>
-                                <td>{sensor.timestamp}</td>
-                                <td>{sensor.pressure}</td>
-                                <td>{sensor.voltage}</td>
-                                <td>{sensor.humidity}</td>
-                                <td>{sensor.temperature}</td>
-                            </tr>
-                        ))}
-                    </tbody>
+            {error && <Text c="red">{error}</Text>}
+            <Table.ScrollContainer minWidth={800}>
+                <Table verticalSpacing="sm">
+                    <Table.Thead>
+                        <Table.Tr>
+                            <Table.Th>Day</Table.Th>
+                            <Table.Th>Pressure (hPa)</Table.Th>
+                            <Table.Th>Voltage (V)</Table.Th>
+                            <Table.Th>Humidity (%)</Table.Th>
+                            <Table.Th>Temperature (°C)</Table.Th>
+                        </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                        {rows.length > 0 ? (
+                            rows
+                        ) : (
+                            <Table.Tr>
+                                <Table.Td colSpan={5}>
+                                    No data available
+                                </Table.Td>
+                            </Table.Tr>
+                        )}
+                    </Table.Tbody>
                 </Table>
-            </Paper>
+            </Table.ScrollContainer>
         </Container>
     );
 };

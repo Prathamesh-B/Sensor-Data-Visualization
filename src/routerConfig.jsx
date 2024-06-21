@@ -7,7 +7,6 @@ const AppRoutes = () => (
     <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/sensors" element={<SensorData />} />
-        <Route path="/users" element={<SensorData />} />
     </Routes>
 );
 

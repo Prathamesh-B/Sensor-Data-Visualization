@@ -1,14 +1,13 @@
-import "@mantine/core/styles.css";
-import { Group, MantineProvider } from "@mantine/core";
-import { theme } from "./theme";
+import { Group } from "@mantine/core";
 import { AppShell, Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import Dashboard from "./components/Dashboard/Dashboard";
 import Navbar from "./components/Navbar/Navbar";
+import AppRoutes from "./routerConfig"; // Import your Routes component
+
 function App() {
     const [opened, { toggle }] = useDisclosure();
     return (
-        <MantineProvider theme={theme}>
+        <>
             <AppShell
                 header={{ height: 60 }}
                 navbar={{
@@ -29,14 +28,14 @@ function App() {
                         <div>Logo</div>
                     </Group>
                 </AppShell.Header>
-                <AppShell.Navbar p="md" className="navbar">
+                <AppShell.Navbar p="md">
                     <Navbar />
                 </AppShell.Navbar>
-                <AppShell.Main>
-                    <Dashboard />
+                <AppShell.Main className="main">
+                    <AppRoutes />
                 </AppShell.Main>
             </AppShell>
-        </MantineProvider>
+        </>
     );
 }
 

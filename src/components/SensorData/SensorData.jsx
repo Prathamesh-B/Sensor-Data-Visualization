@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Center, Grid, Button, Text, Table } from "@mantine/core";
+import { Container, Center, Grid, Button, Text, Table, Autocomplete, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { formatDate } from "../../utils";
@@ -79,9 +79,33 @@ const SensorData = () => {
                         mx="auto"
                     />
                 </Grid.Col>
+                <Grid.Col span={6}>
+                    <Autocomplete
+                        label="Parameters: "
+                        placeholder="Pick a Parameter"
+                        data={['Pressure', 'Voltage', 'Temperature', 'Humidity']}
+                    />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                    <TextInput
+                        label="Search"
+                        placeholder="Enter word to search"
+                    />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                    <Button
+                        variant="outline"
+                        // onClick={() => setPresetRange(0)}
+                        // style={{ marginLeft: "10px" }}
+                    >
+                        Reset Filters
+                    </Button>
+                </Grid.Col>
                 <Grid.Col span={12}>
                     <Center>
-                        <Button onClick={handleFetchData}>Fetch Data</Button>
+                        <Button 
+                            onClick={handleFetchData}
+                            >Fetch Data</Button>
                         <Button
                             variant="outline"
                             onClick={() => setPresetRange(0)}

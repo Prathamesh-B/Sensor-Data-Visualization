@@ -1,15 +1,5 @@
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
 .container {
-    background: #ffffff;
+    margin: 0 auto;
     padding: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -19,7 +9,7 @@ body {
     padding-left: 20px;
     padding-right: 20px;
 }
-h2 {
+.title {
     margin-bottom: 20px;
     color: #333;
 }
@@ -27,12 +17,12 @@ h2 {
     margin-bottom: 15px;
     text-align: left;
 }
-label {
+.label {
     display: block;
     margin-bottom: 5px;
     color: #333;
 }
-input {
+.input {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -50,7 +40,6 @@ button.btn {
     cursor: pointer;
     transition: background 0.3s ease;
 }
-
-p{
+.p {
     font-size: small;
 }

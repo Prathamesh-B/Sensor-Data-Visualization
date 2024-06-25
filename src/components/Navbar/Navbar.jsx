@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { Avatar, NavLink, Text } from "@mantine/core";
 import {
     LayoutDashboard,
@@ -5,13 +6,18 @@ import {
     NotebookPen,
     ScrollText,
     UsersRound,
-    BarChart2
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
     const location = useLocation();
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+    // useEffect(() => {
+    //     const token = localStorage.getItem("token");
+    //     setIsAuthenticated(!!token);
+    // }, []);
 
     return (
         <>
@@ -24,53 +30,71 @@ const Navbar = () => {
                         active={location.pathname === "/"}
                     />
                 </Link>
-                <Link to="/sensors">
-                    <NavLink
-                        leftSection={<ScrollText strokeWidth={1} />}
-                        href="/sensors"
-                        label="Dashboard"
-                        mt="sm"
-                        active={location.pathname === "/sensors"}
-                    />
-                </Link>
-                <Link to="/users">
-                    <NavLink
-                        leftSection={<BarChart2 strokeWidth={1} />}
-                        href="/users"
-                        label="Production"
-                        mt="sm"
-                        active={location.pathname === "/users"}
-                    />
-                </Link>
-                <Link to="/addnote">
-                    <NavLink
-                        leftSection={<NotebookPen strokeWidth={1} />}
-                        href="/notes"
-                        label="Notes"
-                        mt="sm"
-                        active={location.pathname === "/addnote"}
-                    />
-                </Link>
+                {isAuthenticated ? (
+                    <>
+                        <Link to="/sensors">
+                            <NavLink
+                                leftSection={<ScrollText strokeWidth={1} />}
+                                label="Dashboard"
+                                mt="sm"
+                                active={location.pathname === "/sensors"}
+                            />
+                        </Link>
+                        <Link to="/notes">
+                            <NavLink
+                                leftSection={<NotebookPen strokeWidth={1} />}
+                                label="Notes"
+                                mt="sm"
+                                active={location.pathname === "/notes"}
+                            />
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <Link to="/login">
+                            <NavLink
+                                leftSection={<UsersRound strokeWidth={1} />}
+                                label="Login"
+                                mt="sm"
+                                active={location.pathname === "/login"}
+                            />
+                        </Link>
+                        <Link to="/signup">
+                            <NavLink
+                                leftSection={<UsersRound strokeWidth={1} />}
+                                label="Register"
+                                mt="sm"
+                                active={location.pathname === "/signup"}
+                            />
+                        </Link>
+                    </>
+                )}
             </div>
-            <div className="nav-bottom">
-                <div className="contentWrapper">
-                    <Avatar color={"blue"} radius={"lg"} mt="sm">
-                        T U
-                    </Avatar>
-                    <div>
-                        <Text style={{ fontWeight: "bold" }} size="md">
-                            Test User
-                        </Text>
-                        <Text size="xs">test@qwe.com</Text>
+            {isAuthenticated && (
+                <div className="nav-bottom">
+                    <div className="contentWrapper">
+                        <Avatar color={"blue"} radius={"lg"} mt="sm">
+                            T U
+                        </Avatar>
+                        <div>
+                            <Text style={{ fontWeight: "bold" }} size="md">
+                                Test User
+                            </Text>
+                            <Text size="xs">test@qwe.com</Text>
+                        </div>
                     </div>
+                    <NavLink
+                        leftSection={<LogOut strokeWidth={1} />}
+                        href="#required-for-focus"
+                        label="Logout"
+                        mt="sm"
+                        onClick={() => {
+                            localStorage.removeItem("token");
+                            setIsAuthenticated(false);
+                        }}
+                    />
                 </div>
-                <NavLink
-                    leftSection={<LogOut strokeWidth={1} />}
-                    href="#required-for-focus"
-                    label="Logout"
-                    mt="sm"
-                />
-            </div>
+            )}
         </>
     );
 };

@@ -1,19 +1,21 @@
 import { Card, Text } from "@mantine/core";
 import { formatDate } from "../../utils";
 import { useEffect, useState } from "react";
+import { notes } from "../../data";
 
 const Notes = () => {
-    const [notes, setNotes] = useState([]);
-    useEffect(() => {
-        const fetchItems = async () => {
-            const response = await fetch("http://127.0.0.1:8000/api/notes/");
-            const json = await response.json();
-            if (response.ok) {
-                setNotes(json);
-            }
-        };
-        fetchItems();
-    }, []);
+    // const [notes, setNotes] = useState([]);
+    // useEffect(() => {
+    //     const fetchItems = async () => {
+    //         const response = await fetch("http://127.0.0.1:8000/api/notes/");
+    //         const json = await response.json();
+    //         console.log(json);
+    //         if (response.ok) {
+    //             setNotes(json);
+    //         }
+    //     };
+    //     fetchItems();
+    // }, []);
     return (
         <>
             {notes.map((note, index) => (

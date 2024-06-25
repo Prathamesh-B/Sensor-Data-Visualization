@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Container, Center, Grid, Button, Text, Table, Autocomplete, TextInput } from "@mantine/core";
+import {
+    Container,
+    Center,
+    Grid,
+    Button,
+    Text,
+    Table,
+    Autocomplete,
+} from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { formatDate } from "../../utils";
@@ -32,9 +40,9 @@ const SensorData = () => {
             setSensorData(json);
             setError(null);
         } catch (error) {
-            setError("Failed to fetch sensor data");
+            setError("Failed to fetch data");
             console.error(error);
-            setSensorData([]); // Clear sensorData on error
+            setSensorData([]);
         }
     };
 
@@ -60,8 +68,8 @@ const SensorData = () => {
 
     return (
         <Container>
-            <Grid grow align="center" gutter="md">
-                <Grid.Col span={4}>
+            <Grid grow gutter="md" justify="flex-start">
+                <Grid.Col span={6}>
                     <DateTimePicker
                         label="Start Date:"
                         value={startDate}
@@ -70,7 +78,7 @@ const SensorData = () => {
                         mx="auto"
                     />
                 </Grid.Col>
-                <Grid.Col span={4}>
+                <Grid.Col span={6}>
                     <DateTimePicker
                         label="End Date:"
                         value={endDate}
@@ -79,59 +87,58 @@ const SensorData = () => {
                         mx="auto"
                     />
                 </Grid.Col>
-                <Grid.Col span={4} mt='auto'>
-                    {/* <Autocomplete
-                        label="Parameters: "
-                        placeholder="Pick a Parameter"
-                        data={['Pressure', 'Voltage', 'Temperature', 'Humidity']}
-                    /> */}
+                <Grid.Col span={12}>
                     <Button
-                        // variant="outline"
-                        // onClick={() => setPresetRange(0)}
-                        // style={{ marginLeft: "10px" }}
+                        variant="outline"
+                        onClick={() => setPresetRange(0)}
+                        style={{ marginLeft: "10px" }}
                     >
-                        Apply Filters
+                        Today
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => setPresetRange(2)}
+                        style={{ marginLeft: "10px" }}
+                    >
+                        Last 2 Days
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => setPresetRange(7)}
+                        style={{ marginLeft: "10px" }}
+                    >
+                        Last 7 Days
+                    </Button>
+                    <Button style={{ marginLeft: "10px" }}>Fetch</Button>
+                    <Button
+                        variant="light"
+                        color="green"
+                        style={{ marginLeft: "10px" }}
+                    >
+                        Refresh
                     </Button>
                 </Grid.Col>
-                <Grid.Col span={12}>
-                    <Center>
-                        <Button
-                            variant="outline"
-                            onClick={() => setPresetRange(0)}
-                            style={{ marginLeft: "10px" }}
-                        >
-                            Today
-                        </Button>
-                        <Button
-                            variant="outline"
-                            onClick={() => setPresetRange(2)}
-                            style={{ marginLeft: "10px" }}
-                        >
-                            Last 2 Days
-                        </Button>
-                        <Button
-                            variant="outline"
-                            onClick={() => setPresetRange(7)}
-                            style={{ marginLeft: "10px" }}
-                        >
-                            Last 7 Days
-                        </Button>
-                    </Center>
-                </Grid.Col>
-                <Grid.Col span={4} mt='auto'>
+                <Grid.Col span={6} mt="auto">
                     <Autocomplete
                         label="Tables: "
                         placeholder="Select a table"
-                        data={['Sensors', 'Sensor Data', 'Machines', 'Supervisior', 'Products', 'Production', 'Events', 'Supervisior Reports']}
+                        data={[
+                            "Sensors",
+                            "Sensor Data",
+                            "Machines",
+                            "Supervisior",
+                            "Products",
+                            "Production",
+                            "Events",
+                            "Supervisior Reports",
+                        ]}
                     />
                 </Grid.Col>
-                <Grid.Col span={4} mt='auto'>
-                    <Button>
-                        Apply Filters
-                    </Button>
+                <Grid.Col span={6} mt="auto">
+                    <Button>Apply</Button>
                 </Grid.Col>
             </Grid>
-            {error && <Text c="red">{error}</Text>}
+
             <Table.ScrollContainer minWidth={800}>
                 <Table verticalSpacing="sm">
                     <Table.Thead>
@@ -149,6 +156,7 @@ const SensorData = () => {
                         ) : (
                             <Table.Tr>
                                 <Table.Td colSpan={5}>
+                                    {error && <Text c="red">{error}</Text>}
                                     No data available
                                 </Table.Td>
                             </Table.Tr>

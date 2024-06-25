@@ -2,10 +2,22 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    text-align: center;
 }
 
-.latest-card-text {
-    margin-left: 1.5rem;
+.dropdown-chart {
+    display: flex;
+    /* spcae bwtween */
+    /* justify-content: space-around; */
+    margin: 1rem;
+}
+
+.machine-dropdown {
+    padding: 0 1rem;
+}
+
+.sensor-dropdown {
+    padding: 0 1rem;
 }
 
 .chart {

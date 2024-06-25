@@ -60,8 +60,8 @@ const SensorData = () => {
 
     return (
         <Container>
-            <Grid align="center" gutter="md">
-                <Grid.Col span={6}>
+            <Grid grow align="center" gutter="md">
+                <Grid.Col span={4}>
                     <DateTimePicker
                         label="Start Date:"
                         value={startDate}
@@ -70,7 +70,7 @@ const SensorData = () => {
                         mx="auto"
                     />
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={4}>
                     <DateTimePicker
                         label="End Date:"
                         value={endDate}
@@ -79,33 +79,22 @@ const SensorData = () => {
                         mx="auto"
                     />
                 </Grid.Col>
-                <Grid.Col span={6}>
-                    <Autocomplete
+                <Grid.Col span={4} mt='auto'>
+                    {/* <Autocomplete
                         label="Parameters: "
                         placeholder="Pick a Parameter"
                         data={['Pressure', 'Voltage', 'Temperature', 'Humidity']}
-                    />
-                </Grid.Col>
-                <Grid.Col span={6}>
-                    <TextInput
-                        label="Search"
-                        placeholder="Enter word to search"
-                    />
-                </Grid.Col>
-                <Grid.Col span={6}>
+                    /> */}
                     <Button
-                        variant="outline"
+                        // variant="outline"
                         // onClick={() => setPresetRange(0)}
                         // style={{ marginLeft: "10px" }}
                     >
-                        Reset Filters
+                        Apply Filters
                     </Button>
                 </Grid.Col>
                 <Grid.Col span={12}>
                     <Center>
-                        <Button 
-                            onClick={handleFetchData}
-                            >Fetch Data</Button>
                         <Button
                             variant="outline"
                             onClick={() => setPresetRange(0)}
@@ -129,17 +118,29 @@ const SensorData = () => {
                         </Button>
                     </Center>
                 </Grid.Col>
+                <Grid.Col span={4} mt='auto'>
+                    <Autocomplete
+                        label="Tables: "
+                        placeholder="Select a table"
+                        data={['Sensors', 'Sensor Data', 'Machines', 'Supervisior', 'Products', 'Production', 'Events', 'Supervisior Reports']}
+                    />
+                </Grid.Col>
+                <Grid.Col span={4} mt='auto'>
+                    <Button>
+                        Apply Filters
+                    </Button>
+                </Grid.Col>
             </Grid>
             {error && <Text c="red">{error}</Text>}
             <Table.ScrollContainer minWidth={800}>
                 <Table verticalSpacing="sm">
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th>Day</Table.Th>
-                            <Table.Th>Pressure (hPa)</Table.Th>
-                            <Table.Th>Voltage (V)</Table.Th>
-                            <Table.Th>Humidity (%)</Table.Th>
-                            <Table.Th>Temperature (°C)</Table.Th>
+                            <Table.Th>ID</Table.Th>
+                            <Table.Th>Timestamp</Table.Th>
+                            <Table.Th>Machine_ID</Table.Th>
+                            <Table.Th>Sensor_ID</Table.Th>
+                            <Table.Th>Value</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>

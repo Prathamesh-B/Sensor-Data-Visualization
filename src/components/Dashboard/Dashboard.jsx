@@ -30,13 +30,16 @@ const Dashboard = () => {
                         className="latest-card"
                     >
                         <div>
-                            <CircleGauge size={"2.5rem"} strokeWidth={1} />
+                            {/* <CircleGauge size={"2.5rem"} strokeWidth={1} /> */}
+                            <Text size="xl" fw={700} c="yellow">
+                                30%
+                            </Text>
                         </div>
                         <div className="latest-card-text">
-                            <Text weight={500}>Pressure</Text>
-                            <Text size="xl" c="blue">
+                            <Text size="lg" weight={700}>Failure Prediction</Text>
+                            {/* <Text size="xl" c="blue">
                                 {latestData.Pressure} hPa
-                            </Text>
+                            </Text> */}
                         </div>
                     </Card>
                 </Grid.Col>
@@ -48,13 +51,17 @@ const Dashboard = () => {
                         className="latest-card"
                     >
                         <div>
-                            <PlugZap size={"2.5rem"} strokeWidth={1} />
+                            {/* <PlugZap size={"2.5rem"} strokeWidth={1} /> */}
+                            <Text size="xl" fw={700} c="green">
+                                650 Units
+                            </Text>
                         </div>
                         <div className="latest-card-text">
-                            <Text weight={500}>Voltage</Text>
-                            <Text size="xl" c="green">
+                            <Text size="lg" weight={500}>Current Production</Text>
+                            
+                            {/* <Text size="xl" c="green">
                                 {latestData.Voltage} V
-                            </Text>
+                            </Text> */}
                         </div>
                     </Card>
                 </Grid.Col>
@@ -66,13 +73,16 @@ const Dashboard = () => {
                         className="latest-card"
                     >
                         <div>
-                            <Thermometer size={"2.5rem"} strokeWidth={1} />
+                            {/* <Thermometer size={"2.5rem"} strokeWidth={1} /> */}
+                            <Text size="xl" fw={700} c="green">
+                                2
+                            </Text>
                         </div>
                         <div className="latest-card-text">
-                            <Text weight={500}>Temperature</Text>
-                            <Text size="xl" c="red">
+                            <Text size="lg" weight={500}>Active Machines</Text>
+                            {/* <Text size="xl" c="red">
                                 {latestData.Temperature} °C
-                            </Text>
+                            </Text> */}
                         </div>
                     </Card>
                 </Grid.Col>
@@ -84,13 +94,15 @@ const Dashboard = () => {
                         className="latest-card"
                     >
                         <div>
-                            <Wind size={"2.5rem"} strokeWidth={1} />
+                        <Text size="xl" fw={700} c="blue">
+                                80%
+                            </Text>
                         </div>
                         <div className="latest-card-text">
-                            <Text weight={500}>Humidity</Text>
-                            <Text size="xl" c="orange">
+                            <Text size="lg" weight={500}>Production Rate</Text>
+                            {/* <Text size="xl" c="orange">
                                 {latestData.Humidity} %
-                            </Text>
+                            </Text> */}
                         </div>
                     </Card>
                 </Grid.Col>

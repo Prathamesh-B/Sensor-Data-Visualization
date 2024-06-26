@@ -6,6 +6,7 @@ import {
     NotebookPen,
     ScrollText,
     UsersRound,
+    BarChart2
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -46,6 +47,14 @@ const Navbar = () => {
                                 label="Notes"
                                 mt="sm"
                                 active={location.pathname === "/notes"}
+                            />
+                        </Link>
+                        <Link to="/production">
+                            <NavLink
+                                leftSection={<BarChart2 strokeWidth={1} />}
+                                label="Production"
+                                mt="sm"
+                                active={location.pathname === "/production"}
                             />
                         </Link>
                     </>

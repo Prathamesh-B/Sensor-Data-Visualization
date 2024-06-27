@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { Avatar, NavLink, Text } from "@mantine/core";
 import {
     BarChart2,
     LayoutDashboard,
     LogOut,
     NotebookPen,
-    ScrollText,
     UsersRound,
+    Cpu,
+    Table2
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -27,7 +28,7 @@ const Navbar = () => {
                     <NavLink
                         leftSection={<LayoutDashboard strokeWidth={1} />}
                         mt="sm"
-                        label="Overview"
+                        label="Dashboard"
                         active={location.pathname === "/"}
                     />
                 </Link>
@@ -35,16 +36,24 @@ const Navbar = () => {
                     <>
                         <Link to="/sensors">
                             <NavLink
-                                leftSection={<ScrollText strokeWidth={1} />}
-                                label="Dashboard"
+                                leftSection={<Table2 strokeWidth={1} />}
+                                label="Data Console"
                                 mt="sm"
                                 active={location.pathname === "/sensors"}
+                            />
+                        </Link>
+                        <Link to="/machine">
+                            <NavLink
+                                leftSection={<Cpu strokeWidth={1} />}
+                                label="Machine Overview"
+                                mt="sm"
+                                active={location.pathname === "/machine"}
                             />
                         </Link>
                         <Link to="/notes">
                             <NavLink
                                 leftSection={<NotebookPen strokeWidth={1} />}
-                                label="Notes"
+                                label="Reports"
                                 mt="sm"
                                 active={location.pathname === "/notes"}
                             />

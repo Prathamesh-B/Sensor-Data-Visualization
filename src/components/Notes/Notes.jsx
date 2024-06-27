@@ -1,31 +1,37 @@
 import { Card, Text } from "@mantine/core";
-import { formatDate } from "../../utils";
-import { useEffect, useState } from "react";
-import { notes } from "../../data";
+import { notifs } from "../../data";
 
 const Notes = () => {
-    // const [notes, setNotes] = useState([]);
-    // useEffect(() => {
-    //     const fetchItems = async () => {
-    //         const response = await fetch("http://127.0.0.1:8000/api/notes/");
-    //         const json = await response.json();
-    //         console.log(json);
-    //         if (response.ok) {
-    //             setNotes(json);
-    //         }
-    //     };
-    //     fetchItems();
-    // }, []);
+    const getBackgroundColorByType = (type) => {
+        switch (type) {
+            case "info":
+                return "#e0f7fa";
+            case "warning":
+                return "#fff3e0";
+            case "error":
+                return "#ffebee";
+            default:
+                return "#f5f5f5";
+        }
+    };
     return (
         <>
-            {notes.map((note, index) => (
-                <Card shadow="sm" p="lg" mb="lg" key={index}>
-                    <Text fw={500}>{note.title}</Text>
+            {notifs.map((notif, index) => (
+                <Card shadow="sm" p="lg" mb="lg" key={index} style={{
+                    backgroundColor: getBackgroundColorByType(
+                        notif.type
+                    ),
+                    padding: "1rem",
+                    borderRadius: "8px",
+                    marginBottom: "1rem",
+                }} >
+                    
+                    <Text fw={500}>{notif.title}</Text>
                     <Text size="sm" c="dimmed">
-                        {formatDate(note.timestamp)}
+                        {notif.type}
                     </Text>
                     <Text w={300} mt="sm" truncate="end">
-                        {note.description}
+                        {notif.description}
                     </Text>
                 </Card>
             ))}

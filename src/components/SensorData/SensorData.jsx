@@ -156,7 +156,7 @@ const SensorData = () => {
                         ) : (
                             <Table.Tr>
                                 <Table.Td colSpan={5}>
-                                    {error && <Text c="red">{error}</Text>}
+                                    {/* {error && <Text c="red">{error}</Text>} */}
                                     No data available
                                 </Table.Td>
                             </Table.Tr>

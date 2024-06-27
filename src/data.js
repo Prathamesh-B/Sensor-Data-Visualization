@@ -155,7 +155,7 @@ export const notesData = [
     },
 ];
 
-export const products =[
+export const products = [
     { id: 1, name: "Structural Steel Beams", unit_price: 150, desc: "Robust structural steel beams designed for construction and infrastructure projects, providing exceptional strength and durability for load-bearing applications." },
     { id: 2, name: "Silicone Gels", unit_price: 150, desc: "Soft, transparent silicone gels used in electronics and medical devices for their cushioning, insulating, and biocompatible properties." },
     { id: 3, name: "Tool Steel Rods", unit_price: 150, desc: "High-hardness tool steel rods crafted for manufacturing cutting tools, dies, and molds, ensuring long-lasting sharpness and wear resistance." },
@@ -165,23 +165,23 @@ export const production = [
     { id: 1, machine_id: 1, product_id: 1, qty: 100, timestamp: '20-06-2024  08:30:00' },
     { id: 2, machine_id: 2, product_id: 2, qty: 150, timestamp: '20-06-2024  08:30:00' },
     { id: 3, machine_id: 3, product_id: 3, qty: 250, timestamp: '20-06-2024  08:30:00' },
-    { id: 4, machine_id: 1, product_id: 1, qty: 350, timestamp: '20-06-2024  08:30:00' },
-    { id: 5, machine_id: 2, product_id: 2, qty: 400, timestamp: '20-06-2024  08:30:00' },
-    { id: 6, machine_id: 3, product_id: 3, qty: 90, timestamp: '20-06-2024  08:30:00' },
-    { id: 7, machine_id: 1, product_id: 1, qty: 170, timestamp: '20-06-2024  08:30:00' },
-    { id: 8, machine_id: 2, product_id: 2, qty: 200, timestamp: '20-06-2024  08:30:00' },
-    { id: 9, machine_id: 3, product_id: 3, qty: 300, timestamp: '20-06-2024  08:30:00' },
-    { id: 10, machine_id: 1, product_id: 1, qty: 450, timestamp: '20-06-2024  08:30:00' },
-    { id: 11, machine_id: 2, product_id: 2, qty: 150, timestamp: '20-06-2024  08:30:00' },
-    { id: 12, machine_id: 3, product_id: 3, qty: 250, timestamp: '20-06-2024  08:30:00' },
-    { id: 13, machine_id: 1, product_id: 1, qty: 250, timestamp: '20-06-2024  08:30:00' },
-    { id: 14, machine_id: 2, product_id: 2, qty: 370, timestamp: '20-06-2024  08:30:00' },
-    { id: 15, machine_id: 3, product_id: 3, qty: 450, timestamp: '20-06-2024  08:30:00' },
+    { id: 4, machine_id: 1, product_id: 1, qty: 350, timestamp: '21-06-2024  08:30:00' },
+    { id: 5, machine_id: 2, product_id: 2, qty: 400, timestamp: '21-06-2024  08:30:00' },
+    { id: 6, machine_id: 3, product_id: 3, qty: 90, timestamp: '21-06-2024  08:30:00' },
+    { id: 7, machine_id: 1, product_id: 1, qty: 170, timestamp: '22-06-2024  08:30:00' },
+    { id: 8, machine_id: 2, product_id: 2, qty: 200, timestamp: '22-06-2024  08:30:00' },
+    { id: 9, machine_id: 3, product_id: 3, qty: 300, timestamp: '22-06-2024  08:30:00' },
+    { id: 10, machine_id: 1, product_id: 1, qty: 450, timestamp: '23-06-2024  08:30:00' },
+    { id: 11, machine_id: 2, product_id: 2, qty: 150, timestamp: '23-06-2024  08:30:00' },
+    { id: 12, machine_id: 3, product_id: 3, qty: 250, timestamp: '23-06-2024  08:30:00' },
+    { id: 13, machine_id: 1, product_id: 1, qty: 250, timestamp: '24-06-2024  08:30:00' },
+    { id: 14, machine_id: 2, product_id: 2, qty: 370, timestamp: '24-06-2024  08:30:00' },
+    { id: 15, machine_id: 3, product_id: 3, qty: 450, timestamp: '24-06-2024  08:30:00' },
 
 ]
 
 export const status = [
     { id: 1, name: 'Machine 1', status: 'Running' },
-    { id: 2, name: 'Machine 2', status: 'Under Maintenance' },
+    { id: 2, name: 'Machine 2', status: 'Stopped' },
     { id: 3, name: 'Machine 3', status: 'Runnning' },
 ]

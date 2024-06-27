@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, NavLink, Text } from "@mantine/core";
 import {
+    BarChart2,
     LayoutDashboard,
     LogOut,
     NotebookPen,
     ScrollText,
     UsersRound,
-    BarChart2
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";

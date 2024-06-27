@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { formatDate } from "../../utils";
 
-const Chart = ({ data }) => {
+const Chart = ({ data, Ylable }) => {
     return (
         <>
             <ResponsiveContainer width="100%" height={400} className="chart">
@@ -34,7 +34,7 @@ const Chart = ({ data }) => {
                     />
                     <YAxis
                         label={{
-                            value: "Value",
+                            value: Ylable,
                             angle: -90,
                             position: "insideLeft",
                         }}

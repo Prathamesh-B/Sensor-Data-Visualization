@@ -4,14 +4,15 @@ import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
 import { useState, useEffect } from "react";
 import { data as chartData, machines, sensors } from "../../data"; // Import data
+import { Boxes, Cog, RefreshCw, TriangleAlert } from "lucide-react";
 
 const Dashboard = () => {
     const sensorOptions = sensors.map((item) => item.name);
     const machineOptions = machines.map((item) => item.name);
 
     const [machineMenu, setMachineMenu] = useState(machineOptions[0]);
-    const [sensorMenu, setSensorMenu] = useState(sensorOptions[0]);
-    const [rangeMenu, setRangeMenu] = useState("Today");
+    const [sensorMenu, setSensorMenu] = useState(sensorOptions[6]);
+    // const [rangeMenu, setRangeMenu] = useState("Today");
     const [filteredChartData, setFilteredChartData] = useState([]);
 
     useEffect(() => {
@@ -40,13 +41,20 @@ const Dashboard = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div>
-                            <Text size="xl" c="green" fw={700}>
-                                650 units
-                            </Text>
-                            <Text weight={500} size="lg" fw={400}>
-                                Today&apos;s Production
-                            </Text>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <Boxes
+                                style={{ marginRight: "1rem" }}
+                                size={48}
+                                strokeWidth={1}
+                            />
+                            <div>
+                                <Text size="xl" c="green" fw={700}>
+                                    650 units
+                                </Text>
+                                <Text weight={500} size="lg" fw={400}>
+                                    Today&apos;s Production
+                                </Text>
+                            </div>
                         </div>
                     </Card>
                 </Grid.Col>
@@ -57,13 +65,20 @@ const Dashboard = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div>
-                            <Text size="xl" c="indigo" fw={700}>
-                                80%
-                            </Text>
-                            <Text weight={500} size="lg" fw={400}>
-                                Production Rate
-                            </Text>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <RefreshCw
+                                style={{ marginRight: "1rem" }}
+                                size={48}
+                                strokeWidth={1}
+                            />
+                            <div>
+                                <Text size="xl" c="indigo" fw={700}>
+                                    80%
+                                </Text>
+                                <Text weight={500} size="lg" fw={400}>
+                                    Production Rate
+                                </Text>
+                            </div>
                         </div>
                     </Card>
                 </Grid.Col>
@@ -74,13 +89,20 @@ const Dashboard = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div>
-                            <Text size="xl" c="teal" fw={700}>
-                                2
-                            </Text>
-                            <Text weight={500} size="lg" fw={400}>
-                                Active Machines
-                            </Text>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <Cog
+                                style={{ marginRight: "1rem" }}
+                                size={48}
+                                strokeWidth={1}
+                            />
+                            <div>
+                                <Text size="xl" c="teal" fw={700}>
+                                    2
+                                </Text>
+                                <Text weight={500} size="lg" fw={400}>
+                                    Active Machines
+                                </Text>
+                            </div>
                         </div>
                     </Card>
                 </Grid.Col>
@@ -91,13 +113,20 @@ const Dashboard = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div>
-                            <Text size="xl" c="orange" fw={700}>
-                                30%
-                            </Text>
-                            <Text weight={500} size="lg" fw={400}>
-                                Failure Prediction
-                            </Text>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <TriangleAlert
+                                style={{ marginRight: "1rem" }}
+                                size={48}
+                                strokeWidth={1}
+                            />
+                            <div>
+                                <Text size="xl" c="orange" fw={700}>
+                                    30%
+                                </Text>
+                                <Text weight={500} size="lg" fw={400}>
+                                    Failure Prediction
+                                </Text>
+                            </div>
                         </div>
                     </Card>
                 </Grid.Col>
@@ -121,14 +150,14 @@ const Dashboard = () => {
                                 onChange={setSensorMenu}
                             />
                         </div>
-                        <Select
+                        {/* <Select
                             placeholder="Pick Range"
                             data={["Today", "Yesterday", "Last Week"]}
                             value={rangeMenu}
                             onChange={setRangeMenu}
-                        />
+                        /> */}
                     </div>
-                    <Chart data={filteredChartData} />
+                    <Chart data={filteredChartData} Ylable={sensorMenu} />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} weight={500} size="xl">

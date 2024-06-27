@@ -6,13 +6,13 @@ const Notes = () => {
     const getBackgroundColorByType = (type) => {
         switch (type) {
             case "info":
-                return "#e0f7fa";
+                return "#0fa8ee";
             case "warning":
-                return "#fff3e0";
+                return "#ffa618";
             case "error":
-                return "#ffebee";
+                return "#ff0026";
             default:
-                return "#f5f5f5";
+                return "#000000";
         }
     };
 
@@ -38,7 +38,6 @@ const Notes = () => {
                     mb="sm"
                     key={index}
                     style={{
-                        backgroundColor: getBackgroundColorByType(notif.type),
                         padding: "1rem",
                         borderRadius: "8px",
                         marginBottom: "1rem",
@@ -46,10 +45,14 @@ const Notes = () => {
                 >
                     <Text
                         fw={500}
-                        style={{ display: "flex", alignItems: "center" }}
+                        style={{ color: getBackgroundColorByType(notif.type) }}
                     >
                         {getIconByType(notif.type)}
-                        <span style={{ marginLeft: "0.5rem" }}>
+                        <span
+                            style={{
+                                marginLeft: "0.5rem",
+                            }}
+                        >
                             {notif.title}
                         </span>
                     </Text>

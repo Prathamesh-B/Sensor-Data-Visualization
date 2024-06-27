@@ -7,7 +7,7 @@ import {
     NotebookPen,
     UsersRound,
     Cpu,
-    Table2
+    Table2,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -92,13 +92,13 @@ const Navbar = () => {
                 <div className="nav-bottom">
                     <div className="contentWrapper">
                         <Avatar color={"blue"} radius={"lg"} mt="sm">
-                            T U
+                            M P
                         </Avatar>
                         <div>
                             <Text style={{ fontWeight: "bold" }} size="md">
-                                Test User
+                                Manoj Prabhakar
                             </Text>
-                            <Text size="xs">test@qwe.com</Text>
+                            <Text size="sm">Machine Foreman</Text>
                         </div>
                     </div>
                     <NavLink

@@ -41,7 +41,7 @@ function App() {
                             hiddenFrom="md"
                             size="sm"
                         />
-                        <div>Logo</div>
+                        <div className="logo">SenseViz</div>
                         <div>
                             <NotepadText
                                 strokeWidth={1.5}
@@ -81,9 +81,7 @@ function App() {
                                 {note.title}
                             </Text>
                             <Text size="xs" color="dimmed">
-                                {new Date(
-                                    note.timestamp
-                                ).toLocaleString()}{" "}
+                                {new Date(note.timestamp).toLocaleString()}{" "}
                             </Text>
                             <Text size="sm">{note.description}</Text>
                             <Divider my="md" />

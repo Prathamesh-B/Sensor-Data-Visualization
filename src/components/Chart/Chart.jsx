@@ -5,7 +5,6 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend,
     ResponsiveContainer,
 } from "recharts";
 import { formatDate } from "../../utils";
@@ -20,14 +19,27 @@ const Chart = ({ data }) => {
                         top: 5,
                         right: 30,
                         left: 20,
-                        bottom: 5,
+                        bottom: 30,
                     }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="timestamp" tickFormatter={formatDate} />
-                    <YAxis />
+                    <XAxis
+                        dataKey="timestamp"
+                        tickFormatter={formatDate}
+                        label={{
+                            value: "Time",
+                            position: "insideBottom",
+                            offset: -20,
+                        }}
+                    />
+                    <YAxis
+                        label={{
+                            value: "Value",
+                            angle: -90,
+                            position: "insideLeft",
+                        }}
+                    />
                     <Tooltip />
-                    <Legend />
                     <Line
                         type="monotone"
                         dataKey="value"

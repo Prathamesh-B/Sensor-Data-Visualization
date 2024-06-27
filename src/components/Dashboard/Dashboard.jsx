@@ -1,12 +1,4 @@
-import {
-    Card,
-    Grid,
-    ScrollArea,
-    Text,
-    Combobox,
-    useCombobox,
-    InputBase,
-} from "@mantine/core";
+import { Card, Grid, ScrollArea, Text, Select } from "@mantine/core";
 import "./Dashboard.css";
 import Notes from "../Notes/Notes";
 import Chart from "../Chart/Chart";
@@ -14,57 +6,18 @@ import { useState, useEffect } from "react";
 import { data as chartData, machines, sensors } from "../../data"; // Import data
 
 const Dashboard = () => {
-    const combobox = useCombobox({
-        onDropdownClose: () => combobox.resetSelectedOption(),
-    });
-    const combobox2 = useCombobox({
-        onDropdownClose: () => combobox2.resetSelectedOption(),
-    });
+    const sensorOptions = sensors.map((item) => item.name);
+    const machineOptions = machines.map((item) => item.name);
 
-    const [value, setValue] = useState(null);
-    const [value2, setValue2] = useState(null);
-    const [searchM, setSearchM] = useState("");
-    const [searchS, setSearchS] = useState("");
+    const [machineMenu, setMachineMenu] = useState(machineOptions[0]);
+    const [sensorMenu, setSensorMenu] = useState(sensorOptions[0]);
     const [filteredChartData, setFilteredChartData] = useState([]);
 
-    const machineOptions = machines.map((item) => item.name);
-    const sensorOptions = sensors.map((item) => item.name);
-
-    const shouldFilterOptionsMachine = machineOptions.every(
-        (item) => item !== searchM
-    );
-    const filteredOptionsMachine = shouldFilterOptionsMachine
-        ? machineOptions.filter((item) =>
-              item.toLowerCase().includes(searchM.toLowerCase().trim())
-          )
-        : machineOptions;
-
-    const optionsM = filteredOptionsMachine.map((item) => (
-        <Combobox.Option value={item} key={item}>
-            {item}
-        </Combobox.Option>
-    ));
-
-    const shouldFilterOptionsSensor = sensorOptions.every(
-        (item) => item !== searchS
-    );
-    const filteredOptionsSensor = shouldFilterOptionsSensor
-        ? sensorOptions.filter((item) =>
-              item.toLowerCase().includes(searchS.toLowerCase().trim())
-          )
-        : sensorOptions;
-
-    const optionsS = filteredOptionsSensor.map((item) => (
-        <Combobox.Option value={item} key={item}>
-            {item}
-        </Combobox.Option>
-    ));
-
     useEffect(() => {
-        if (value && value2) {
+        if (machineMenu && sensorMenu) {
             // Filter chart data based on selected machine and sensor
-            const machine = machines.find((m) => m.name === value);
-            const sensor = sensors.find((s) => s.name === value2);
+            const machine = machines.find((m) => m.name === machineMenu);
+            const sensor = sensors.find((s) => s.name === sensorMenu);
             if (machine && sensor) {
                 const filteredData = chartData.filter(
                     (item) =>
@@ -74,7 +27,7 @@ const Dashboard = () => {
                 setFilteredChartData(filteredData);
             }
         }
-    }, [value, value2]);
+    }, [machineMenu, sensorMenu]);
 
     return (
         <>
@@ -155,90 +108,22 @@ const Dashboard = () => {
                     </Text>
                     <div className="dropdown-chart">
                         <div className="machine-dropdown">
-                            <Combobox
-                                store={combobox}
-                                onOptionSubmit={(val) => {
-                                    setValue(val);
-                                    setSearchM(val);
-                                    combobox.closeDropdown();
-                                }}
-                            >
-                                <Combobox.Target>
-                                    <InputBase
-                                        rightSection={<Combobox.Chevron />}
-                                        rightSectionPointerEvents="none"
-                                        onClick={() => combobox.openDropdown()}
-                                        onFocus={() => combobox.openDropdown()}
-                                        onBlur={() => {
-                                            combobox.closeDropdown();
-                                            setSearchM(value || "");
-                                        }}
-                                        placeholder="Select Machine"
-                                        value={searchM}
-                                        onChange={(event) => {
-                                            combobox.updateSelectedOptionIndex();
-                                            setSearchM(
-                                                event.currentTarget.value
-                                            );
-                                        }}
-                                    />
-                                </Combobox.Target>
-
-                                <Combobox.Dropdown>
-                                    <Combobox.Options>
-                                        {optionsM.length > 0 ? (
-                                            optionsM
-                                        ) : (
-                                            <Combobox.Empty>
-                                                Nothing found
-                                            </Combobox.Empty>
-                                        )}
-                                    </Combobox.Options>
-                                </Combobox.Dropdown>
-                            </Combobox>
+                            <Select
+                                placeholder="Pick value"
+                                data={machineOptions}
+                                value={machineMenu}
+                                onChange={setMachineMenu}
+                                clearable
+                            />
                         </div>
                         <div className="sensor-dropdown">
-                            <Combobox
-                                store={combobox2}
-                                onOptionSubmit={(val) => {
-                                    setValue2(val);
-                                    setSearchS(val);
-                                    combobox2.closeDropdown();
-                                }}
-                            >
-                                <Combobox.Target>
-                                    <InputBase
-                                        rightSection={<Combobox.Chevron />}
-                                        rightSectionPointerEvents="none"
-                                        onClick={() => combobox2.openDropdown()}
-                                        onFocus={() => combobox2.openDropdown()}
-                                        onBlur={() => {
-                                            combobox2.closeDropdown();
-                                            setSearchS(value2 || "");
-                                        }}
-                                        placeholder="Select Sensor"
-                                        value={searchS}
-                                        onChange={(event) => {
-                                            combobox2.updateSelectedOptionIndex();
-                                            setSearchS(
-                                                event.currentTarget.value
-                                            );
-                                        }}
-                                    />
-                                </Combobox.Target>
-
-                                <Combobox.Dropdown>
-                                    <Combobox.Options>
-                                        {optionsS.length > 0 ? (
-                                            optionsS
-                                        ) : (
-                                            <Combobox.Empty>
-                                                Nothing found
-                                            </Combobox.Empty>
-                                        )}
-                                    </Combobox.Options>
-                                </Combobox.Dropdown>
-                            </Combobox>
+                            <Select
+                                placeholder="Pick value"
+                                data={sensorOptions}
+                                value={sensorMenu}
+                                onChange={setSensorMenu}
+                                clearable
+                            />
                         </div>
                     </div>
                     <Chart data={filteredChartData} />

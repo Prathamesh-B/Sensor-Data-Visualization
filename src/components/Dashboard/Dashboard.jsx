@@ -130,7 +130,7 @@ const Dashboard = () => {
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} weight={500} size="xl">
-                        Supervisor Notes
+                        Alerts
                     </Text>
                     <ScrollArea style={{ height: 450 }}>
                         <Notes />

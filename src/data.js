@@ -185,3 +185,38 @@ export const status = [
     { id: 2, name: 'Machine 2', status: 'Stopped' },
     { id: 3, name: 'Machine 3', status: 'Runnning' },
 ]
+
+export const notifs = [
+    {
+        id: 1,
+        "type": "info",
+        "title": "New machine added",
+        "description": "A new machine has been added to the system.",
+        "timestamp": "2024-06-25T14:48:00.000Z",
+        "duration": "2 mins",
+    },
+    {
+        id: 2,
+        type: "warning",
+        title: "Sensor alert: Temperature high",
+        description: "The temperature sensor has recorded a high value.",
+        timestamp: "2024-06-25T14:38:00.000Z",
+        duration: "10 mins",
+    },
+    {
+        id: 3,
+        type: "info",
+        title: "Maintenance required",
+        description: "Routine maintenance is required for Machine A.",
+        timestamp: "2024-06-25T13:48:00.000Z",
+        duration: "1 hour",
+    },
+    {
+        id: 4,
+        type: "error",
+        title: "Breakdown",
+        description: "Machine stopped due to overheating.",
+        timestamp: "2024-06-25T13:58:00.000Z",
+        duration: "1 hour",
+    },
+];

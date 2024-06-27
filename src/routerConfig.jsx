@@ -6,6 +6,7 @@ import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 import AddNote from "./components/AddNote/AddNote";
 import Production from "./components/Production/Production";
+import Machine from "./components/Machine Overview/Machine";
 
 const AppRoutes = () => (
     <Routes>
@@ -15,6 +16,7 @@ const AppRoutes = () => (
         <Route path="/signup" element={<Signup />} />
         <Route path="/notes" element={<AddNote />} />
         <Route path="/production" element={<Production />} />
+        <Route path="/machine" element={<Machine />} />
     </Routes>
 );
 

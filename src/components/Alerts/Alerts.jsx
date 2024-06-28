@@ -13,7 +13,16 @@ import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
 
 const Notes = () => {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState([
+        {
+            id: 1,
+            type: "error",
+            title: "Error while fetching data",
+            description: "",
+            timestamp: "",
+            duration: "",
+        },
+    ]);
     const [loading, setLoading] = useState(true);
     const [opened, { open, close }] = useDisclosure(false);
 
@@ -21,8 +30,10 @@ const Notes = () => {
         const fetchEvents = async () => {
             try {
                 const response = await fetch("http://localhost:3000/events/");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch events");
+                }
                 const data = await response.json();
-                console.log(data);
                 setEvents(data);
             } catch (error) {
                 console.error("Error fetching events:", error);

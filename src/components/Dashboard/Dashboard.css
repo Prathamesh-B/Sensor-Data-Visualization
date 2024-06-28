@@ -5,10 +5,12 @@
     text-align: center;
 }
 
+.machine-dropdown {
+    max-width: 250px;
+}
+
 .dropdown-chart {
     display: flex;
-    /* spcae bwtween */
-    /* justify-content: space-around; */
     margin: 1rem;
 }
 

@@ -3,17 +3,16 @@ import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
 import { useState, useEffect } from "react";
-import { data as chartData, machines, sensors } from "../../data"; // Import data
+import { data as chartData, machines, sensors, cards } from "../../data";
 import { Boxes, Cog, RefreshCw, TriangleAlert } from "lucide-react";
 
 const FSDashboard = () => {
-    // const [TopCards, setTopCards] = useState([{id: 1, machine_id: 1, TP: 600, Ef: "75%", DR:"45 mins"}])
     const sensorOptions = sensors.map((item) => item.name);
     const machineOptions = machines.map((item) => item.name);
 
-    const [machineMenu, setMachineMenu] = useState(machineOptions[1]);
+    const [machineMenu, setMachineMenu] = useState(machineOptions[0]);
+    const [topCards, setTopCards] = useState([]);
     const [sensorMenu, setSensorMenu] = useState(sensorOptions[6]);
-    // const [rangeMenu, setRangeMenu] = useState("Today");
     const [filteredChartData, setFilteredChartData] = useState([]);
 
     useEffect(() => {
@@ -27,6 +26,10 @@ const FSDashboard = () => {
                         item.machine_id === machine.id &&
                         item.sensor_id === sensor.id
                 );
+                const test = cards.filter(
+                    (card) => card.machine_id === machine.id
+                );
+                setTopCards(test[0]);
                 setFilteredChartData(filteredData);
             }
         }
@@ -37,16 +40,15 @@ const FSDashboard = () => {
             <Grid gutter="lg" mb="lg">
                 <Grid.Col span={12}>
                     <div className="machine-dropdown">
-                            <Select
-                                placeholder="Pick value"
-                                data={machineOptions}
-                                value={machineMenu}
-                                onChange={setMachineMenu}
-                            />
-                        </div>
+                        <Select
+                            placeholder="Pick value"
+                            data={machineOptions}
+                            value={machineMenu}
+                            onChange={setMachineMenu}
+                        />
+                    </div>
                 </Grid.Col>
                 <Grid.Col span={{ base: 6, md: 3 }}>
-                    
                     <Card
                         shadow="sm"
                         p="lg"
@@ -60,9 +62,8 @@ const FSDashboard = () => {
                                 strokeWidth={1}
                             />
                             <div>
-                                {/* {topCards.map((Card) =>)} */}
                                 <Text size="xl" c="green" fw={700}>
-                                    650 units
+                                    {topCards.TP} units
                                 </Text>
                                 <Text weight={500} size="lg" fw={400}>
                                     Today&apos;s Production
@@ -86,7 +87,7 @@ const FSDashboard = () => {
                             />
                             <div>
                                 <Text size="xl" c="indigo" fw={700}>
-                                    80%
+                                    {topCards.PR}%
                                 </Text>
                                 <Text weight={500} size="lg" fw={400}>
                                     Production Rate
@@ -110,7 +111,7 @@ const FSDashboard = () => {
                             />
                             <div>
                                 <Text size="xl" c="teal" fw={700}>
-                                    75%
+                                    {topCards.ER}%
                                 </Text>
                                 <Text weight={500} size="lg" fw={400}>
                                     Efficiency Rate
@@ -134,7 +135,7 @@ const FSDashboard = () => {
                             />
                             <div>
                                 <Text size="xl" c="orange" fw={700}>
-                                    45 mins
+                                    {topCards.DT} mins
                                 </Text>
                                 <Text weight={500} size="lg" fw={400}>
                                     Downtime
@@ -155,12 +156,6 @@ const FSDashboard = () => {
                                 onChange={setSensorMenu}
                             />
                         </div>
-                        {/* <Select
-                            placeholder="Pick Range"
-                            data={["Today", "Yesterday", "Last Week"]}
-                            value={rangeMenu}
-                            onChange={setRangeMenu}
-                        /> */}
                     </div>
                     <Chart data={filteredChartData} Ylable={sensorMenu} />
                 </Grid.Col>

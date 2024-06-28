@@ -1,18 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-    Container,
-    Center,
-    Grid,
-    Button,
-    Text,
-    Table,
-    Autocomplete,
-} from "@mantine/core";
+import { Container, Grid, Button, Table, Autocomplete } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import { formatDate } from "../../utils";
 
-const SensorData = () => {
+const DataConsole = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [sensorData, setSensorData] = useState([]);
@@ -168,4 +160,4 @@ const SensorData = () => {
     );
 };
 
-export default SensorData;
+export default DataConsole;

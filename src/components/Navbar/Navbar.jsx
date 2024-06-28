@@ -49,7 +49,7 @@ const Navbar = () => {
                                 active={location.pathname === "/"}
                             />
                         </Link>
-                        <Link to="/sensors">
+                        <Link to="/console">
                             <NavLink
                                 leftSection={<Table2 strokeWidth={1} />}
                                 label="Data Console"
@@ -57,14 +57,14 @@ const Navbar = () => {
                                 active={location.pathname === "/sensors"}
                             />
                         </Link>
-                        <Link to="/machine">
+                        {/* <Link to="/machine">
                             <NavLink
                                 leftSection={<Cpu strokeWidth={1} />}
                                 label="Machine Overview"
                                 mt="sm"
                                 active={location.pathname === "/machine"}
                             />
-                        </Link>
+                        </Link> */}
                         <Link to="/notes">
                             <NavLink
                                 leftSection={<NotebookPen strokeWidth={1} />}

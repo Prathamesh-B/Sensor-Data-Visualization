@@ -283,8 +283,8 @@ export const notifs = [
     },
 ];
 
-export const topCards = [
-    { id: 1, machine_id: 1, TP: 650, Ef: "75%", DR:"45 mins"},
-    { id: 2, machine_id: 2, TP: 550, Ef: "65%", DR:"20 mins"},
-    { id: 3, machine_id: 3, TP: 660, Ef: "50%", DR:"15 mins"},
+export const cards = [
+    { id: 1, machine_id: 1, TP: 650, ER: "75", DT: "45", PR: "80" },
+    { id: 2, machine_id: 2, TP: 550, ER: "65", DT: "20", PR: "90" },
+    { id: 3, machine_id: 3, TP: 660, ER: "50", DT: "15", PR: "70" },
 ]

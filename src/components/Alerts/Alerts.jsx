@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
     Button,
     Card,
@@ -7,12 +8,39 @@ import {
     Textarea,
     TextInput,
 } from "@mantine/core";
-import { notifs } from "../../data";
 import { Info, AlertTriangle, AlertOctagon } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
 
 const Notes = () => {
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [opened, { open, close }] = useDisclosure(false);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/events/");
+                const data = await response.json();
+                console.log(data);
+                setEvents(data);
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchEvents();
+    }, []);
+
+    const formatTime = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
     const getBackgroundColorByType = (type) => {
         switch (type) {
             case "info":
@@ -38,7 +66,6 @@ const Notes = () => {
                 return null;
         }
     };
-    const [opened, { open, close }] = useDisclosure(false);
 
     return (
         <>
@@ -58,7 +85,7 @@ const Notes = () => {
                     <br></br>
                     <Textarea
                         placeholder="Enter the cause of the Incident"
-                        label="Casue of the Incident"
+                        label="Cause of the Incident"
                         autosize
                         minRows={5}
                     />
@@ -82,56 +109,64 @@ const Notes = () => {
                     </Button>
                 </form>
             </Modal>
-            {notifs.map((notif, index) => (
-                <Card
-                    shadow="sm"
-                    p="sm"
-                    mb="sm"
-                    key={index}
-                    style={{
-                        padding: "1rem",
-                        borderRadius: "8px",
-                        marginBottom: "1rem",
-                    }}
-                    onClick={open}
-                >
-                    <Text
-                        fw={500}
-                        style={{ color: getBackgroundColorByType(notif.type) }}
-                    >
-                        <div
+            {loading ? (
+                <Text>Loading...</Text>
+            ) : (
+                <>
+                    {events.map((event) => (
+                        <Card
+                            shadow="sm"
+                            p="sm"
+                            mb="sm"
+                            key={event.id}
                             style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
+                                padding: "1rem",
+                                borderRadius: "8px",
+                                marginBottom: "1rem",
                             }}
+                            onClick={open}
                         >
-                            <div
+                            <Text
+                                fw={500}
                                 style={{
-                                    display: "flex",
-                                    alignItems: "center",
+                                    color: getBackgroundColorByType(event.type),
                                 }}
                             >
-                                {getIconByType(notif.type)}
-                                <span
+                                <div
                                     style={{
-                                        marginLeft: "0.5rem",
-                                        marginBottom: "0.2rem",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
                                     }}
                                 >
-                                    {notif.title}
-                                </span>
-                            </div>
-                            <Text size="sm" c="gray">
-                                {notif.timestamp}
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        {getIconByType(event.type)}
+                                        <span
+                                            style={{
+                                                marginLeft: "0.5rem",
+                                                marginBottom: "0.2rem",
+                                            }}
+                                        >
+                                            {event.title}
+                                        </span>
+                                    </div>
+                                    <Text size="sm" c="gray">
+                                        {formatTime(event.timestamp)}
+                                    </Text>
+                                </div>
                             </Text>
-                        </div>
-                    </Text>
-                    <Text w={300} truncate="end">
-                        {notif.description}
-                    </Text>
-                </Card>
-            ))}
+                            <Text w={300} truncate="end">
+                                {event.description}
+                            </Text>
+                        </Card>
+                    ))}
+                </>
+            )}
         </>
     );
 };

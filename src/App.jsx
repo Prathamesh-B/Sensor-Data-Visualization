@@ -8,19 +8,19 @@ import {
     Divider,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { NotepadText } from "lucide-react";
+// import { NotepadText } from "lucide-react";
 import Navbar from "./components/Navbar/Navbar";
 import AppRoutes from "./routerConfig";
 import { notes } from "./data";
 
 function App() {
     const [opened, { toggle }] = useDisclosure();
-    const [drawerOpened, { open, close }] = useDisclosure(false);
+    const [drawerOpened, { close }] = useDisclosure(false);
 
     return (
         <>
             <AppShell
-                header={{ height: 40 }}
+                // header={{ height: 20 }}
                 navbar={{
                     width: 300,
                     breakpoint: "md",
@@ -41,14 +41,13 @@ function App() {
                             hiddenFrom="md"
                             size="sm"
                         />
-                        <div className="logo">SenseViz</div>
                         <div>
-                            <NotepadText
+                            {/* <NotepadText
                                 strokeWidth={1.5}
                                 onClick={open}
                                 style={{ cursor: "pointer" }}
-                            />
-                        </div>
+                            /> */}
+                        </div> 
                     </Group>
                 </AppShell.Header>
                 <AppShell.Navbar p="md">

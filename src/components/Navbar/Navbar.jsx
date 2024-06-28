@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar, NavLink, Text } from "@mantine/core";
+import { Avatar, Divider, Drawer, NavLink, ScrollArea, Text } from "@mantine/core";
 import {
     BarChart2,
     LayoutDashboard,
@@ -8,13 +8,18 @@ import {
     UsersRound,
     Cpu,
     Table2,
+    NotepadText,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
+import { notes } from "../../data";
+import { useDisclosure } from "@mantine/hooks";
 
 const Navbar = () => {
     const location = useLocation();
     const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+    const [drawerOpened, { open, close }] = useDisclosure(false);
 
     // useEffect(() => {
     //     const token = localStorage.getItem("token");
@@ -24,6 +29,7 @@ const Navbar = () => {
     return (
         <>
             <div className="nav-top">
+                <div className="logo">SenseViz</div>
                 <Link to="/">
                     <NavLink
                         leftSection={<LayoutDashboard strokeWidth={1} />}
@@ -100,6 +106,14 @@ const Navbar = () => {
                             </Text>
                             <Text size="sm">Machine Foreman</Text>
                         </div>
+                        <div>
+                            <NotepadText
+                                strokeWidth={1.5}
+                                size={30}
+                                onClick={open}
+                                style={{ cursor: "pointer" }}
+                            />
+                        </div>
                     </div>
                     <NavLink
                         leftSection={<LogOut strokeWidth={1} />}
@@ -113,6 +127,36 @@ const Navbar = () => {
                     />
                 </div>
             )}
+            <Drawer
+                opened={drawerOpened}
+                onClose={close}
+                title="Supervisor Notes"
+                padding="md"
+                size="lg"
+                position="right"
+            >
+                <ScrollArea style={{ height: "80vh" }}>
+                    {notes.map((note) => (
+                        <div
+                            key={note.id}
+                            style={{
+                                paddingTop: "1rem",
+                                borderRadius: "8px",
+                                marginBottom: "1rem",
+                            }}
+                        >
+                            <Text size="lg" weight={700}>
+                                {note.title}
+                            </Text>
+                            <Text size="xs" color="dimmed">
+                                {new Date(note.timestamp).toLocaleString()}{" "}
+                            </Text>
+                            <Text size="sm">{note.description}</Text>
+                            <Divider my="md" />
+                        </div>
+                    ))}
+                </ScrollArea>
+            </Drawer>
         </>
     );
 };

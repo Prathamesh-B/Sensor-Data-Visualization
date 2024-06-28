@@ -7,6 +7,7 @@ import Signup from "./components/Signup/Signup";
 import AddNote from "./components/AddNote/AddNote";
 import Production from "./components/Production/Production";
 import Machine from "./components/Machine Overview/Machine";
+import FSDashboard from "./components/Dashboard/FSDashboard";
 
 const AppRoutes = () => (
     <Routes>
@@ -17,6 +18,7 @@ const AppRoutes = () => (
         <Route path="/notes" element={<AddNote />} />
         <Route path="/production" element={<Production />} />
         <Route path="/machine" element={<Machine />} />
+        <Route path="/fs" element={<FSDashboard />} />
     </Routes>
 );
 

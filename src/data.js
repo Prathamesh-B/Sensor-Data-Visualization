@@ -230,7 +230,7 @@ export const notifs = [
         "type": "info",
         "title": "New machine added",
         "description": "A new machine has been added to the system.",
-        "timestamp": "2024-06-25T14:48:00.000Z",
+        "timestamp": "09:45",
         "duration": "2 mins",
     },
     {
@@ -238,7 +238,7 @@ export const notifs = [
         type: "warning",
         title: "Sensor alert: Temperature high",
         description: "The temperature sensor has recorded a high value.",
-        timestamp: "2024-06-25T14:38:00.000Z",
+        timestamp: "10:23",
         duration: "10 mins",
     },
     {
@@ -246,7 +246,7 @@ export const notifs = [
         type: "info",
         title: "Maintenance required",
         description: "Routine maintenance is required for Machine A.",
-        timestamp: "2024-06-25T13:48:00.000Z",
+        timestamp: "12:50",
         duration: "1 hour",
     },
     {
@@ -254,7 +254,7 @@ export const notifs = [
         type: "error",
         title: "Breakdown",
         description: "Machine stopped due to overheating.",
-        timestamp: "2024-06-25T13:58:00.000Z",
+        timestamp: "13:32",
         duration: "1 hour",
     },
     {
@@ -262,7 +262,7 @@ export const notifs = [
         type: "warning",
         title: "Sensor alert: Temperature high",
         description: "The temperature sensor has recorded a high value.",
-        timestamp: "2024-06-25T14:38:00.000Z",
+        timestamp: "14:05",
         duration: "10 mins",
     },
     {
@@ -270,7 +270,7 @@ export const notifs = [
         type: "info",
         title: "Maintenance required",
         description: "Routine maintenance is required for Machine A.",
-        timestamp: "2024-06-25T13:48:00.000Z",
+        timestamp: "15:45",
         duration: "1 hour",
     },
     {
@@ -278,7 +278,7 @@ export const notifs = [
         type: "error",
         title: "Breakdown",
         description: "Machine stopped due to overheating.",
-        timestamp: "2024-06-25T13:58:00.000Z",
+        timestamp: "16:20",
         duration: "1 hour",
     },
 ];

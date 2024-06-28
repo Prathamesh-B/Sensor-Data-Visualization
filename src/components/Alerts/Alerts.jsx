@@ -1,4 +1,12 @@
-import { Button, Card, Modal, Select, Text, Textarea, TextInput } from "@mantine/core";
+import {
+    Button,
+    Card,
+    Modal,
+    Select,
+    Text,
+    Textarea,
+    TextInput,
+} from "@mantine/core";
 import { notifs } from "../../data";
 import { Info, AlertTriangle, AlertOctagon } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -34,42 +42,46 @@ const Notes = () => {
 
     return (
         <>
-        <Modal opened={opened} onClose={close} size={"55rem"} title="Incident Event">
-            <form onSubmit={close}>
-                <TextInput
-                placeholder="Enter Title"
-                label="Title"
-                />
-                <br></br>
-                <DateTimePicker
-                placeholder="Pick date and time of the Incident"
-                label="Time of the Incident"
-                />
-                <br></br>
-                <Textarea
-                placeholder="Enter the cause of the Incident"
-                label="Casue of the Incident"
-                autosize
-                minRows={5}
-                />
-                <br></br>
-                <div>
-                    <Select
-                    label="Category of the incident"
-                    placeholder="Pick a category"
-                    data={['Breakdown','Material Shortage']}
+            <Modal
+                opened={opened}
+                onClose={close}
+                size={"55rem"}
+                title="Incident Event"
+            >
+                <form onSubmit={close}>
+                    <TextInput placeholder="Enter Title" label="Title" />
+                    <br></br>
+                    <DateTimePicker
+                        placeholder="Pick date and time of the Incident"
+                        label="Time of the Incident"
                     />
                     <br></br>
-                    <Select
-                    label="Sub-Category of the incident"
-                    placeholder="Pick a sub-category"
-                    data={['Breakdown','Material Shortage']}
+                    <Textarea
+                        placeholder="Enter the cause of the Incident"
+                        label="Casue of the Incident"
+                        autosize
+                        minRows={5}
                     />
-                </div>
-                <br></br>
-                <Button type="submit" variant="filled">Submit</Button>
-            </form>
-        </Modal>
+                    <br></br>
+                    <div>
+                        <Select
+                            label="Category of the incident"
+                            placeholder="Pick a category"
+                            data={["Breakdown", "Material Shortage"]}
+                        />
+                        <br></br>
+                        <Select
+                            label="Sub-Category of the incident"
+                            placeholder="Pick a sub-category"
+                            data={["Breakdown", "Material Shortage"]}
+                        />
+                    </div>
+                    <br></br>
+                    <Button type="submit" variant="filled">
+                        Submit
+                    </Button>
+                </form>
+            </Modal>
             {notifs.map((notif, index) => (
                 <Card
                     shadow="sm"
@@ -87,17 +99,33 @@ const Notes = () => {
                         fw={500}
                         style={{ color: getBackgroundColorByType(notif.type) }}
                     >
-                            {getIconByType(notif.type)}
-                            <span
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <div
                                 style={{
-                                    marginLeft: "0.5rem",
+                                    display: "flex",
+                                    alignItems: "center",
                                 }}
                             >
-                                {notif.title}
-                            </span>
-                            <Text size="sm" color="gray" >
+                                {getIconByType(notif.type)}
+                                <span
+                                    style={{
+                                        marginLeft: "0.5rem",
+                                        marginBottom: "0.2rem",
+                                    }}
+                                >
+                                    {notif.title}
+                                </span>
+                            </div>
+                            <Text size="sm" c="gray">
                                 {notif.timestamp}
                             </Text>
+                        </div>
                     </Text>
                     <Text w={300} truncate="end">
                         {notif.description}

@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Avatar, Divider, Drawer, NavLink, ScrollArea, Text } from "@mantine/core";
+import {
+    Avatar,
+    Divider,
+    Drawer,
+    NavLink,
+    ScrollArea,
+    Text,
+} from "@mantine/core";
 import {
     BarChart2,
     LayoutDashboard,
@@ -29,17 +36,19 @@ const Navbar = () => {
     return (
         <>
             <div className="nav-top">
-                <div className="logo">SenseViz</div>
-                <Link to="/">
-                    <NavLink
-                        leftSection={<LayoutDashboard strokeWidth={1} />}
-                        mt="sm"
-                        label="Dashboard"
-                        active={location.pathname === "/"}
-                    />
-                </Link>
+                <div className="logo">ProdViz</div>
                 {isAuthenticated ? (
                     <>
+                        <Link to="/">
+                            <NavLink
+                                leftSection={
+                                    <LayoutDashboard strokeWidth={1} />
+                                }
+                                mt="sm"
+                                label="Dashboard"
+                                active={location.pathname === "/"}
+                            />
+                        </Link>
                         <Link to="/sensors">
                             <NavLink
                                 leftSection={<Table2 strokeWidth={1} />}
@@ -83,14 +92,14 @@ const Navbar = () => {
                                 active={location.pathname === "/login"}
                             />
                         </Link>
-                        <Link to="/signup">
+                        {/* <Link to="/signup">
                             <NavLink
                                 leftSection={<UsersRound strokeWidth={1} />}
                                 label="Register"
                                 mt="sm"
                                 active={location.pathname === "/signup"}
                             />
-                        </Link>
+                        </Link> */}
                     </>
                 )}
             </div>
@@ -104,11 +113,11 @@ const Navbar = () => {
                             <Text style={{ fontWeight: "bold" }} size="md">
                                 Manoj Prabhakar
                             </Text>
-                            <Text size="sm">Machine Foreman</Text>
+                            <Text size="sm">Supervisor</Text>
                         </div>
                         <div>
                             <NotepadText
-                                strokeWidth={1.5}
+                                strokeWidth={1}
                                 size={30}
                                 onClick={open}
                                 style={{ cursor: "pointer" }}
@@ -148,7 +157,7 @@ const Navbar = () => {
                             <Text size="lg" weight={700}>
                                 {note.title}
                             </Text>
-                            <Text size="xs" color="dimmed">
+                            <Text size="xs" c="dimmed">
                                 {new Date(note.timestamp).toLocaleString()}{" "}
                             </Text>
                             <Text size="sm">{note.description}</Text>

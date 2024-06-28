@@ -163,7 +163,7 @@ const Dashboard = () => {
                     <Text p={"sm"} weight={500} size="xl">
                         Alerts :
                     </Text>
-                    <ScrollArea style={{ height: 400 }}>
+                    <ScrollArea style={{ height: 450 }}>
                         <Alerts />
                     </ScrollArea>
                 </Grid.Col>

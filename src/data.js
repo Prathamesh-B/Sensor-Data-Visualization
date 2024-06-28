@@ -282,3 +282,9 @@ export const notifs = [
         duration: "1 hour",
     },
 ];
+
+export const topCards = [
+    { id: 1, machine_id: 1, TP: 650, Ef: "75%", DR:"45 mins"},
+    { id: 2, machine_id: 2, TP: 550, Ef: "65%", DR:"20 mins"},
+    { id: 3, machine_id: 3, TP: 660, Ef: "50%", DR:"15 mins"},
+]

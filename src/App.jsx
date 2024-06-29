@@ -8,11 +8,9 @@ import {
     Divider,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-// import { NotepadText } from "lucide-react";
 import Navbar from "./components/Navbar/Navbar";
 import AppRoutes from "./routerConfig";
 import { notes } from "./data";
-
 function App() {
     const [opened, { toggle }] = useDisclosure();
     const [drawerOpened, { close }] = useDisclosure(false);
@@ -20,7 +18,6 @@ function App() {
     return (
         <>
             <AppShell
-                // header={{ height: 20 }}
                 navbar={{
                     width: 300,
                     breakpoint: "md",
@@ -41,13 +38,6 @@ function App() {
                             hiddenFrom="md"
                             size="sm"
                         />
-                        <div>
-                            {/* <NotepadText
-                                strokeWidth={1.5}
-                                onClick={open}
-                                style={{ cursor: "pointer" }}
-                            /> */}
-                        </div> 
                     </Group>
                 </AppShell.Header>
                 <AppShell.Navbar p="md">

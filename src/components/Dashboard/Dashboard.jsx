@@ -3,7 +3,7 @@ import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
 import { useState, useEffect } from "react";
-import { data as chartData, machines, sensors } from "../../data"; // Import data
+import { data as chartData, machines, sensors } from "../../data";
 import { Boxes, Cog, RefreshCw, TriangleAlert } from "lucide-react";
 
 const Dashboard = () => {

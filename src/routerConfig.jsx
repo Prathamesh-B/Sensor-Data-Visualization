@@ -7,18 +7,68 @@ import Production from "./components/Production/Production";
 import Machine from "./components/Machine Overview/Machine";
 import MODashboard from "./components/Dashboard/MODashboard";
 import SVPMDashboard from "./components/Dashboard/SVPMDashboard";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => (
     <Routes>
-        <Route path="/" element={<MODashboard />} />
-        <Route path="/console" element={<DataConsole />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/notes" element={<AddNote />} />
-        <Route path="/production" element={<Production />} />
-        <Route path="/machine" element={<Machine />} />
-        <Route path="/mo" element={<MODashboard />} />
-        <Route path="/svpm" element={<SVPMDashboard />} />
+        <Route
+            path="/"
+            element={
+                <ProtectedRoute>
+                    <MODashboard />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/console"
+            element={
+                <ProtectedRoute>
+                    <DataConsole />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/notes"
+            element={
+                <ProtectedRoute>
+                    <AddNote />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/production"
+            element={
+                <ProtectedRoute>
+                    <Production />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/machine"
+            element={
+                <ProtectedRoute>
+                    <Machine />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/mo"
+            element={
+                <ProtectedRoute>
+                    <MODashboard />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/svpm"
+            element={
+                <ProtectedRoute>
+                    <SVPMDashboard />
+                </ProtectedRoute>
+            }
+        />
     </Routes>
 );
 

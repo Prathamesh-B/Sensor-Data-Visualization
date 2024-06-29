@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Avatar,
     Divider,
@@ -13,7 +12,6 @@ import {
     LogOut,
     NotebookPen,
     UsersRound,
-    Cpu,
     Table2,
     NotepadText,
 } from "lucide-react";
@@ -21,17 +19,34 @@ import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 import { notes } from "../../data";
 import { useDisclosure } from "@mantine/hooks";
+import { useAuth } from "../../context/AuthContext";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
     const location = useLocation();
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
-
+    const { isAuthenticated, logout } = useAuth();
     const [drawerOpened, { open, close }] = useDisclosure(false);
+    const [username, setUsername] = useState("");
+    const [role, setRole] = useState("");
 
-    // useEffect(() => {
-    //     const token = localStorage.getItem("token");
-    //     setIsAuthenticated(!!token);
-    // }, []);
+    useEffect(() => {
+        const token = JSON.parse(localStorage.getItem("token"));
+
+        if (token) {
+            setUsername(token.username);
+            setRole(token.role);
+        }
+    }, []);
+
+    const getDashboardLink = () => {
+        if (role === "Supervisor" || role === "Product Manager") {
+            return "/svpm"; // Link for Supervisor or Product Manager
+        } else if (role === "Machine Operator") {
+            return "/mo"; // Link for Machine Operator
+        } else {
+            return "/"; // Default dashboard link
+        }
+    };
 
     return (
         <>
@@ -39,14 +54,16 @@ const Navbar = () => {
                 <div className="logo">ProdViz</div>
                 {isAuthenticated ? (
                     <>
-                        <Link to="/">
+                        <Link to={getDashboardLink()}>
                             <NavLink
                                 leftSection={
                                     <LayoutDashboard strokeWidth={1} />
                                 }
                                 mt="sm"
                                 label="Dashboard"
-                                active={location.pathname === "/"}
+                                active={
+                                    location.pathname === getDashboardLink()
+                                }
                             />
                         </Link>
                         <Link to="/console">
@@ -54,17 +71,9 @@ const Navbar = () => {
                                 leftSection={<Table2 strokeWidth={1} />}
                                 label="Data Console"
                                 mt="sm"
-                                active={location.pathname === "/sensors"}
+                                active={location.pathname === "/console"}
                             />
                         </Link>
-                        {/* <Link to="/machine">
-                            <NavLink
-                                leftSection={<Cpu strokeWidth={1} />}
-                                label="Machine Overview"
-                                mt="sm"
-                                active={location.pathname === "/machine"}
-                            />
-                        </Link> */}
                         <Link to="/notes">
                             <NavLink
                                 leftSection={<NotebookPen strokeWidth={1} />}
@@ -92,14 +101,6 @@ const Navbar = () => {
                                 active={location.pathname === "/login"}
                             />
                         </Link>
-                        {/* <Link to="/signup">
-                            <NavLink
-                                leftSection={<UsersRound strokeWidth={1} />}
-                                label="Register"
-                                mt="sm"
-                                active={location.pathname === "/signup"}
-                            />
-                        </Link> */}
                     </>
                 )}
             </div>
@@ -107,13 +108,13 @@ const Navbar = () => {
                 <div className="nav-bottom">
                     <div className="contentWrapper">
                         <Avatar color={"blue"} radius={"lg"} mt="sm">
-                            M P
+                            {username && username.charAt(0).toUpperCase()}
                         </Avatar>
                         <div>
                             <Text style={{ fontWeight: "bold" }} size="md">
-                                Manoj Prabhakar
+                                {username}
                             </Text>
-                            <Text size="sm">Supervisor</Text>
+                            <Text size="sm">{role}</Text>
                         </div>
                         <div>
                             <NotepadText
@@ -126,13 +127,9 @@ const Navbar = () => {
                     </div>
                     <NavLink
                         leftSection={<LogOut strokeWidth={1} />}
-                        href="#required-for-focus"
                         label="Logout"
                         mt="sm"
-                        onClick={() => {
-                            localStorage.removeItem("token");
-                            setIsAuthenticated(false);
-                        }}
+                        onClick={logout}
                     />
                 </div>
             )}

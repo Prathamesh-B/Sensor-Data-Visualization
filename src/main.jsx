@@ -7,12 +7,15 @@ import "./index.css";
 import { MantineProvider } from "@mantine/core";
 import { BrowserRouter } from "react-router-dom";
 import { theme } from "./theme";
+import { AuthProvider } from "./context/AuthContext"; // Import the AuthProvider
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <MantineProvider theme={theme}>
             <BrowserRouter>
-                <App />
+                <AuthProvider>
+                    <App />
+                </AuthProvider>
             </BrowserRouter>
         </MantineProvider>
     </React.StrictMode>

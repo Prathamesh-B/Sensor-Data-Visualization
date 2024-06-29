@@ -1,27 +1,29 @@
-.container {
-    margin: 0 auto;
-    padding: 40px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    width: 300px;
+.website-name {
+    background-color: #228be8;
+    padding: 0 10px;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: bold;
     text-align: center;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
+    margin-bottom: 20px;
 }
+
 .title {
     margin-bottom: 20px;
     color: #333;
 }
+
 .group {
     margin-bottom: 15px;
     text-align: left;
 }
+
 .label {
     display: block;
     margin-bottom: 5px;
     color: #333;
 }
+
 .input {
     width: 100%;
     border: 1px solid #ccc;
@@ -29,6 +31,7 @@
     padding: 8px;
     box-sizing: border-box;
 }
+
 button.btn {
     width: 100%;
     padding: 10px;
@@ -40,6 +43,33 @@ button.btn {
     cursor: pointer;
     transition: background 0.3s ease;
 }
+
+button.btn:hover {
+    background: #0069d9;
+}
+
 .p {
     font-size: small;
+}
+
+.role-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.role-btn {
+    width: 100%;
+    padding: 10px;
+    background: #e2f0ff;
+    border: #79b7fa solid 1px;
+    color: #007bff;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.role-btn:hover {
+    background: #c8dff7;
 }

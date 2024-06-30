@@ -16,6 +16,17 @@ const Dashboard = () => {
     const [filteredChartData, setFilteredChartData] = useState([]);
 
     useEffect(() => {
+        const token = JSON.parse(localStorage.getItem("token"));
+
+        if (token) {
+            const { role } = token;
+            if (role === "Supervisor" || role === "Product Manager") {
+                window.location.href = "/svpm";
+            } else if (role === "Machine Operator") {
+                window.location.href = "/mo";
+            }
+        }
+
         if (machineMenu && sensorMenu) {
             // Filter chart data based on selected machine and sensor
             const machine = machines.find((m) => m.name === machineMenu);

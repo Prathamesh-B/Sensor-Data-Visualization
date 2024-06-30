@@ -40,11 +40,11 @@ const Navbar = () => {
 
     const getDashboardLink = () => {
         if (role === "Supervisor" || role === "Product Manager") {
-            return "/svpm"; // Link for Supervisor or Product Manager
+            return "/svpm";
         } else if (role === "Machine Operator") {
-            return "/mo"; // Link for Machine Operator
+            return "/mo";
         } else {
-            return "/"; // Default dashboard link
+            return "/";
         }
     };
 
@@ -116,14 +116,14 @@ const Navbar = () => {
                             </Text>
                             <Text size="sm">{role}</Text>
                         </div>
-                        <div>
+                        {/* <div>
                             <NotepadText
                                 strokeWidth={1}
                                 size={30}
                                 onClick={open}
                                 style={{ cursor: "pointer" }}
                             />
-                        </div>
+                        </div> */}
                     </div>
                     <NavLink
                         leftSection={<LogOut strokeWidth={1} />}
@@ -133,7 +133,7 @@ const Navbar = () => {
                     />
                 </div>
             )}
-            <Drawer
+            {/* <Drawer
                 opened={drawerOpened}
                 onClose={close}
                 title="Supervisor Notes"
@@ -162,7 +162,7 @@ const Navbar = () => {
                         </div>
                     ))}
                 </ScrollArea>
-            </Drawer>
+            </Drawer> */}
         </>
     );
 };

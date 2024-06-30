@@ -8,6 +8,7 @@ import Machine from "./components/Machine Overview/Machine";
 import MODashboard from "./components/Dashboard/MODashboard";
 import SVPMDashboard from "./components/Dashboard/SVPMDashboard";
 import ProtectedRoute from "./ProtectedRoute";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 const AppRoutes = () => (
     <Routes>
@@ -17,7 +18,7 @@ const AppRoutes = () => (
             path="/"
             element={
                 <ProtectedRoute>
-                    <MODashboard />
+                    <Dashboard />
                 </ProtectedRoute>
             }
         />

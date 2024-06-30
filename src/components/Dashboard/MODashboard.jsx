@@ -4,12 +4,13 @@ import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
 import { useState, useEffect } from "react";
 import { data as chartData, machines, sensors, cards } from "../../data";
-import { Boxes, Cog, RefreshCw, TriangleAlert } from "lucide-react";
+import { Boxes, Calendar, Cog, RefreshCw, TriangleAlert } from "lucide-react";
 
 const FSDashboard = () => {
     const sensorOptions = sensors.map((item) => item.name);
     const machineOptions = machines.map((item) => item.name);
 
+    const [rangeMenu, setRangeMenu] = useState("Today");
     const [machineMenu, setMachineMenu] = useState(machineOptions[0]);
     const [topCards, setTopCards] = useState([]);
     const [sensorMenu, setSensorMenu] = useState(sensorOptions[6]);
@@ -37,18 +38,38 @@ const FSDashboard = () => {
 
     return (
         <>
-            <Grid gutter="lg" mb="lg">
-                <Grid.Col span={12}>
-                    <div className="machine-dropdown">
-                        <Select
-                            placeholder="Pick value"
-                            data={machineOptions}
-                            value={machineMenu}
-                            onChange={setMachineMenu}
-                        />
-                    </div>
+            <Grid columns={10} gutter="lg" mb="lg">
+                <Grid.Col span={{ base: 4, md: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="lg"
+                        radius="lg"
+                        className="latest-card"
+                    >
+                        <div
+                            style={{
+                                height: "4rem",
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Calendar
+                                style={{ marginRight: "1rem" }}
+                                size={38}
+                                strokeWidth={1.3}
+                            />
+                            <Select
+                                size="xs"
+                                placeholder="Pick Range"
+                                data={["Today", "Yesterday", "Last Week"]}
+                                value={rangeMenu}
+                                allowDeselect={false}
+                                onChange={setRangeMenu}
+                            />
+                        </div>
+                    </Card>
                 </Grid.Col>
-                <Grid.Col span={{ base: 6, md: 3 }}>
+                <Grid.Col span={{ base: 4, md: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -58,21 +79,25 @@ const FSDashboard = () => {
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <Boxes
                                 style={{ marginRight: "1rem" }}
-                                size={48}
+                                size={38}
                                 strokeWidth={1}
                             />
                             <div>
-                                <Text size="xl" c="green" fw={700}>
+                                <Text
+                                    style={{ fontSize: "1.6rem" }}
+                                    c="green"
+                                    fw={700}
+                                >
                                     {topCards.TP} units
                                 </Text>
-                                <Text weight={500} size="lg" fw={400}>
-                                    Today&apos;s Production
+                                <Text size="md" fw={400}>
+                                    Production
                                 </Text>
                             </div>
                         </div>
                     </Card>
                 </Grid.Col>
-                <Grid.Col span={{ base: 6, md: 3 }}>
+                <Grid.Col span={{ base: 4, md: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -82,21 +107,25 @@ const FSDashboard = () => {
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <RefreshCw
                                 style={{ marginRight: "1rem" }}
-                                size={48}
+                                size={38}
                                 strokeWidth={1}
                             />
                             <div>
-                                <Text size="xl" c="indigo" fw={700}>
+                                <Text
+                                    style={{ fontSize: "1.6rem" }}
+                                    fw={700}
+                                    c="indigo"
+                                >
                                     {topCards.PR}%
                                 </Text>
-                                <Text weight={500} size="lg" fw={400}>
+                                <Text size="md" fw={400}>
                                     Production Rate
                                 </Text>
                             </div>
                         </div>
                     </Card>
                 </Grid.Col>
-                <Grid.Col span={{ base: 6, md: 3 }}>
+                <Grid.Col span={{ base: 4, md: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -106,21 +135,25 @@ const FSDashboard = () => {
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <Cog
                                 style={{ marginRight: "1rem" }}
-                                size={48}
+                                size={38}
                                 strokeWidth={1}
                             />
                             <div>
-                                <Text size="xl" c="teal" fw={700}>
+                                <Text
+                                    style={{ fontSize: "1.6rem" }}
+                                    fw={700}
+                                    c="teal"
+                                >
                                     {topCards.ER}%
                                 </Text>
-                                <Text weight={500} size="lg" fw={400}>
+                                <Text size="md" fw={400}>
                                     Efficiency Rate
                                 </Text>
                             </div>
                         </div>
                     </Card>
                 </Grid.Col>
-                <Grid.Col span={{ base: 6, md: 3 }}>
+                <Grid.Col span={{ base: 4, md: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -130,14 +163,18 @@ const FSDashboard = () => {
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <TriangleAlert
                                 style={{ marginRight: "1rem" }}
-                                size={48}
+                                size={38}
                                 strokeWidth={1}
                             />
                             <div>
-                                <Text size="xl" c="orange" fw={700}>
+                                <Text
+                                    style={{ fontSize: "1.6rem" }}
+                                    fw={700}
+                                    c="orange"
+                                >
                                     {topCards.DT} mins
                                 </Text>
-                                <Text weight={500} size="lg" fw={400}>
+                                <Text size="md" fw={400}>
                                     Downtime
                                 </Text>
                             </div>
@@ -148,6 +185,14 @@ const FSDashboard = () => {
             <Grid grow>
                 <Grid.Col span={8}>
                     <div className="dropdown-chart">
+                        <div className="machine-dropdown">
+                            <Select
+                                placeholder="Pick value"
+                                data={machineOptions}
+                                value={machineMenu}
+                                onChange={setMachineMenu}
+                            />
+                        </div>
                         <div className="sensor-dropdown">
                             <Select
                                 placeholder="Pick value"
@@ -160,7 +205,7 @@ const FSDashboard = () => {
                     <Chart data={filteredChartData} Ylable={sensorMenu} />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
-                    <Text p={"sm"} weight={500} size="xl">
+                    <Text p={"sm"} size="xl">
                         Alerts :
                     </Text>
                     <ScrollArea style={{ height: 400 }}>

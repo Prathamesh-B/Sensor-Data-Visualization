@@ -29,10 +29,14 @@ const Production = () => {
                         className="latest-card"
                     >
                         <div>
-                            <Text weight={500} size="lg" c="blue" fw={700}>
+                            <Text
+                                style={{ fontSize: "1.6rem" }}
+                                c="blue"
+                                fw={700}
+                            >
                                 640
                             </Text>
-                            <Text size="xl" fw={400}>
+                            <Text size="md" fw={400}>
                                 Units produced
                             </Text>
                         </div>
@@ -46,10 +50,14 @@ const Production = () => {
                         className="latest-card"
                     >
                         <div>
-                            <Text weight={500} c="yellow" size="lg" fw={700}>
+                            <Text
+                                style={{ fontSize: "1.6rem" }}
+                                fw={700}
+                                c="yellow"
+                            >
                                 800
                             </Text>
-                            <Text size="xl" fw={400}>
+                            <Text size="md" fw={400}>
                                 Production Target
                             </Text>
                         </div>
@@ -63,10 +71,14 @@ const Production = () => {
                         className="latest-card"
                     >
                         <div>
-                            <Text size="xl" c="lime" fw={700}>
+                            <Text
+                                style={{ fontSize: "1.6rem" }}
+                                fw={700}
+                                c="lime"
+                            >
                                 80%
                             </Text>
-                            <Text weight={500} size="lg" fw={400}>
+                            <Text size="md" fw={400}>
                                 Production Rate
                             </Text>
                         </div>
@@ -75,9 +87,7 @@ const Production = () => {
             </Grid>
             <Grid>
                 <Grid.Col span={8}>
-                    <Text weight={500} size="xl">
-                        Add Production:
-                    </Text>
+                    <Text size="xl">Add Production:</Text>
                     <Grid grow align="center" gutter="md">
                         <Grid.Col>
                             <Select
@@ -106,7 +116,7 @@ const Production = () => {
                     </Grid>
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
-                    <Text p={"sm"} weight={500} size="xl">
+                    <Text p={"sm"} size="xl">
                         Machine Status:
                     </Text>
                     <Table.ScrollContainer>

@@ -4,11 +4,11 @@ import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 import AddNote from "./components/AddNote/AddNote";
 import Production from "./components/Production/Production";
-import Machine from "./components/Machine Overview/Machine";
 import MODashboard from "./components/Dashboard/MODashboard";
 import SVPMDashboard from "./components/Dashboard/SVPMDashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
+import DowntimeReport from "./components/DowntimeReport/DowntimeReport";
 
 const AppRoutes = () => (
     <Routes>
@@ -47,10 +47,10 @@ const AppRoutes = () => (
             }
         />
         <Route
-            path="/machine"
+            path="/dwr"
             element={
                 <ProtectedRoute>
-                    <Machine />
+                    <DowntimeReport />
                 </ProtectedRoute>
             }
         />

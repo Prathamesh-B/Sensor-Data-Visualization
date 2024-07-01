@@ -1,4 +1,4 @@
-import { Card, Grid, ScrollArea, Text, Select } from "@mantine/core";
+import { Menu, Card, Grid, ScrollArea, Text, Select } from "@mantine/core";
 import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
@@ -38,38 +38,61 @@ const FSDashboard = () => {
 
     return (
         <>
-            <Grid columns={10} gutter="lg" mb="lg">
-                <Grid.Col span={{ base: 4, md: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
-                    >
-                        <div
-                            style={{
-                                height: "4rem",
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Calendar
-                                style={{ marginRight: "1rem" }}
-                                size={38}
-                                strokeWidth={1.3}
-                            />
-                            <Select
-                                size="xs"
-                                placeholder="Pick Range"
-                                data={["Today", "Yesterday", "Last Week"]}
-                                value={rangeMenu}
-                                allowDeselect={false}
-                                onChange={setRangeMenu}
-                            />
-                        </div>
-                    </Card>
+            <Grid columns={10} gutter="lg" mb="lg" grow>
+                <Grid.Col span={1}>
+                    <Menu shadow="md" width={200}>
+                        <Menu.Target>
+                            <Card
+                                shadow="sm"
+                                p="lg"
+                                radius="lg"
+                                className="latest-card"
+                                style={{
+                                    cursor: "pointer",
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        height: "4rem",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        position: "relative",
+                                    }}
+                                >
+                                    <img
+                                        style={{ width: "2.5rem" }}
+                                        src="./calendar.png"
+                                    />
+                                    <Text
+                                        style={{ marginTop: "0.3rem" }}
+                                        size="sm"
+                                        fw={400}
+                                    >
+                                        {rangeMenu}
+                                    </Text>
+                                </div>
+                            </Card>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Label>Day Range</Menu.Label>
+                            <Menu.Item onClick={() => setRangeMenu("Today")}>
+                                Today
+                            </Menu.Item>
+                            <Menu.Item
+                                onClick={() => setRangeMenu("Yesterday")}
+                            >
+                                Yesterday
+                            </Menu.Item>
+                            <Menu.Item
+                                onClick={() => setRangeMenu("Last 7 Days")}
+                            >
+                                Last 7 Days
+                            </Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
                 </Grid.Col>
-                <Grid.Col span={{ base: 4, md: 2 }}>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -77,27 +100,26 @@ const FSDashboard = () => {
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <Boxes
-                                style={{ marginRight: "1rem" }}
-                                size={38}
-                                strokeWidth={1}
-                            />
-                            <div>
-                                <Text
-                                    style={{ fontSize: "1.6rem" }}
-                                    c="green"
-                                    fw={700}
-                                >
-                                    {topCards.TP} units
-                                </Text>
-                                <Text size="md" fw={400}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./production.png"
+                                />
+                                <Text size="sm" fw={400}>
                                     Production
                                 </Text>
                             </div>
+                            <Text
+                                style={{ fontSize: "2.5rem" }}
+                                c="green"
+                                fw={700}
+                            >
+                                {topCards.TP}
+                            </Text>
                         </div>
                     </Card>
                 </Grid.Col>
-                <Grid.Col span={{ base: 4, md: 2 }}>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -105,27 +127,26 @@ const FSDashboard = () => {
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <RefreshCw
-                                style={{ marginRight: "1rem" }}
-                                size={38}
-                                strokeWidth={1}
-                            />
                             <div>
-                                <Text
-                                    style={{ fontSize: "1.6rem" }}
-                                    fw={700}
-                                    c="indigo"
-                                >
-                                    {topCards.PR}%
-                                </Text>
-                                <Text size="md" fw={400}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./production-rate.png"
+                                />
+                                <Text size="sm" fw={400}>
                                     Production Rate
                                 </Text>
                             </div>
+                            <Text
+                                style={{ fontSize: "2.5rem" }}
+                                fw={700}
+                                c="indigo"
+                            >
+                                {topCards.PR}%
+                            </Text>
                         </div>
                     </Card>
                 </Grid.Col>
-                <Grid.Col span={{ base: 4, md: 2 }}>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -133,27 +154,27 @@ const FSDashboard = () => {
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <Cog
-                                style={{ marginRight: "1rem" }}
-                                size={38}
-                                strokeWidth={1}
-                            />
-                            <div>
-                                <Text
-                                    style={{ fontSize: "1.6rem" }}
-                                    fw={700}
-                                    c="teal"
-                                >
-                                    {topCards.ER}%
-                                </Text>
-                                <Text size="md" fw={400}>
-                                    Efficiency Rate
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./efficiency.png"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Efficiency
                                 </Text>
                             </div>
+
+                            <Text
+                                style={{ fontSize: "2.5rem" }}
+                                c="teal"
+                                fw={700}
+                            >
+                                {topCards.ER}%
+                            </Text>
                         </div>
                     </Card>
                 </Grid.Col>
-                <Grid.Col span={{ base: 4, md: 2 }}>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
                     <Card
                         shadow="sm"
                         p="lg"
@@ -161,23 +182,22 @@ const FSDashboard = () => {
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <TriangleAlert
-                                style={{ marginRight: "1rem" }}
-                                size={38}
-                                strokeWidth={1}
-                            />
-                            <div>
-                                <Text
-                                    style={{ fontSize: "1.6rem" }}
-                                    fw={700}
-                                    c="orange"
-                                >
-                                    {topCards.DT} mins
-                                </Text>
-                                <Text size="md" fw={400}>
-                                    Downtime
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./down-time.png"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Downtime (mins)
                                 </Text>
                             </div>
+                            <Text
+                                style={{ fontSize: "2.5rem" }}
+                                c="orange"
+                                fw={700}
+                            >
+                                {topCards.DT}
+                            </Text>
                         </div>
                     </Card>
                 </Grid.Col>

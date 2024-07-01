@@ -1,9 +1,6 @@
 import {
     Avatar,
-    Divider,
-    Drawer,
     NavLink,
-    ScrollArea,
     Text,
 } from "@mantine/core";
 import {
@@ -13,19 +10,16 @@ import {
     NotebookPen,
     UsersRound,
     Table2,
-    NotepadText,
+    FileClock
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
-import { notes } from "../../data";
-import { useDisclosure } from "@mantine/hooks";
 import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
     const location = useLocation();
     const { isAuthenticated, logout } = useAuth();
-    const [drawerOpened, { open, close }] = useDisclosure(false);
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
 
@@ -82,6 +76,14 @@ const Navbar = () => {
                                 active={location.pathname === "/notes"}
                             />
                         </Link>
+                        <Link to="/dwr">
+                            <NavLink
+                                leftSection={<FileClock strokeWidth={1} />}
+                                label="Downtime Report"
+                                mt="sm"
+                                active={location.pathname === "/dwr"}
+                            />
+                        </Link>
                         <Link to="/production">
                             <NavLink
                                 leftSection={<BarChart2 strokeWidth={1} />}
@@ -116,14 +118,6 @@ const Navbar = () => {
                             </Text>
                             <Text size="sm">{role}</Text>
                         </div>
-                        {/* <div>
-                            <NotepadText
-                                strokeWidth={1}
-                                size={30}
-                                onClick={open}
-                                style={{ cursor: "pointer" }}
-                            />
-                        </div> */}
                     </div>
                     <NavLink
                         leftSection={<LogOut strokeWidth={1} />}
@@ -133,36 +127,6 @@ const Navbar = () => {
                     />
                 </div>
             )}
-            {/* <Drawer
-                opened={drawerOpened}
-                onClose={close}
-                title="Supervisor Notes"
-                padding="md"
-                size="lg"
-                position="right"
-            >
-                <ScrollArea style={{ height: "80vh" }}>
-                    {notes.map((note) => (
-                        <div
-                            key={note.id}
-                            style={{
-                                paddingTop: "1rem",
-                                borderRadius: "8px",
-                                marginBottom: "1rem",
-                            }}
-                        >
-                            <Text size="lg" weight={700}>
-                                {note.title}
-                            </Text>
-                            <Text size="xs" c="dimmed">
-                                {new Date(note.timestamp).toLocaleString()}{" "}
-                            </Text>
-                            <Text size="sm">{note.description}</Text>
-                            <Divider my="md" />
-                        </div>
-                    ))}
-                </ScrollArea>
-            </Drawer> */}
         </>
     );
 };

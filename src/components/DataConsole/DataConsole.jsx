@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Container, Grid, Button, Table, Autocomplete } from "@mantine/core";
+import { Container, Grid, Button, Table } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
-import { formatDate } from "../../utils";
+
 
 const DataConsole = () => {
     const [startDate, setStartDate] = useState(null);
@@ -12,28 +12,31 @@ const DataConsole = () => {
 
     const handleFetchData = async () => {
         try {
-            const formattedStartDate =
-                startDate && dayjs(startDate).toISOString();
-            const formattedEndDate = endDate && dayjs(endDate).toISOString();
+            const formattedStartDate = startDate ? dayjs(startDate).toISOString() : null;
+            const formattedEndDate = endDate ? dayjs(endDate).toISOString() : null;
 
-            const url = new URL("http://localhost:8000/api/sensors/");
-            if (formattedStartDate) {
-                url.searchParams.append("start_date", formattedStartDate);
-            }
-            if (formattedEndDate) {
-                url.searchParams.append("end_date", formattedEndDate);
-            }
+            const baseURL = "http://localhost:8000/api/device_logs";
+            const params = new URLSearchParams({
+                DeviceID: "DIDa1B2c3D4",
+                TagId: "1",
+                StartDate: formattedStartDate,
+                EndDate: formattedEndDate,
+            });
 
-            const response = await fetch(url.toString());
+            const url = `${baseURL}/?${params.toString()}`;
+            console.log("Fetching data from URL:", url); // Debugging: Log the URL
+
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Failed to fetch sensor data");
             }
             const json = await response.json();
+            console.log("Fetched data:", json); // Debugging: Log the fetched data
             setSensorData(json);
             setError(null);
         } catch (error) {
             setError("Failed to fetch data");
-            console.error(error);
+            console.error("Fetch error:", error); // Debugging: Log the error
             setSensorData([]);
         }
     };
@@ -45,18 +48,21 @@ const DataConsole = () => {
     };
 
     const rows = sensorData.map((data) => (
-        <Table.Tr key={data.id}>
-            <Table.Td>{formatDate(data.timestamp)}</Table.Td>
-            <Table.Td>{data.pressure}</Table.Td>
-            <Table.Td>{data.voltage}</Table.Td>
-            <Table.Td>{data.humidity}</Table.Td>
-            <Table.Td>{data.temperature}</Table.Td>
+        <Table.Tr key={data.EventDate}>
+            <Table.Td>{dayjs(data.EventDate).format("MMM DD, HH:mm")}</Table.Td>
+            <Table.Td>{data.DeviceId}</Table.Td>
+            <Table.Td>{data.Name}</Table.Td>
+            <Table.Td>{data.Tag}</Table.Td>
+            <Table.Td>{data.Value}</Table.Td>
+            {/* Add more columns as per your API response */}
         </Table.Tr>
     ));
 
     useEffect(() => {
-        handleFetchData();
-    }, []);
+        if (startDate && endDate) {
+            handleFetchData();
+        }
+    }, [startDate, endDate]);
 
     return (
         <Container>
@@ -101,30 +107,20 @@ const DataConsole = () => {
                     >
                         Last 7 Days
                     </Button>
-                    <Button style={{ marginLeft: "10px" }}>Fetch</Button>
+                    <Button
+                        style={{ marginLeft: "10px" }}
+                        onClick={handleFetchData} // Call fetch data function on button click
+                    >
+                        Fetch
+                    </Button>
                     <Button
                         variant="light"
                         color="green"
                         style={{ marginLeft: "10px" }}
+                        onClick={handleFetchData} // Call fetch data function on button click
                     >
                         Refresh
                     </Button>
-                </Grid.Col>
-                <Grid.Col span={6} mt="auto">
-                    <Autocomplete
-                        label="Tables: "
-                        placeholder="Select a table"
-                        data={[
-                            "Sensors",
-                            "Sensor Data",
-                            "Machines",
-                            "Supervisior",
-                            "Products",
-                            "Production",
-                            "Events",
-                            "Supervisior Reports",
-                        ]}
-                    />
                 </Grid.Col>
                 <Grid.Col span={6} mt="auto">
                     <Button>Apply</Button>
@@ -135,10 +131,10 @@ const DataConsole = () => {
                 <Table verticalSpacing="sm">
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th>ID</Table.Th>
-                            <Table.Th>Timestamp</Table.Th>
-                            <Table.Th>Machine_ID</Table.Th>
-                            <Table.Th>Sensor_ID</Table.Th>
+                            <Table.Th>Event Date</Table.Th>
+                            <Table.Th>Device ID</Table.Th>
+                            <Table.Th>Name</Table.Th>
+                            <Table.Th>Tag</Table.Th>
                             <Table.Th>Value</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
@@ -148,8 +144,7 @@ const DataConsole = () => {
                         ) : (
                             <Table.Tr>
                                 <Table.Td colSpan={5}>
-                                    {/* {error && <Text c="red">{error}</Text>} */}
-                                    No data available
+                                    {error ? <span style={{ color: "red" }}>{error}</span> : "No data available"}
                                 </Table.Td>
                             </Table.Tr>
                         )}

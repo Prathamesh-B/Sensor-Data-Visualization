@@ -288,3 +288,11 @@ export const cards = [
     { id: 2, machine_id: 2, TP: 550, ER: "65", DT: "20", PR: "90" },
     { id: 3, machine_id: 3, TP: 660, ER: "50", DT: "15", PR: "70" },
 ]
+
+export const DTdata = [
+    {id:1, machine_id: 1, machine_nm:"Mitsubishi 35", dwt_type:"Outage", start:"2024-06-01T02:45:00Z", end:"2024-06-01T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rahul Singh", shift:"Afternoon"},
+    {id:2, machine_id: 2, machine_nm:"Laser Cutter", dwt_type:"Outage", start:"2024-06-03T02:45:00Z", end:"2024-06-03T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rohit Anand", shift:"Afternoon"},
+    {id:3, machine_id: 3, machine_nm:"Stratos 42", dwt_type:"Maintenance", start:"2024-06-04T02:45:00Z", end:"2024-06-04T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rahul Singh", shift:"Afternoon"},
+    {id:4, machine_id: 4, machine_nm:"Falcon 65", dwt_type:"Maintenance", start:"2024-06-05T02:45:00Z", end:"2024-06-05T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Nilesh Chutke", shift:"Afternoon"},
+    {id:5, machine_id: 5, machine_nm:"Cypher 15", dwt_type:"Outage", start:"2024-06-06T02:45:00Z", end:"2024-06-06T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rahul Singh", shift:"Afternoon"}
+]

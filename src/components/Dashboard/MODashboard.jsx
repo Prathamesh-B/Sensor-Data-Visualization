@@ -20,7 +20,7 @@ const MODashboard = () => {
         if (machineMenu && sensorMenu) {
             try {
                 const response = await fetch(
-                    `http://localhost:8000/api/device_logs/?DeviceID=${machineMenu}&TagId=${sensorMenu}&StartDate=2024-05-31T18%3A30%3A00.000Z&EndDate=2024-06-01T07%3A30%3A00.501Z`
+                    `http://localhost:8000/api/device_logs/?DeviceID=${machineMenu}&TagId=${sensorMenu}&StartDate=2024-06-01T00:00:00Z&EndDate=2024-07-01T00:00:00Z`
                 );
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
@@ -33,7 +33,6 @@ const MODashboard = () => {
                 setFilteredChartData(data);
             } catch (error) {
                 console.error("Error fetching data:", error);
-                // Handle error state or show a message to the user
                 setFilteredChartData([]);
             }
         }
@@ -215,23 +214,23 @@ const MODashboard = () => {
                                 data={[
                                     {
                                         value: "DIDa1B2c3D4",
-                                        label: "Machine A",
+                                        label: "Destacker Unit",
                                     },
                                     {
                                         value: "DIDe5F6g7H8",
-                                        label: "Machine B",
+                                        label: "Deep Drawing Press",
                                     },
                                     {
                                         value: "DIDi9J0k1L2",
-                                        label: "Machine C",
+                                        label: "Flaring Press",
                                     },
                                     {
                                         value: "DIDm3N4o5P6",
-                                        label: "Machine D",
+                                        label: "Piercing Press",
                                     },
                                     {
                                         value: "DIDq7R8s9T0",
-                                        label: "Machine E",
+                                        label: "Robotic Loader",
                                     },
                                 ]}
                                 value={machineMenu}

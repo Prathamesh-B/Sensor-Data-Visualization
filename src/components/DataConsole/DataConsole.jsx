@@ -1,42 +1,53 @@
 import { useEffect, useState } from "react";
-import { Container, Grid, Button, Table } from "@mantine/core";
+import { Container, Grid, Button, Table, Select } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 
-
 const DataConsole = () => {
+    const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
+    const [sensorMenu, setSensorMenu] = useState("12");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [sensorData, setSensorData] = useState([]);
     const [error, setError] = useState(null);
 
+    const deviceNames = {
+        1: "Destacker Unit",
+        2: "Deep Drawing press",
+        3: "Piercing Press",
+        4: "Robotic Loader",
+        5: "Flaring Press",
+    };
+
     const handleFetchData = async () => {
         try {
-            const formattedStartDate = startDate ? dayjs(startDate).toISOString() : null;
-            const formattedEndDate = endDate ? dayjs(endDate).toISOString() : null;
+            const formattedStartDate = startDate
+                ? dayjs(startDate).toISOString()
+                : null;
+            const formattedEndDate = endDate
+                ? dayjs(endDate).toISOString()
+                : null;
 
             const baseURL = "http://localhost:8000/api/device_logs";
             const params = new URLSearchParams({
-                DeviceID: "DIDa1B2c3D4",
-                TagId: "1",
+                DeviceID: machineMenu,
+                TagId: sensorMenu,
                 StartDate: formattedStartDate,
                 EndDate: formattedEndDate,
             });
 
             const url = `${baseURL}/?${params.toString()}`;
-            console.log("Fetching data from URL:", url); // Debugging: Log the URL
 
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Failed to fetch sensor data");
             }
             const json = await response.json();
-            console.log("Fetched data:", json); // Debugging: Log the fetched data
             setSensorData(json);
             setError(null);
         } catch (error) {
             setError("Failed to fetch data");
-            console.error("Fetch error:", error); // Debugging: Log the error
+            console.error("Fetch error:", error);
             setSensorData([]);
         }
     };
@@ -51,10 +62,9 @@ const DataConsole = () => {
         <Table.Tr key={data.EventDate}>
             <Table.Td>{dayjs(data.EventDate).format("MMM DD, HH:mm")}</Table.Td>
             <Table.Td>{data.DeviceId}</Table.Td>
-            <Table.Td>{data.Name}</Table.Td>
+            <Table.Td>{deviceNames[data.DeviceId]}</Table.Td>
             <Table.Td>{data.Tag}</Table.Td>
             <Table.Td>{data.Value}</Table.Td>
-            {/* Add more columns as per your API response */}
         </Table.Tr>
     ));
 
@@ -67,6 +77,60 @@ const DataConsole = () => {
     return (
         <Container>
             <Grid grow gutter="md" justify="flex-start">
+                <Grid.Col span={6}>
+                    <Select
+                        label="Machine:"
+                        allowDeselect={false}
+                        placeholder="Pick value"
+                        data={[
+                            {
+                                value: "DIDa1B2c3D4",
+                                label: "Destacker Unit",
+                            },
+                            {
+                                value: "DIDe5F6g7H8",
+                                label: "Deep Drawing Press",
+                            },
+                            {
+                                value: "DIDi9J0k1L2",
+                                label: "Flaring Press",
+                            },
+                            {
+                                value: "DIDm3N4o5P6",
+                                label: "Piercing Press",
+                            },
+                            {
+                                value: "DIDq7R8s9T0",
+                                label: "Robotic Loader",
+                            },
+                        ]}
+                        value={machineMenu}
+                        onChange={setMachineMenu}
+                    />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                    <Select
+                        label="Sensor:"
+                        allowDeselect={false}
+                        placeholder="Pick value"
+                        data={[
+                            { value: "1", label: "Watts Consumed" },
+                            { value: "2", label: "Watts Total" },
+                            { value: "3", label: "PF Ave." },
+                            { value: "4", label: "VA total" },
+                            { value: "5", label: "Vry phase" },
+                            { value: "6", label: "Vyb phase" },
+                            { value: "7", label: "Vbr phase" },
+                            { value: "8", label: "Current R" },
+                            { value: "9", label: "Current Y" },
+                            { value: "10", label: "Current B" },
+                            { value: "11", label: "Frequency" },
+                            { value: "12", label: "Temp" },
+                        ]}
+                        value={sensorMenu}
+                        onChange={setSensorMenu}
+                    />
+                </Grid.Col>
                 <Grid.Col span={6}>
                     <DateTimePicker
                         label="Start Date:"
@@ -109,7 +173,7 @@ const DataConsole = () => {
                     </Button>
                     <Button
                         style={{ marginLeft: "10px" }}
-                        onClick={handleFetchData} // Call fetch data function on button click
+                        onClick={handleFetchData}
                     >
                         Fetch
                     </Button>
@@ -117,7 +181,7 @@ const DataConsole = () => {
                         variant="light"
                         color="green"
                         style={{ marginLeft: "10px" }}
-                        onClick={handleFetchData} // Call fetch data function on button click
+                        onClick={handleFetchData}
                     >
                         Refresh
                     </Button>
@@ -144,7 +208,13 @@ const DataConsole = () => {
                         ) : (
                             <Table.Tr>
                                 <Table.Td colSpan={5}>
-                                    {error ? <span style={{ color: "red" }}>{error}</span> : "No data available"}
+                                    {error ? (
+                                        <span style={{ color: "red" }}>
+                                            {error}
+                                        </span>
+                                    ) : (
+                                        "No data available"
+                                    )}
                                 </Table.Td>
                             </Table.Tr>
                         )}

@@ -6,6 +6,7 @@ import {
     CartesianGrid,
     Tooltip,
     ResponsiveContainer,
+    Brush,
 } from "recharts";
 import { formatDate } from "../../utils";
 
@@ -39,12 +40,18 @@ const Chart = ({ data }) => {
                             position: "insideLeft",
                         }}
                     />
-                    <Tooltip />
+                    <Tooltip labelFormatter={formatDate} />
                     <Line
                         type="monotone"
                         dataKey="Value"
                         stroke="#8884d8"
                         activeDot={{ r: 8 }}
+                    />
+                    <Brush
+                        dataKey="ModifiedOn"
+                        height={20}
+                        stroke="#8884d8"
+                        tickFormatter={formatDate}
                     />
                 </LineChart>
             </ResponsiveContainer>

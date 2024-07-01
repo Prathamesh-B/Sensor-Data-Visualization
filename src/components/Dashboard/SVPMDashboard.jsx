@@ -4,6 +4,14 @@ import Alerts from "../Alerts/Alerts";
 import { useState } from "react";
 import { PackageCheck, Hourglass } from "lucide-react";
 
+const data = [
+    { name: "Destacker Unit", unit: 256, time: 12 },
+    { name: "Deep Drawing press", unit: 102, time: 7 },
+    { name: "Piercing Press", unit: 423, time: 23 },
+    { name: "Robotic Loader", unit: 523, time: 0 },
+    { name: "Flaring Press", unit: 322, time: 11 },
+];
+
 const SVPMDashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
 
@@ -86,7 +94,7 @@ const SVPMDashboard = () => {
                                 c="green"
                                 fw={700}
                             >
-                                642
+                                1,626
                             </Text>
                         </div>
                     </Card>
@@ -168,7 +176,7 @@ const SVPMDashboard = () => {
                                 c="orange"
                                 fw={700}
                             >
-                                80
+                                53
                             </Text>
                         </div>
                     </Card>
@@ -187,90 +195,84 @@ const SVPMDashboard = () => {
                             <Text size="xl">Downtime</Text>
                         </Grid.Col>
                     </Grid>
-                    <Grid grow>
-                        <Grid.Col span={3}>
-                            <Card
-                                shadow="sm"
-                                p="lg"
-                                radius="lg"
-                                className="latest-card"
-                            >
-                                <Text size="xl" fw={500}>
-                                    Mitsubishi 35
-                                </Text>
-                            </Card>
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                            <Card
-                                shadow="sm"
-                                p="lg"
-                                radius="lg"
-                                className="latest-card"
-                            >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
+                    {data.map((item, index) => (
+                        <Grid grow key={index}>
+                            <Grid.Col span={3}>
+                                <Card
+                                    shadow="sm"
+                                    p="lg"
+                                    radius="lg"
+                                    className="latest-card"
                                 >
-                                    <PackageCheck
-                                        style={{ marginRight: "1rem" }}
-                                        size={30}
-                                        strokeWidth={1}
-                                    />
-                                    <Text
-                                        size="xl"
-                                        fw={700}
-                                        c={"lime"}
-                                        style={{ fontSize: "1.6rem" }}
-                                    >
-                                        250
+                                    <Text size="xl" fw={500}>
+                                        {item.name}
                                     </Text>
-                                </div>
-                            </Card>
-                        </Grid.Col>
-                        <Grid.Col span={3}>
-                            <Popover
-                                width={200}
-                                position="bottom"
-                                withArrow
-                                shadow="md"
-                            >
-                                <Popover.Target>
-                                    <Card
-                                        shadow="sm"
-                                        p="lg"
-                                        radius="lg"
-                                        className="latest-card"
+                                </Card>
+                            </Grid.Col>
+                            <Grid.Col span={3}>
+                                <Card
+                                    shadow="sm"
+                                    p="lg"
+                                    radius="lg"
+                                    className="latest-card"
+                                >
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
                                     >
-                                        <div
+                                        <PackageCheck
+                                            style={{ marginRight: "1rem" }}
+                                            size={30}
+                                            strokeWidth={1}
+                                        />
+                                        <Text
+                                            size="xl"
+                                            fw={700}
+                                            c={"lime"}
+                                            style={{ fontSize: "1.6rem" }}
+                                        >
+                                            {item.unit}
+                                        </Text>
+                                    </div>
+                                </Card>
+                            </Grid.Col>
+                            <Grid.Col span={3}>
+                                <Card
+                                    shadow="sm"
+                                    p="lg"
+                                    radius="lg"
+                                    className="latest-card"
+                                >
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Hourglass
                                             style={{
-                                                display: "flex",
-                                                alignItems: "center",
+                                                marginRight: "1rem",
+                                            }}
+                                            size={30}
+                                            strokeWidth={1}
+                                        />
+                                        <Text
+                                            size="xl"
+                                            fw={700}
+                                            c={"orange"}
+                                            style={{
+                                                fontSize: "1.6rem",
                                             }}
                                         >
-                                            <Hourglass
-                                                style={{ marginRight: "1rem" }}
-                                                size={30}
-                                                strokeWidth={1}
-                                            />
-                                            <Text
-                                                size="xl"
-                                                fw={700}
-                                                c={"orange"}
-                                                style={{ fontSize: "1.6rem" }}
-                                            >
-                                                12 mins
-                                            </Text>
-                                        </div>
-                                    </Card>
-                                </Popover.Target>
-                                <Popover.Dropdown>
-                                    <Text size="sm">• 12 mins - 10 am</Text>
-                                </Popover.Dropdown>
-                            </Popover>
-                        </Grid.Col>
-                    </Grid>
+                                            {item.time} mins
+                                        </Text>
+                                    </div>
+                                </Card>
+                            </Grid.Col>
+                        </Grid>
+                    ))}
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} size="xl">

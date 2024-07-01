@@ -3,38 +3,41 @@ import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
 import { useState, useEffect } from "react";
-import { data as chartData, machines, sensors, cards } from "../../data";
-import { Boxes, Calendar, Cog, RefreshCw, TriangleAlert } from "lucide-react";
+import { cards } from "../../data";
 
-const FSDashboard = () => {
-    const sensorOptions = sensors.map((item) => item.name);
-    const machineOptions = machines.map((item) => item.name);
-
+const MODashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
-    const [machineMenu, setMachineMenu] = useState(machineOptions[0]);
     const [topCards, setTopCards] = useState([]);
-    const [sensorMenu, setSensorMenu] = useState(sensorOptions[6]);
+    const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
+    const [sensorMenu, setSensorMenu] = useState("12");
     const [filteredChartData, setFilteredChartData] = useState([]);
 
     useEffect(() => {
+        fetchData();
+    }, [machineMenu, sensorMenu]);
+
+    const fetchData = async () => {
         if (machineMenu && sensorMenu) {
-            // Filter chart data based on selected machine and sensor
-            const machine = machines.find((m) => m.name === machineMenu);
-            const sensor = sensors.find((s) => s.name === sensorMenu);
-            if (machine && sensor) {
-                const filteredData = chartData.filter(
-                    (item) =>
-                        item.machine_id === machine.id &&
-                        item.sensor_id === sensor.id
+            try {
+                const response = await fetch(
+                    `http://localhost:8000/api/device_logs/?DeviceID=${machineMenu}&TagId=${sensorMenu}&StartDate=2024-05-31T18%3A30%3A00.000Z&EndDate=2024-06-01T07%3A30%3A00.501Z`
                 );
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
                 const test = cards.filter(
-                    (card) => card.machine_id === machine.id
+                    (card) => card.machine_id === machineMenu
                 );
                 setTopCards(test[0]);
-                setFilteredChartData(filteredData);
+                setFilteredChartData(data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                // Handle error state or show a message to the user
+                setFilteredChartData([]);
             }
         }
-    }, [machineMenu, sensorMenu]);
+    };
 
     return (
         <>
@@ -207,22 +210,58 @@ const FSDashboard = () => {
                     <div className="dropdown-chart">
                         <div className="machine-dropdown">
                             <Select
+                                allowDeselect={false}
                                 placeholder="Pick value"
-                                data={machineOptions}
+                                data={[
+                                    {
+                                        value: "DIDa1B2c3D4",
+                                        label: "Machine A",
+                                    },
+                                    {
+                                        value: "DIDe5F6g7H8",
+                                        label: "Machine B",
+                                    },
+                                    {
+                                        value: "DIDi9J0k1L2",
+                                        label: "Machine C",
+                                    },
+                                    {
+                                        value: "DIDm3N4o5P6",
+                                        label: "Machine D",
+                                    },
+                                    {
+                                        value: "DIDq7R8s9T0",
+                                        label: "Machine E",
+                                    },
+                                ]}
                                 value={machineMenu}
                                 onChange={setMachineMenu}
                             />
                         </div>
                         <div className="sensor-dropdown">
                             <Select
+                                allowDeselect={false}
                                 placeholder="Pick value"
-                                data={sensorOptions}
+                                data={[
+                                    { value: "1", label: "Watts Consumed" },
+                                    { value: "2", label: "Watts Total" },
+                                    { value: "3", label: "PF Ave." },
+                                    { value: "4", label: "VA total" },
+                                    { value: "5", label: "Vry phase" },
+                                    { value: "6", label: "Vyb phase" },
+                                    { value: "7", label: "Vbr phase" },
+                                    { value: "8", label: "Current R" },
+                                    { value: "9", label: "Current Y" },
+                                    { value: "10", label: "Current B" },
+                                    { value: "11", label: "Frequency" },
+                                    { value: "12", label: "Temp" },
+                                ]}
                                 value={sensorMenu}
                                 onChange={setSensorMenu}
                             />
                         </div>
                     </div>
-                    <Chart data={filteredChartData} Ylable={sensorMenu} />
+                    <Chart data={filteredChartData} />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} size="xl">
@@ -237,4 +276,4 @@ const FSDashboard = () => {
     );
 };
 
-export default FSDashboard;
+export default MODashboard;

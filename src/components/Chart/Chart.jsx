@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { formatDate } from "../../utils";
 
-const Chart = ({ data, Ylable }) => {
+const Chart = ({ data }) => {
     return (
         <>
             <ResponsiveContainer width="100%" height={400} className="chart">
@@ -24,7 +24,7 @@ const Chart = ({ data, Ylable }) => {
                 >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                        dataKey="timestamp"
+                        dataKey="ModifiedOn"
                         tickFormatter={formatDate}
                         label={{
                             value: "Time",
@@ -34,7 +34,7 @@ const Chart = ({ data, Ylable }) => {
                     />
                     <YAxis
                         label={{
-                            value: Ylable,
+                            value: "Value",
                             angle: -90,
                             position: "insideLeft",
                         }}
@@ -42,7 +42,7 @@ const Chart = ({ data, Ylable }) => {
                     <Tooltip />
                     <Line
                         type="monotone"
-                        dataKey="value"
+                        dataKey="Value"
                         stroke="#8884d8"
                         activeDot={{ r: 8 }}
                     />

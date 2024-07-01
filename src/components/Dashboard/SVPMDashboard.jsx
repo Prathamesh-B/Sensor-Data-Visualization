@@ -178,7 +178,7 @@ const SVPMDashboard = () => {
                 <Grid.Col span={8}>
                     <Grid grow style={{ textAlign: "center" }}>
                         <Grid.Col span={3}>
-                            <Text size="xl">Name</Text>
+                            <Text size="xl">Machine</Text>
                         </Grid.Col>
                         <Grid.Col span={3}>
                             <Text size="xl">Production</Text>

@@ -284,15 +284,17 @@ export const notifs = [
 ];
 
 export const cards = [
-    { id: 1, machine_id: 1, TP: 650, ER: "75", DT: "45", PR: "80" },
-    { id: 2, machine_id: 2, TP: 550, ER: "65", DT: "20", PR: "90" },
-    { id: 3, machine_id: 3, TP: 660, ER: "50", DT: "15", PR: "70" },
+    { id: 1, machine_id: "DIDa1B2c3D4", TP: 650, ER: "75", DT: "45", PR: "80" },
+    { id: 2, machine_id: "DIDe5F6g7H8", TP: 550, ER: "65", DT: "20", PR: "90" },
+    { id: 3, machine_id: "DIDi9J0k1L2", TP: 660, ER: "50", DT: "15", PR: "70" },
+    { id: 3, machine_id: "DIDm3N4o5P6", TP: 530, ER: "75", DT: "0", PR: "72" },
+    { id: 3, machine_id: "DIDq7R8s9T0", TP: 150, ER: "45", DT: "60", PR: "68" },
 ]
 
 export const DTdata = [
-    {id:1, machine_id: 1, machine_nm:"Mitsubishi 35", dwt_type:"Outage", start:"2024-06-01T02:45:00Z", end:"2024-06-01T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rahul Singh", shift:"Afternoon"},
-    {id:2, machine_id: 2, machine_nm:"Laser Cutter", dwt_type:"Outage", start:"2024-06-03T02:45:00Z", end:"2024-06-03T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rohit Anand", shift:"Afternoon"},
-    {id:3, machine_id: 3, machine_nm:"Stratos 42", dwt_type:"Maintenance", start:"2024-06-04T02:45:00Z", end:"2024-06-04T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rahul Singh", shift:"Afternoon"},
-    {id:4, machine_id: 4, machine_nm:"Falcon 65", dwt_type:"Maintenance", start:"2024-06-05T02:45:00Z", end:"2024-06-05T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Nilesh Chutke", shift:"Afternoon"},
-    {id:5, machine_id: 5, machine_nm:"Cypher 15", dwt_type:"Outage", start:"2024-06-06T02:45:00Z", end:"2024-06-06T03:30:00Z", lost:"45", rc:"Sensor Failure", fm:"Rahul Singh", shift:"Afternoon"}
+    { id: 1, machine_id: 1, machine_nm: "Mitsubishi 35", dwt_type: "Outage", start: "2024-06-01T02:45:00Z", end: "2024-06-01T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
+    { id: 2, machine_id: 2, machine_nm: "Laser Cutter", dwt_type: "Outage", start: "2024-06-03T02:45:00Z", end: "2024-06-03T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rohit Anand", shift: "Afternoon" },
+    { id: 3, machine_id: 3, machine_nm: "Stratos 42", dwt_type: "Maintenance", start: "2024-06-04T02:45:00Z", end: "2024-06-04T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
+    { id: 4, machine_id: 4, machine_nm: "Falcon 65", dwt_type: "Maintenance", start: "2024-06-05T02:45:00Z", end: "2024-06-05T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Nilesh Chutke", shift: "Afternoon" },
+    { id: 5, machine_id: 5, machine_nm: "Cypher 15", dwt_type: "Outage", start: "2024-06-06T02:45:00Z", end: "2024-06-06T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" }
 ]

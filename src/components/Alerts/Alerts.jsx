@@ -12,37 +12,63 @@ import { Info, AlertTriangle, AlertOctagon } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
 
+const alertsData = [
+    {
+        id: 1,
+        type: "error",
+        title: "Oil Filter Clogged for Destacker Unit",
+        description: "",
+        timestamp: "2024-07-01T10:00:00Z",
+        duration: "",
+    },
+    {
+        id: 1,
+        type: "error",
+        title: "Part Location Issue",
+        description: "",
+        timestamp: "2024-07-01T12:00:00Z",
+        duration: "",
+    },
+    {
+        id: 1,
+        type: "info",
+        title: "Destacker Unit Started",
+        description: "",
+        timestamp: "2024-07-01T13:00:00Z",
+        duration: "",
+    },
+    {
+        id: 1,
+        type: "warning",
+        title: "Double sheet feed",
+        description: "",
+        timestamp: "2024-07-01T15:00:00Z",
+        duration: "",
+    },
+];
+
 const Notes = () => {
-    const [events, setEvents] = useState([
-        {
-            id: 1,
-            type: "error",
-            title: "Error while fetching data",
-            description: "",
-            timestamp: "",
-            duration: "",
-        },
-    ]);
-    const [loading, setLoading] = useState(true);
+    const [events, setEvents] = useState(alertsData);
+    const [loading, setLoading] = useState(false);
     const [opened, { open, close }] = useDisclosure(false);
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await fetch("http://localhost:3000/events/");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch events");
-                }
-                const data = await response.json();
-                setEvents(data);
-            } catch (error) {
-                console.error("Error fetching events:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchEvents();
-    }, []);
+    // useEffect(() => {
+    //     const fetchEvents = async () => {
+    //         try {
+    //             const response = await fetch("http://localhost:3000/events/");
+    //             if (!response.ok) {
+    //                 throw new Error("Failed to fetch events");
+    //             }
+    //             const data = await response.json();
+    //             setEvents(data);
+    //         } catch (error) {
+    //             console.error("Error fetching events:", error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+    //     fetchEvents();
+    // }, []);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);

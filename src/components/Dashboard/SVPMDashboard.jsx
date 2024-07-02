@@ -1,19 +1,59 @@
-import { Menu, Card, Grid, Popover, ScrollArea, Text } from "@mantine/core";
+import { Menu, Card, Grid, ScrollArea, Text } from "@mantine/core";
 import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import { useState } from "react";
 import { PackageCheck, Hourglass } from "lucide-react";
 
-const data = [
-    { name: "Destacker Unit", unit: 256, time: 12 },
-    { name: "Deep Drawing press", unit: 102, time: 7 },
-    { name: "Piercing Press", unit: 423, time: 23 },
-    { name: "Robotic Loader", unit: 523, time: 0 },
-    { name: "Flaring Press", unit: 322, time: 11 },
-];
+const dataSets = {
+    Today: {
+        data: [
+            { name: "Destacker Unit", unit: 256, time: 12 },
+            { name: "Deep Drawing press", unit: 102, time: 7 },
+            { name: "Piercing Press", unit: 423, time: 23 },
+            { name: "Robotic Loader", unit: 523, time: 0 },
+            { name: "Flaring Press", unit: 322, time: 11 },
+        ],
+        production: 1626,
+        efficiency: "80%",
+        activeMachines: 2,
+        downtime: 53,
+    },
+    Yesterday: {
+        data: [
+            { name: "Destacker Unit", unit: 300, time: 10 },
+            { name: "Deep Drawing press", unit: 150, time: 5 },
+            { name: "Piercing Press", unit: 400, time: 20 },
+            { name: "Robotic Loader", unit: 500, time: 2 },
+            { name: "Flaring Press", unit: 350, time: 9 },
+        ],
+        production: 1540,
+        efficiency: "78%",
+        activeMachines: 3,
+        downtime: 45,
+    },
+    "Last 7 Days": {
+        data: [
+            { name: "Destacker Unit", unit: 2000, time: 70 },
+            { name: "Deep Drawing press", unit: 1200, time: 40 },
+            { name: "Piercing Press", unit: 2900, time: 160 },
+            { name: "Robotic Loader", unit: 3200, time: 10 },
+            { name: "Flaring Press", unit: 2200, time: 90 },
+        ],
+        production: 10200,
+        efficiency: "85%",
+        activeMachines: 4,
+        downtime: 230,
+    },
+};
 
 const SVPMDashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
+    const [dataSet, setDataSet] = useState(dataSets["Today"]);
+
+    const handleMenuClick = (range) => {
+        setRangeMenu(range);
+        setDataSet(dataSets[range]);
+    };
 
     return (
         <>
@@ -55,16 +95,16 @@ const SVPMDashboard = () => {
                         </Menu.Target>
                         <Menu.Dropdown>
                             <Menu.Label>Day Range</Menu.Label>
-                            <Menu.Item onClick={() => setRangeMenu("Today")}>
+                            <Menu.Item onClick={() => handleMenuClick("Today")}>
                                 Today
                             </Menu.Item>
                             <Menu.Item
-                                onClick={() => setRangeMenu("Yesterday")}
+                                onClick={() => handleMenuClick("Yesterday")}
                             >
                                 Yesterday
                             </Menu.Item>
                             <Menu.Item
-                                onClick={() => setRangeMenu("Last 7 Days")}
+                                onClick={() => handleMenuClick("Last 7 Days")}
                             >
                                 Last 7 Days
                             </Menu.Item>
@@ -84,7 +124,6 @@ const SVPMDashboard = () => {
                                     style={{ width: "2.5rem" }}
                                     src="./production.png"
                                 />
-
                                 <Text size="sm" fw={400}>
                                     Production
                                 </Text>
@@ -94,7 +133,7 @@ const SVPMDashboard = () => {
                                 c="green"
                                 fw={700}
                             >
-                                1,626
+                                {dataSet.production}
                             </Text>
                         </div>
                     </Card>
@@ -122,7 +161,7 @@ const SVPMDashboard = () => {
                                 c="indigo"
                                 fw={700}
                             >
-                                80%
+                                {dataSet.efficiency}
                             </Text>
                         </div>
                     </Card>
@@ -149,7 +188,7 @@ const SVPMDashboard = () => {
                                 c="teal"
                                 fw={700}
                             >
-                                2
+                                {dataSet.activeMachines}
                             </Text>
                         </div>
                     </Card>
@@ -176,7 +215,7 @@ const SVPMDashboard = () => {
                                 c="orange"
                                 fw={700}
                             >
-                                53
+                                {dataSet.downtime}
                             </Text>
                         </div>
                     </Card>
@@ -195,7 +234,7 @@ const SVPMDashboard = () => {
                             <Text size="xl">Downtime</Text>
                         </Grid.Col>
                     </Grid>
-                    {data.map((item, index) => (
+                    {dataSet.data.map((item, index) => (
                         <Grid grow key={index}>
                             <Grid.Col span={3}>
                                 <Card

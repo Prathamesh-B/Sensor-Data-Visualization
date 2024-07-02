@@ -14,17 +14,50 @@ const MODashboard = () => {
 
     useEffect(() => {
         fetchData();
-    }, [machineMenu, sensorMenu]);
+    }, [machineMenu, sensorMenu, rangeMenu]);
 
     const fetchData = async () => {
         if (machineMenu && sensorMenu) {
             try {
+                let startDate = new Date().toISOString();
+                let endDate = new Date().toISOString();
+
+                switch (rangeMenu) {
+                    case "Today":
+                        startDate =
+                            new Date().toISOString().split("T")[0] +
+                            "T00:00:00Z";
+                        break;
+                    case "Yesterday":
+                        var yesterday = new Date();
+                        yesterday.setDate(yesterday.getDate() - 1);
+                        startDate =
+                            yesterday.toISOString().split("T")[0] +
+                            "T00:00:00Z";
+                        endDate =
+                            new Date(yesterday).toISOString().split("T")[0] +
+                            "T23:59:59Z";
+                        break;
+                    case "Last 7 Days":
+                        var lastWeek = new Date();
+                        lastWeek.setDate(lastWeek.getDate() - 6);
+                        startDate =
+                            lastWeek.toISOString().split("T")[0] + "T00:00:00Z";
+                        break;
+                    default:
+                        break;
+                }
+
+                console.log(startDate, endDate);
+
                 const response = await fetch(
-                    `http://localhost:8000/api/device_logs/?DeviceID=${machineMenu}&TagId=${sensorMenu}&StartDate=2024-06-01T00:00:00Z&EndDate=2024-07-01T00:00:00Z`
+                    `http://localhost:8000/api/device_logs/?DeviceID=${machineMenu}&TagId=${sensorMenu}&StartDate=${startDate}&EndDate=${endDate}`
                 );
+
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
+
                 const data = await response.json();
                 const test = cards.filter(
                     (card) => card.machine_id === machineMenu

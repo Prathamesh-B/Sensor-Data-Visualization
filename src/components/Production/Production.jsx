@@ -9,8 +9,49 @@ import {
 } from "@mantine/core";
 import "./Production.css";
 import { status } from "../../data";
+import { useEffect, useState } from "react";
 
 const Production = () => {
+    const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
+    const [sensorMenu, setSensorMenu] = useState("12");
+    const [devices, setDevices] = useState([]);
+    const [deviceTags, setDeviceTags] = useState([]);
+
+    useEffect(() => {
+        fetchDevicesAndTags();
+    }, []);
+
+    const fetchDevicesAndTags = async () => {
+        try {
+            const deviceResponse = await fetch("/api/devices/");
+            const tagResponse = await fetch("/api/device-tags/");
+            if (!deviceResponse.ok || !tagResponse.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const devicesData = await deviceResponse.json();
+            const tagsData = await tagResponse.json();
+
+            // Ensure unique and defined values for devices and tags
+            const uniqueDevices = Array.from(
+                new Set(devicesData.map((device) => device.DeviceId))
+            ).map((id) => devicesData.find((device) => device.DeviceId === id));
+            const uniqueTags = Array.from(
+                new Set(tagsData.map((tag) => tag.id))
+            ).map((id) => tagsData.find((tag) => tag.id === id));
+
+            setDevices(
+                uniqueDevices.filter(
+                    (device) => device && device.DeviceId && device.Name
+                )
+            );
+            setDeviceTags(
+                uniqueTags.filter((tag) => tag && tag.id && tag.Name)
+            );
+        } catch (error) {
+            console.error("Error fetching devices or tags:", error);
+        }
+    };
+
     const rows = status.map((Status) => (
         <Table.Tr key={Status.name}>
             <Table.Td>{Status.name}</Table.Td>
@@ -91,20 +132,28 @@ const Production = () => {
                     <Grid grow align="center" gutter="md">
                         <Grid.Col>
                             <Select
-                                label="Machine"
+                                label="Machine:"
+                                allowDeselect={false}
                                 placeholder="Pick value"
-                                data={["Machine 1", "Machine 2", "Machine 3"]}
+                                data={devices.map((device) => ({
+                                    value: device.DeviceId.toString(),
+                                    label: device.Name,
+                                }))}
+                                value={machineMenu}
+                                onChange={setMachineMenu}
                             />
                         </Grid.Col>
                         <Grid.Col>
                             <Select
-                                label="Product"
+                                label="Sensor:"
+                                allowDeselect={false}
                                 placeholder="Pick value"
-                                data={[
-                                    "Structural Steel Beams",
-                                    "Silicone Gels",
-                                    "Tool Steel Rods",
-                                ]}
+                                data={deviceTags.map((tag) => ({
+                                    value: tag.id.toString(),
+                                    label: tag.Name,
+                                }))}
+                                value={sensorMenu}
+                                onChange={setSensorMenu}
                             />
                         </Grid.Col>
                         <Grid.Col>

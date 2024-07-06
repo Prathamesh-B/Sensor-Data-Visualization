@@ -22,7 +22,7 @@ const alertsData = [
         duration: "",
     },
     {
-        id: 1,
+        id: 2,
         type: "error",
         title: "Part Location Issue",
         description: "",
@@ -30,7 +30,7 @@ const alertsData = [
         duration: "",
     },
     {
-        id: 1,
+        id: 3,
         type: "info",
         title: "Destacker Unit Started",
         description: "",
@@ -38,7 +38,7 @@ const alertsData = [
         duration: "",
     },
     {
-        id: 1,
+        id: 4,
         type: "warning",
         title: "Double sheet feed",
         description: "",

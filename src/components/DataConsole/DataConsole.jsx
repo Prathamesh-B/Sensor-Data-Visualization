@@ -10,6 +10,8 @@ const DataConsole = () => {
     const [endDate, setEndDate] = useState(null);
     const [sensorData, setSensorData] = useState([]);
     const [error, setError] = useState(null);
+    const [devices, setDevices] = useState([]);
+    const [deviceTags, setDeviceTags] = useState([]);
 
     const deviceNames = {
         1: "Destacker Unit",
@@ -17,6 +19,41 @@ const DataConsole = () => {
         3: "Piercing Press",
         4: "Robotic Loader",
         5: "Flaring Press",
+    };
+
+    useEffect(() => {
+        fetchDevicesAndTags();
+    }, []);
+
+    const fetchDevicesAndTags = async () => {
+        try {
+            const deviceResponse = await fetch("/api/devices/");
+            const tagResponse = await fetch("/api/device-tags/");
+            if (!deviceResponse.ok || !tagResponse.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const devicesData = await deviceResponse.json();
+            const tagsData = await tagResponse.json();
+
+            // Ensure unique and defined values for devices and tags
+            const uniqueDevices = Array.from(
+                new Set(devicesData.map((device) => device.DeviceId))
+            ).map((id) => devicesData.find((device) => device.DeviceId === id));
+            const uniqueTags = Array.from(
+                new Set(tagsData.map((tag) => tag.id))
+            ).map((id) => tagsData.find((tag) => tag.id === id));
+
+            setDevices(
+                uniqueDevices.filter(
+                    (device) => device && device.DeviceId && device.Name
+                )
+            );
+            setDeviceTags(
+                uniqueTags.filter((tag) => tag && tag.id && tag.Name)
+            );
+        } catch (error) {
+            console.error("Error fetching devices or tags:", error);
+        }
     };
 
     const handleFetchData = async () => {
@@ -28,7 +65,7 @@ const DataConsole = () => {
                 ? dayjs(endDate).toISOString()
                 : null;
 
-            const baseURL = "http://localhost:8000/api/device_logs";
+            const baseURL = "/ProdvizBack/api/device_logs";
             const params = new URLSearchParams({
                 DeviceID: machineMenu,
                 TagId: sensorMenu,
@@ -82,28 +119,10 @@ const DataConsole = () => {
                         label="Machine:"
                         allowDeselect={false}
                         placeholder="Pick value"
-                        data={[
-                            {
-                                value: "DIDa1B2c3D4",
-                                label: "Destacker Unit",
-                            },
-                            {
-                                value: "DIDe5F6g7H8",
-                                label: "Deep Drawing Press",
-                            },
-                            {
-                                value: "DIDi9J0k1L2",
-                                label: "Flaring Press",
-                            },
-                            {
-                                value: "DIDm3N4o5P6",
-                                label: "Piercing Press",
-                            },
-                            {
-                                value: "DIDq7R8s9T0",
-                                label: "Robotic Loader",
-                            },
-                        ]}
+                        data={devices.map((device) => ({
+                            value: device.DeviceId.toString(),
+                            label: device.Name,
+                        }))}
                         value={machineMenu}
                         onChange={setMachineMenu}
                     />
@@ -113,20 +132,10 @@ const DataConsole = () => {
                         label="Sensor:"
                         allowDeselect={false}
                         placeholder="Pick value"
-                        data={[
-                            { value: "1", label: "Watts Consumed" },
-                            { value: "2", label: "Watts Total" },
-                            { value: "3", label: "PF Ave." },
-                            { value: "4", label: "VA total" },
-                            { value: "5", label: "Vry phase" },
-                            { value: "6", label: "Vyb phase" },
-                            { value: "7", label: "Vbr phase" },
-                            { value: "8", label: "Current R" },
-                            { value: "9", label: "Current Y" },
-                            { value: "10", label: "Current B" },
-                            { value: "11", label: "Frequency" },
-                            { value: "12", label: "Temp" },
-                        ]}
+                        data={deviceTags.map((tag) => ({
+                            value: tag.id.toString(),
+                            label: tag.Name,
+                        }))}
                         value={sensorMenu}
                         onChange={setSensorMenu}
                     />

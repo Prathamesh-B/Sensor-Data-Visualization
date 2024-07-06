@@ -114,33 +114,33 @@ const Notes = () => {
             >
                 <form onSubmit={close}>
                     <TextInput placeholder="Enter Title" label="Title" />
-                    <br></br>
+                    <br />
                     <DateTimePicker
                         placeholder="Pick date and time of the Incident"
                         label="Time of the Incident"
                     />
-                    <br></br>
+                    <br />
                     <Textarea
                         placeholder="Enter the cause of the Incident"
                         label="Cause of the Incident"
                         autosize
                         minRows={5}
                     />
-                    <br></br>
+                    <br />
                     <div>
                         <Select
                             label="Category of the incident"
                             placeholder="Pick a category"
                             data={["Breakdown", "Material Shortage"]}
                         />
-                        <br></br>
+                        <br />
                         <Select
                             label="Sub-Category of the incident"
                             placeholder="Pick a sub-category"
                             data={["Breakdown", "Material Shortage"]}
                         />
                     </div>
-                    <br></br>
+                    <br />
                     <Button type="submit" variant="filled">
                         Submit
                     </Button>
@@ -163,40 +163,37 @@ const Notes = () => {
                             }}
                             onClick={open}
                         >
-                            <Text
-                                fw={500}
+                            <div
                                 style={{
-                                    color: getBackgroundColorByType(event.type),
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
                                 }}
                             >
                                 <div
                                     style={{
                                         display: "flex",
                                         alignItems: "center",
-                                        justifyContent: "space-between",
                                     }}
                                 >
-                                    <div
+                                    {getIconByType(event.type)}
+                                    <Text
+                                        fw={500}
                                         style={{
-                                            display: "flex",
-                                            alignItems: "center",
+                                            color: getBackgroundColorByType(
+                                                event.type
+                                            ),
+                                            marginLeft: "0.5rem",
+                                            marginBottom: "0.2rem",
                                         }}
                                     >
-                                        {getIconByType(event.type)}
-                                        <span
-                                            style={{
-                                                marginLeft: "0.5rem",
-                                                marginBottom: "0.2rem",
-                                            }}
-                                        >
-                                            {event.title}
-                                        </span>
-                                    </div>
-                                    <Text size="sm" c="gray">
-                                        {formatTime(event.timestamp)}
+                                        {event.title}
                                     </Text>
                                 </div>
-                            </Text>
+                                <Text size="sm" c="gray">
+                                    {formatTime(event.timestamp)}
+                                </Text>
+                            </div>
                             <Text w={300} truncate="end">
                                 {event.description}
                             </Text>

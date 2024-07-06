@@ -32,7 +32,6 @@ const MODashboard = () => {
             const devicesData = await deviceResponse.json();
             const tagsData = await tagResponse.json();
 
-            // Ensure unique and defined values for devices and tags
             const uniqueDevices = Array.from(
                 new Set(devicesData.map((device) => device.DeviceId))
             ).map((id) => devicesData.find((device) => device.DeviceId === id));

@@ -1,8 +1,4 @@
-import {
-    Avatar,
-    NavLink,
-    Text,
-} from "@mantine/core";
+import { Avatar, NavLink, Text } from "@mantine/core";
 import {
     BarChart2,
     LayoutDashboard,
@@ -10,7 +6,7 @@ import {
     NotebookPen,
     UsersRound,
     Table2,
-    FileClock
+    FileClock,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -48,62 +44,56 @@ const Navbar = () => {
                 <div className="logo">ProdViz</div>
                 {isAuthenticated ? (
                     <>
-                        <Link to={getDashboardLink()}>
-                            <NavLink
-                                leftSection={
-                                    <LayoutDashboard strokeWidth={1} />
-                                }
-                                mt="sm"
-                                label="Dashboard"
-                                active={
-                                    location.pathname === getDashboardLink()
-                                }
-                            />
-                        </Link>
-                        <Link to="/console">
-                            <NavLink
-                                leftSection={<Table2 strokeWidth={1} />}
-                                label="Data Console"
-                                mt="sm"
-                                active={location.pathname === "/console"}
-                            />
-                        </Link>
-                        <Link to="/notes">
-                            <NavLink
-                                leftSection={<NotebookPen strokeWidth={1} />}
-                                label="Reports"
-                                mt="sm"
-                                active={location.pathname === "/notes"}
-                            />
-                        </Link>
-                        <Link to="/dwr">
-                            <NavLink
-                                leftSection={<FileClock strokeWidth={1} />}
-                                label="Downtime Report"
-                                mt="sm"
-                                active={location.pathname === "/dwr"}
-                            />
-                        </Link>
-                        <Link to="/production">
-                            <NavLink
-                                leftSection={<BarChart2 strokeWidth={1} />}
-                                label="Production"
-                                mt="sm"
-                                active={location.pathname === "/production"}
-                            />
-                        </Link>
+                        <NavLink
+                            component={Link}
+                            to={getDashboardLink()}
+                            leftSection={<LayoutDashboard strokeWidth={1} />}
+                            mt="sm"
+                            label="Dashboard"
+                            active={location.pathname === getDashboardLink()}
+                        />
+                        <NavLink
+                            component={Link}
+                            to="/console"
+                            leftSection={<Table2 strokeWidth={1} />}
+                            label="Data Console"
+                            mt="sm"
+                            active={location.pathname === "/console"}
+                        />
+                        <NavLink
+                            component={Link}
+                            to="/notes"
+                            leftSection={<NotebookPen strokeWidth={1} />}
+                            label="Reports"
+                            mt="sm"
+                            active={location.pathname === "/notes"}
+                        />
+                        <NavLink
+                            component={Link}
+                            to="/dwr"
+                            leftSection={<FileClock strokeWidth={1} />}
+                            label="Downtime Report"
+                            mt="sm"
+                            active={location.pathname === "/dwr"}
+                        />
+                        <NavLink
+                            component={Link}
+                            to="/production"
+                            leftSection={<BarChart2 strokeWidth={1} />}
+                            label="Production"
+                            mt="sm"
+                            active={location.pathname === "/production"}
+                        />
                     </>
                 ) : (
-                    <>
-                        <Link to="/login">
-                            <NavLink
-                                leftSection={<UsersRound strokeWidth={1} />}
-                                label="Login"
-                                mt="sm"
-                                active={location.pathname === "/login"}
-                            />
-                        </Link>
-                    </>
+                    <NavLink
+                        component={Link}
+                        to="/login"
+                        leftSection={<UsersRound strokeWidth={1} />}
+                        label="Login"
+                        mt="sm"
+                        active={location.pathname === "/login"}
+                    />
                 )}
             </div>
             {isAuthenticated && (
@@ -120,8 +110,9 @@ const Navbar = () => {
                         </div>
                     </div>
                     <NavLink
-                        leftSection={<LogOut strokeWidth={1} />}
+                        component="div"
                         label="Logout"
+                        leftSection={<LogOut strokeWidth={1} />}
                         mt="sm"
                         onClick={logout}
                     />

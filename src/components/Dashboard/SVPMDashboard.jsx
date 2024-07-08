@@ -7,42 +7,42 @@ import { PackageCheck, Hourglass } from "lucide-react";
 const dataSets = {
     Today: {
         data: [
-            { name: "Destacker Unit", unit: 256, time: 12 },
-            { name: "Deep Drawing press", unit: 102, time: 7 },
-            { name: "Piercing Press", unit: 423, time: 23 },
-            { name: "Robotic Loader", unit: 523, time: 0 },
-            { name: "Flaring Press", unit: 322, time: 11 },
+            { name: "Destacker Unit", unit: 256, time: 2 },
+            { name: "Deep Drawing press", unit: 255, time: 1 },
+            { name: "Piercing Press", unit: 254, time: 2 },
+            { name: "Flaring Press", unit: 252, time: 1 },
+            { name: "Robotic Unloader", unit: 252, time: 0 },
         ],
-        production: 1626,
-        efficiency: "80%",
-        activeMachines: 2,
-        downtime: 53,
+        production: 252,
+        efficiency: "80",
+        activeMachines: 1,
+        downtime: 6,
     },
     Yesterday: {
         data: [
-            { name: "Destacker Unit", unit: 300, time: 10 },
-            { name: "Deep Drawing press", unit: 150, time: 5 },
-            { name: "Piercing Press", unit: 400, time: 20 },
-            { name: "Robotic Loader", unit: 500, time: 2 },
-            { name: "Flaring Press", unit: 350, time: 9 },
+            { name: "Destacker Unit", unit: 300, time: 1 },
+            { name: "Deep Drawing press", unit: 298, time: 2 },
+            { name: "Piercing Press", unit: 297, time: 0 },
+            { name: "Flaring Press", unit: 297, time: 0 },
+            { name: "Robotic Unloader", unit: 297, time: 0 },
         ],
-        production: 1540,
-        efficiency: "78%",
-        activeMachines: 3,
-        downtime: 45,
+        production: 297,
+        efficiency: "78",
+        activeMachines: 1,
+        downtime: 3,
     },
     "Last 7 Days": {
         data: [
-            { name: "Destacker Unit", unit: 2000, time: 70 },
-            { name: "Deep Drawing press", unit: 1200, time: 40 },
-            { name: "Piercing Press", unit: 2900, time: 160 },
-            { name: "Robotic Loader", unit: 3200, time: 10 },
-            { name: "Flaring Press", unit: 2200, time: 90 },
+            { name: "Destacker Unit", unit: 2100, time: 5 },
+            { name: "Deep Drawing press", unit: 2089, time: 4 },
+            { name: "Piercing Press", unit: 2089, time: 3 },
+            { name: "Flaring Press", unit: 2086, time: 1 },
+            { name: "Robotic Unloader", unit: 2086, time: 0 },
         ],
-        production: 10200,
-        efficiency: "85%",
-        activeMachines: 4,
-        downtime: 230,
+        production: 2086,
+        efficiency: "85",
+        activeMachines: 1,
+        downtime: 13,
     },
 };
 
@@ -145,14 +145,14 @@ const SVPMDashboard = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <div style={{ display: "flex", alignItems: "flex-end" }}>
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./efficiency.png"
                                 />
                                 <Text size="sm" fw={400}>
-                                    Efficiency
+                                    Availability
                                 </Text>
                             </div>
 
@@ -161,7 +161,7 @@ const SVPMDashboard = () => {
                                 c="indigo"
                                 fw={700}
                             >
-                                {dataSet.efficiency}
+                                {dataSet.efficiency}%
                             </Text>
                         </div>
                     </Card>
@@ -180,7 +180,7 @@ const SVPMDashboard = () => {
                                     src="./machine.png"
                                 />
                                 <Text size="sm" fw={400}>
-                                    Active Machines
+                                    Active Lines
                                 </Text>
                             </div>
                             <Text

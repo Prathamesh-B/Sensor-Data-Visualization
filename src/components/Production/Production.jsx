@@ -17,6 +17,19 @@ const Production = () => {
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
 
+    const getColorByStatus = (status) =>{
+        switch (status) {
+            case "Running":
+                return "#05cf2d";
+            case "Under Maintenance":
+                return "#ffa618";
+            case "Stopped":
+                return "#ff0026";
+            default:
+                return "#000000";
+        }
+    }
+
     useEffect(() => {
         fetchDevicesAndTags();
     }, []);
@@ -59,7 +72,11 @@ const Production = () => {
     const rows = status.map((Status) => (
         <Table.Tr key={Status.name}>
             <Table.Td>{Status.name}</Table.Td>
-            <Table.Td>{Status.status}</Table.Td>
+            <Table.Td
+            style={{
+                fontWeight: 700,
+                color:getColorByStatus(Status.status)}}
+            >{Status.status}</Table.Td>
         </Table.Tr>
     ));
 
@@ -73,17 +90,23 @@ const Production = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "3rem" }}
+                                    src="./production.png"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Units Produced
+                                </Text>
+                            </div>
                             <Text
-                                style={{ fontSize: "1.6rem" }}
+                                style={{ fontSize: "2.5rem" }}
                                 c="blue"
                                 fw={700}
                             >
                                 640
                             </Text>
-                            <Text size="md" fw={400}>
-                                Units produced
-                            </Text>
                         </div>
                     </Card>
                 </Grid.Col>
@@ -94,16 +117,49 @@ const Production = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div>
+                        <div  style={{ display: "flex", alignItems: "center" }}>
+                            <div  style={{ marginRight: "1rem" }}>
+                            <img
+                                    style={{ width: "3rem" }}
+                                    src="./production_target.png"
+                                />
+                            <Text size="sm" fw={400}>
+                                Production Target
+                            </Text>
+                            </div>
                             <Text
-                                style={{ fontSize: "1.6rem" }}
+                                style={{ fontSize: "2.5rem" }}
                                 fw={700}
                                 c="yellow"
                             >
                                 800
                             </Text>
-                            <Text size="md" fw={400}>
-                                Production Target
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col span={{ base: 6, md: 3 }}>
+                    <Card
+                        shadow="sm"
+                        p="lg"
+                        radius="lg"
+                        className="latest-card"
+                    >
+                        <div  style={{ display: "flex", alignItems: "center" }}>
+                            <div  style={{ marginRight: "1rem" }}>
+                            <img
+                                    style={{ width: "3rem" }}
+                                    src="./production-rate.png"
+                                />
+                            <Text size="sm" fw={400}>
+                                Production Rate
+                            </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "2.5rem" }}
+                                fw={700}
+                                c="lime"
+                            >
+                                80%
                             </Text>
                         </div>
                     </Card>
@@ -115,16 +171,22 @@ const Production = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div>
-                            <Text
-                                style={{ fontSize: "1.6rem" }}
-                                fw={700}
-                                c="lime"
-                            >
-                                80%
+                        <div  style={{ display: "flex", alignItems: "center" }}>
+                            <div  style={{ marginRight: "1rem" }}>
+                            <img
+                                    style={{ width: "3rem" }}
+                                    src="./down-time.png"
+                                />
+                            <Text size="sm" fw={400}>
+                                Avg Downtime (mins)
                             </Text>
-                            <Text size="md" fw={400}>
-                                Production Rate
+                            </div>
+                            <Text
+                                style={{ fontSize: "2.5rem" }}
+                                fw={700}
+                                c="orange"
+                            >
+                                5
                             </Text>
                         </div>
                     </Card>

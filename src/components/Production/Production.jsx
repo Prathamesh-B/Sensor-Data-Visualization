@@ -23,8 +23,12 @@ const Production = () => {
 
     const fetchDevicesAndTags = async () => {
         try {
-            const deviceResponse = await fetch("/api/devices/");
-            const tagResponse = await fetch("/api/device-tags/");
+            const deviceResponse = await fetch(
+                "http://127.0.0.1:8000/api/devices/"
+            );
+            const tagResponse = await fetch(
+                "http://127.0.0.1:8000/api/device-tags/"
+            );
             if (!deviceResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
             }

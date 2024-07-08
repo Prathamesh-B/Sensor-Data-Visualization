@@ -9,7 +9,9 @@
 }
 
 .title {
-    margin-bottom: 20px;
+    font-weight: 700;
+    margin-top: 0.25rem;
+    font-size: 1.6em;
     color: #333;
 }
 
@@ -72,4 +74,9 @@ button.btn:hover {
 
 .role-btn:hover {
     background: #c8dff7;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
 }

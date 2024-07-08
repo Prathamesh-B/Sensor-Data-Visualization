@@ -1,19 +1,52 @@
 import { useEffect, useState } from "react";
-import { Container, Grid, Button, Table, Autocomplete } from "@mantine/core";
+import {
+    Container,
+    Grid,
+    Button,
+    Table,
+    Autocomplete,
+    Select,
+} from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
-// import dayjs from "dayjs";
 import { formatDate } from "../../utils";
 import { DTdata } from "../../data";
 
 const DowntimeReport = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    // const [DTData, setDTData] = useState([]);
-    // const [error, setError] = useState(null);
+    const [devices, setDevices] = useState([]);
+    const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
 
-    const handleFetchData = async () => {
-    
+    useEffect(() => {
+        fetchDevicesAndTags();
+    }, []);
+
+    const fetchDevicesAndTags = async () => {
+        try {
+            const deviceResponse = await fetch(
+                "http://127.0.0.1:8000/api/devices/"
+            );
+            if (!deviceResponse.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const devicesData = await deviceResponse.json();
+
+            // Ensure unique and defined values for devices and tags
+            const uniqueDevices = Array.from(
+                new Set(devicesData.map((device) => device.DeviceId))
+            ).map((id) => devicesData.find((device) => device.DeviceId === id));
+
+            setDevices(
+                uniqueDevices.filter(
+                    (device) => device && device.DeviceId && device.Name
+                )
+            );
+        } catch (error) {
+            console.error("Error fetching devices or tags:", error);
+        }
     };
+
+    const handleFetchData = async () => {};
 
     const rows = DTdata.map((data) => (
         <Table.Tr key={data.id}>
@@ -33,15 +66,12 @@ const DowntimeReport = () => {
 
     return (
         <Container>
-            <Grid  gutter="md" justify="flex-start" mt={"12px"}>
-            <Grid.Col span={3} mt="auto">
+            <Grid gutter="md" justify="flex-start" mt={"12px"}>
+                <Grid.Col span={3} mt="auto">
                     <Autocomplete
                         label="Downtime Type: "
                         placeholder="Select a type"
-                        data={[
-                            "Outages",
-                            "Maintenance",
-                        ]}
+                        data={["Outages", "Maintenance"]}
                     />
                 </Grid.Col>
                 <Grid.Col span={3}>
@@ -63,16 +93,16 @@ const DowntimeReport = () => {
                     />
                 </Grid.Col>
                 <Grid.Col span={3} mt="auto">
-                    <Autocomplete
-                        label="Machines: "
-                        placeholder="Select a machine"
-                        data={[
-                            "Mitsubishi 35",
-                            "Laser Cutter",
-                            "Stratos 42",
-                            "Falcon 65",
-                            "Cypher 15"
-                        ]}
+                    <Select
+                        label="Machine:"
+                        allowDeselect={false}
+                        placeholder="Pick value"
+                        data={devices.map((device) => ({
+                            value: device.DeviceId.toString(),
+                            label: device.Name,
+                        }))}
+                        value={machineMenu}
+                        onChange={setMachineMenu}
                     />
                 </Grid.Col>
                 <Grid.Col span={6} mt="auto">
@@ -93,9 +123,7 @@ const DowntimeReport = () => {
                             <Table.Th>Shift</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
-                    <Table.Tbody>
-                        {rows}
-                    </Table.Tbody>
+                    <Table.Tbody>{rows}</Table.Tbody>
                 </Table>
             </Table.ScrollContainer>
         </Container>

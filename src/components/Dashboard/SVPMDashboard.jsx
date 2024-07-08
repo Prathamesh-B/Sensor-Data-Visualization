@@ -1,4 +1,4 @@
-import { Menu, Card, Grid, ScrollArea, Text } from "@mantine/core";
+import { Menu, Card, Grid, ScrollArea, Text, Divider } from "@mantine/core";
 import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import { useState } from "react";
@@ -7,41 +7,44 @@ import { PackageCheck, Hourglass } from "lucide-react";
 const dataSets = {
     Today: {
         data: [
-            { name: "Destacker Unit", unit: 256, time: 2 },
-            { name: "Deep Drawing press", unit: 255, time: 1 },
-            { name: "Piercing Press", unit: 254, time: 2 },
-            { name: "Flaring Press", unit: 252, time: 1 },
-            { name: "Robotic Unloader", unit: 252, time: 0 },
+            { name: "Komatsu Press Line 1", unit: 256, time: 2 },
+            { name: "Komatsu Press Line 2", unit: 255, time: 1 },
+            { name: "Schuller Press Line 1", unit: 254, time: 2 },
+            // { name: "Schuller Press Line 2", unit: 252, time: 1 },
+            { name: "Hitachi Zosen Press Line 1", unit: 254, time: 3 },
+            { name: "Hitachi Zosen Press Line 2", unit: 256, time: 1 },
         ],
         production: 252,
         efficiency: "80",
-        activeMachines: 1,
+        activeMachines: 5,
         downtime: 6,
     },
     Yesterday: {
         data: [
-            { name: "Destacker Unit", unit: 300, time: 1 },
-            { name: "Deep Drawing press", unit: 298, time: 2 },
-            { name: "Piercing Press", unit: 297, time: 0 },
-            { name: "Flaring Press", unit: 297, time: 0 },
-            { name: "Robotic Unloader", unit: 297, time: 0 },
+            { name: "Komatsu Press Line 1", unit: 300, time: 1 },
+            { name: "Komatsu Press Line 2", unit: 298, time: 2 },
+            { name: "Schuller Press Line 1", unit: 297, time: 0 },
+            // { name: "Schuller Press Line 2", unit: 297, time: 0 },
+            { name: "Hitachi Zosen Press Line 1", unit: 296, time: 3 },
+            { name: "Hitachi Zosen Press Line 2", unit: 296, time: 1 },
         ],
         production: 297,
         efficiency: "78",
-        activeMachines: 1,
+        activeMachines: 5,
         downtime: 3,
     },
     "Last 7 Days": {
         data: [
-            { name: "Destacker Unit", unit: 2100, time: 5 },
-            { name: "Deep Drawing press", unit: 2089, time: 4 },
-            { name: "Piercing Press", unit: 2089, time: 3 },
-            { name: "Flaring Press", unit: 2086, time: 1 },
-            { name: "Robotic Unloader", unit: 2086, time: 0 },
+            { name: "Komatsu Press Line 1", unit: 2100, time: 5 },
+            { name: "Komatsu Press Line 2", unit: 2089, time: 4 },
+            { name: "Schuller Press Line 1", unit: 2089, time: 3 },
+            // { name: "Schuller Press Line 2", unit: 2086, time: 1 },
+            { name: "Hitachi Zosen Press Line 1", unit: 2089, time: 3 },
+            { name: "Hitachi Zosen Press Line 2", unit: 2086, time: 1 },
         ],
         production: 2086,
         efficiency: "85",
-        activeMachines: 1,
+        activeMachines: 5,
         downtime: 13,
     },
 };
@@ -225,20 +228,20 @@ const SVPMDashboard = () => {
                 <Grid.Col span={8}>
                     <Grid grow style={{ textAlign: "center" }}>
                         <Grid.Col span={3}>
-                            <Text size="xl">Machine</Text>
+                            <Text size="xl">Line</Text>
                         </Grid.Col>
                         <Grid.Col span={3}>
                             <Text size="xl">Production</Text>
                         </Grid.Col>
                         <Grid.Col span={3}>
-                            <Text size="xl">Downtime</Text>
+                            <Text size="xl">Downtime (mins)</Text>
                         </Grid.Col>
                     </Grid>
                     {dataSet.data.map((item, index) => (
+                        <>
                         <Grid grow key={index}>
                             <Grid.Col span={3}>
                                 <Card
-                                    shadow="sm"
                                     p="lg"
                                     radius="lg"
                                     className="latest-card"
@@ -250,7 +253,7 @@ const SVPMDashboard = () => {
                             </Grid.Col>
                             <Grid.Col span={3}>
                                 <Card
-                                    shadow="sm"
+                                    
                                     p="lg"
                                     radius="lg"
                                     className="latest-card"
@@ -279,7 +282,7 @@ const SVPMDashboard = () => {
                             </Grid.Col>
                             <Grid.Col span={3}>
                                 <Card
-                                    shadow="sm"
+                                    
                                     p="lg"
                                     radius="lg"
                                     className="latest-card"
@@ -305,14 +308,17 @@ const SVPMDashboard = () => {
                                                 fontSize: "1.6rem",
                                             }}
                                         >
-                                            {item.time} mins
+                                            {item.time}
                                         </Text>
                                     </div>
                                 </Card>
                             </Grid.Col>
                         </Grid>
+                        <Divider />
+                        </>
                     ))}
                 </Grid.Col>
+
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} size="xl">
                         Alerts :

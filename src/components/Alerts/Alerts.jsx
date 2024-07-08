@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import {
     Button,
     Card,
+    Grid,
     Modal,
     Select,
     Text,
@@ -10,7 +11,6 @@ import {
 } from "@mantine/core";
 import { Info, AlertTriangle, AlertOctagon } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
-import { DateTimePicker } from "@mantine/dates";
 
 const alertsData = [
     {
@@ -51,24 +51,6 @@ const Notes = () => {
     const [events, setEvents] = useState(alertsData);
     const [loading, setLoading] = useState(false);
     const [opened, { open, close }] = useDisclosure(false);
-
-    // useEffect(() => {
-    //     const fetchEvents = async () => {
-    //         try {
-    //             const response = await fetch("http://localhost:3000/events/");
-    //             if (!response.ok) {
-    //                 throw new Error("Failed to fetch events");
-    //             }
-    //             const data = await response.json();
-    //             setEvents(data);
-    //         } catch (error) {
-    //             console.error("Error fetching events:", error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchEvents();
-    // }, []);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -113,37 +95,68 @@ const Notes = () => {
                 title="Incident Event"
             >
                 <form onSubmit={close}>
-                    <TextInput placeholder="Enter Title" label="Title" />
-                    <br />
-                    <DateTimePicker
-                        placeholder="Pick date and time of the Incident"
-                        label="Time of the Incident"
-                    />
-                    <br />
-                    <Textarea
-                        placeholder="Enter the cause of the Incident"
-                        label="Cause of the Incident"
-                        autosize
-                        minRows={5}
-                    />
-                    <br />
-                    <div>
+                    <Grid>
+                        <Grid.Col span={6}>
+                            <TextInput placeholder="Enter Title" label="Title" required />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <Select
+                                label="Type of Report"
+                                placeholder="Pick a Type"
+                                data={["Initial Report", "Follow-up Report", "Final Report"]}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={4}>
                         <Select
-                            label="Category of the incident"
-                            placeholder="Pick a category"
-                            data={["Breakdown", "Material Shortage"]}
-                        />
-                        <br />
+                                label="Category of the Incident"
+                                placeholder="Pick a category"
+                                data={["Breakdown", "Material Shortage"]}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                            <Select
+                                label="Sub-Category of the Incident"
+                                placeholder="Pick a sub-category"
+                                data={["Breakdown", "Material Shortage"]}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={4}>
+                            <Select
+                                label="Location of the Incident"
+                                placeholder="Pick a location"
+                                data={["Floor A", "Floor B", "Floor C"]}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col>
+                            <Textarea
+                                placeholder="Enter the details of the Incident"
+                                label="Details of the Incident"
+                                autosize
+                                required
+                                minRows={5}
+                            />
+                        </Grid.Col>
+                    <Grid.Col span={6}>
+                        <TextInput placeholder="Enter Name" label="Report Issued by:" required />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
                         <Select
-                            label="Sub-Category of the incident"
-                            placeholder="Pick a sub-category"
-                            data={["Breakdown", "Material Shortage"]}
+                            label="Role of the Submitter"
+                            placeholder="Pick a role"
+                            data={["Supervisior", "Production Manager", "Machine Foreman"]}
+                            required
                         />
-                    </div>
-                    <br />
+                    </Grid.Col>
+                    <Grid.Col>
                     <Button type="submit" variant="filled">
                         Submit
                     </Button>
+                    </Grid.Col>
+                    </Grid>
                 </form>
             </Modal>
             {loading ? (

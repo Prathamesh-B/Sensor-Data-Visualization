@@ -219,9 +219,11 @@ export const production = [
 ]
 
 export const status = [
-    { id: 1, name: 'Machine 1', status: 'Running' },
-    { id: 2, name: 'Machine 2', status: 'Stopped' },
-    { id: 3, name: 'Machine 3', status: 'Runnning' },
+    { id: 1, name: 'Destacker Unit', status: 'Running' },
+    { id: 2, name: 'Deep Drawing press', status: 'Running' },
+    { id: 3, name: 'Piercing Press', status: 'Running' },
+    { id: 4, name: 'Flaring Press', status: 'Under Maintenance' },
+    { id: 5, name: 'Robotic Unloader', status: 'Stopped' },
 ]
 
 export const notifs = [

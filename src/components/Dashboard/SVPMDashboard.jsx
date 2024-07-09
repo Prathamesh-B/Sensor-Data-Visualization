@@ -1,62 +1,91 @@
+import React, { useState, useEffect } from "react";
 import { Menu, Card, Grid, ScrollArea, Text, Divider } from "@mantine/core";
-import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
-import { useState } from "react";
 import { PackageCheck, Hourglass } from "lucide-react";
-
-const dataSets = {
-    Today: {
-        data: [
-            { name: "Komatsu Press Line 1", unit: 256, time: 2 },
-            { name: "Komatsu Press Line 2", unit: 255, time: 1 },
-            { name: "Schuller Press Line 1", unit: 254, time: 2 },
-            // { name: "Schuller Press Line 2", unit: 252, time: 1 },
-            { name: "Hitachi Zosen Press Line 1", unit: 254, time: 3 },
-            { name: "Hitachi Zosen Press Line 2", unit: 256, time: 1 },
-        ],
-        production: 1275,
-        efficiency: "80",
-        activeMachines: 5,
-        downtime: 6,
-    },
-    Yesterday: {
-        data: [
-            { name: "Komatsu Press Line 1", unit: 300, time: 1 },
-            { name: "Komatsu Press Line 2", unit: 298, time: 2 },
-            { name: "Schuller Press Line 1", unit: 297, time: 0 },
-            // { name: "Schuller Press Line 2", unit: 297, time: 0 },
-            { name: "Hitachi Zosen Press Line 1", unit: 296, time: 3 },
-            { name: "Hitachi Zosen Press Line 2", unit: 296, time: 1 },
-        ],
-        production: 1487,
-        efficiency: "78",
-        activeMachines: 5,
-        downtime: 3,
-    },
-    "Last 7 Days": {
-        data: [
-            { name: "Komatsu Press Line 1", unit: 2100, time: 5 },
-            { name: "Komatsu Press Line 2", unit: 2089, time: 4 },
-            { name: "Schuller Press Line 1", unit: 2089, time: 3 },
-            // { name: "Schuller Press Line 2", unit: 2086, time: 1 },
-            { name: "Hitachi Zosen Press Line 1", unit: 2089, time: 3 },
-            { name: "Hitachi Zosen Press Line 2", unit: 2086, time: 1 },
-        ],
-        production: 10453,
-        efficiency: "85",
-        activeMachines: 5,
-        downtime: 13,
-    },
-};
+import "./Dashboard.css";
 
 const SVPMDashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
-    const [dataSet, setDataSet] = useState(dataSets["Today"]);
+    const [dataSet, setDataSet] = useState({
+        data: [],
+        production: 0,
+        efficiency: "0",
+        activeMachines: 0,
+        downtime: 0,
+    });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const handleMenuClick = (range) => {
-        setRangeMenu(range);
-        setDataSet(dataSets[range]);
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            let startDate = new Date().toISOString();
+            let endDate = new Date().toISOString();
+
+            switch (rangeMenu) {
+                case "Today":
+                    startDate =
+                        new Date().toISOString().split("T")[0] + "T00:00:00Z";
+                    break;
+                case "Yesterday":
+                    var yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    startDate =
+                        yesterday.toISOString().split("T")[0] + "T00:00:00Z";
+                    endDate =
+                        new Date(yesterday).toISOString().split("T")[0] +
+                        "T23:59:59Z";
+                    break;
+                case "Last 7 Days":
+                    var lastWeek = new Date();
+                    lastWeek.setDate(lastWeek.getDate() - 6);
+                    startDate =
+                        lastWeek.toISOString().split("T")[0] + "T00:00:00Z";
+                    break;
+                default:
+                    break;
+            }
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/machine-performance?StartDate=${startDate}&EndDate=${endDate}`
+            );
+            const apiData = await response.json();
+
+            if (Array.isArray(apiData) && apiData.length > 0) {
+                const formattedData = {
+                    data: apiData.map((item) => ({
+                        name: item.line_name,
+                        unit: item.production,
+                        time: item.downtime,
+                    })),
+                    production: apiData.reduce(
+                        (sum, item) => sum + item.production,
+                        0
+                    ),
+                    availability: 75,
+                    activeMachines: apiData.length,
+                    downtime: apiData.reduce(
+                        (sum, item) => sum + item.downtime,
+                        0
+                    ),
+                };
+
+                setDataSet(formattedData);
+            } else {
+                throw new Error("Invalid API response");
+            }
+        } catch (error) {
+            setError(error);
+        }
+        setLoading(false);
     };
+
+    useEffect(() => {
+        fetchData();
+    }, [rangeMenu]);
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
 
     return (
         <>
@@ -69,9 +98,7 @@ const SVPMDashboard = () => {
                                 p="lg"
                                 radius="lg"
                                 className="latest-card menu-button"
-                                style={{
-                                    cursor: "pointer",
-                                }}
+                                style={{ cursor: "pointer" }}
                             >
                                 <div
                                     style={{
@@ -99,16 +126,16 @@ const SVPMDashboard = () => {
                         </Menu.Target>
                         <Menu.Dropdown>
                             <Menu.Label>Day Range</Menu.Label>
-                            <Menu.Item onClick={() => handleMenuClick("Today")}>
+                            <Menu.Item onClick={() => setRangeMenu("Today")}>
                                 Today
                             </Menu.Item>
                             <Menu.Item
-                                onClick={() => handleMenuClick("Yesterday")}
+                                onClick={() => setRangeMenu("Yesterday")}
                             >
                                 Yesterday
                             </Menu.Item>
                             <Menu.Item
-                                onClick={() => handleMenuClick("Last 7 Days")}
+                                onClick={() => setRangeMenu("Last 7 Days")}
                             >
                                 Last 7 Days
                             </Menu.Item>
@@ -157,19 +184,18 @@ const SVPMDashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./efficiency.png"
-                                    alt="Efficiency Icon"
+                                    alt="Availability Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Availability
                                 </Text>
                             </div>
-
                             <Text
                                 style={{ fontSize: "2.5rem" }}
                                 c="indigo"
                                 fw={700}
                             >
-                                {dataSet.efficiency}%
+                                {dataSet.availability}%
                             </Text>
                         </div>
                     </Card>
@@ -217,7 +243,7 @@ const SVPMDashboard = () => {
                                     alt="Downtime Icon"
                                 />
                                 <Text size="sm" fw={400}>
-                                    Downtime (mins)
+                                    Downtime(mins)
                                 </Text>
                             </div>
                             <Text
@@ -245,8 +271,8 @@ const SVPMDashboard = () => {
                         </Grid.Col>
                     </Grid>
                     {dataSet.data.map((item, index) => (
-                        <>
-                            <Grid grow key={index}>
+                        <React.Fragment key={index}>
+                            <Grid grow>
                                 <Grid.Col span={3}>
                                     <Card
                                         p="lg"
@@ -299,9 +325,7 @@ const SVPMDashboard = () => {
                                             }}
                                         >
                                             <Hourglass
-                                                style={{
-                                                    marginRight: "1rem",
-                                                }}
+                                                style={{ marginRight: "1rem" }}
                                                 size={30}
                                                 strokeWidth={1}
                                             />
@@ -309,9 +333,7 @@ const SVPMDashboard = () => {
                                                 size="xl"
                                                 fw={700}
                                                 c={"orange"}
-                                                style={{
-                                                    fontSize: "1.6rem",
-                                                }}
+                                                style={{ fontSize: "1.6rem" }}
                                             >
                                                 {item.time}
                                             </Text>
@@ -320,10 +342,9 @@ const SVPMDashboard = () => {
                                 </Grid.Col>
                             </Grid>
                             <Divider />
-                        </>
+                        </React.Fragment>
                     ))}
                 </Grid.Col>
-
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} size="xl">
                         Alerts :

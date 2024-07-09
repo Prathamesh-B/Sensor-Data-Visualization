@@ -266,7 +266,7 @@ const MODashboard = () => {
                                     alt="Downtime Icon"
                                 />
                                 <Text size="sm" fw={400}>
-                                    Downtime (mins)
+                                    Downtime(mins)
                                 </Text>
                             </div>
                             <Text

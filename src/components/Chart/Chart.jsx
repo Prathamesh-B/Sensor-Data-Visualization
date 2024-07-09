@@ -25,7 +25,7 @@ const Chart = ({ data }) => {
                 >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis
-                        dataKey="ModifiedOn"
+                        dataKey="timestamp"
                         tickFormatter={formatDate}
                         label={{
                             value: "Time",
@@ -35,7 +35,7 @@ const Chart = ({ data }) => {
                     />
                     <YAxis
                         label={{
-                            value: "Value",
+                            value: "value",
                             angle: -90,
                             position: "insideLeft",
                         }}
@@ -43,12 +43,12 @@ const Chart = ({ data }) => {
                     <Tooltip labelFormatter={formatDate} />
                     <Line
                         type="monotone"
-                        dataKey="Value"
+                        dataKey="value"
                         stroke="#8884d8"
                         activeDot={{ r: 8 }}
                     />
                     <Brush
-                        dataKey="ModifiedOn"
+                        dataKey="timestamp"
                         height={20}
                         stroke="#8884d8"
                         tickFormatter={formatDate}

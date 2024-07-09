@@ -286,11 +286,12 @@ export const notifs = [
 ];
 
 export const cards = [
-    { id: 1, machine_id: "DIDa1B2c3D4", TP: 650, ER: "75", DT: "45", PR: "80" },
-    { id: 2, machine_id: "DIDe5F6g7H8", TP: 550, ER: "65", DT: "20", PR: "90" },
-    { id: 3, machine_id: "DIDi9J0k1L2", TP: 660, ER: "50", DT: "15", PR: "70" },
-    { id: 3, machine_id: "DIDm3N4o5P6", TP: 530, ER: "75", DT: "0", PR: "72" },
-    { id: 3, machine_id: "DIDq7R8s9T0", TP: 150, ER: "45", DT: "60", PR: "68" },
+    { id: 1, line_id: "1", ER: "75", PR: "80" },
+    { id: 2, line_id: "2", ER: "65", PR: "90" },
+    { id: 3, line_id: "3", ER: "50", PR: "70" },
+    { id: 4, line_id: "4", ER: "75", PR: "72" },
+    { id: 5, line_id: "5", ER: "45", PR: "68" },
+    { id: 6, line_id: "6", ER: "45", PR: "80" },
 ]
 
 export const DTdata = [
@@ -299,4 +300,79 @@ export const DTdata = [
     { id: 3, machine_id: 3, machine_nm: "Stratos 42", dwt_type: "Maintenance", start: "2024-06-04T02:45:00Z", end: "2024-06-04T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
     { id: 4, machine_id: 4, machine_nm: "Falcon 65", dwt_type: "Maintenance", start: "2024-06-05T02:45:00Z", end: "2024-06-05T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Nilesh Chutke", shift: "Afternoon" },
     { id: 5, machine_id: 5, machine_nm: "Cypher 15", dwt_type: "Outage", start: "2024-06-06T02:45:00Z", end: "2024-06-06T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" }
+]
+
+export const sensorsOpt = [
+    {
+        "id": 5,
+        "name": "Voltage Phase R-Y",
+        "units": "V",
+        "min_val": 410,
+        "max_val": 480,
+        "inactive": false,
+        "modified": "2024-07-01"
+    },
+    {
+        "id": 6,
+        "name": "Voltage Phase Y-B",
+        "units": "V",
+        "min_val": 410,
+        "max_val": 480,
+        "inactive": false,
+        "modified": "2024-07-01"
+    },
+    {
+        "id": 7,
+        "name": "Voltage Phase B-R",
+        "units": "V",
+        "min_val": 410,
+        "max_val": 480,
+        "inactive": false,
+        "modified": "2024-07-01"
+    },
+    {
+        "id": 8,
+        "name": "Current Phase R",
+        "units": "A",
+        "min_val": 220,
+        "max_val": 440,
+        "inactive": false,
+        "modified": "2024-07-01"
+    },
+    {
+        "id": 9,
+        "name": "Current Phase Y",
+        "units": "A",
+        "min_val": 220,
+        "max_val": 440,
+        "inactive": false,
+        "modified": "2024-07-01"
+    },
+    {
+        "id": 10,
+        "name": "Current Phase B",
+        "units": "A",
+        "min_val": 220,
+        "max_val": 440,
+        "inactive": false,
+        "modified": "2024-07-01"
+    },
+    {
+        "id": 11,
+        "name": "Frequency",
+        "units": "Hz",
+        "min_val": 49,
+        "max_val": 60,
+        "inactive": false,
+        "modified": "2024-07-01"
+    },
+    {
+        "id": 12,
+        "name": "Temperature",
+        "units": "°C",
+        "min_val": 39,
+        "max_val": 59,
+        "inactive": false,
+        "modified": "2024-07-01"
+    }
 ]

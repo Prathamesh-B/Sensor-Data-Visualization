@@ -12,45 +12,35 @@ import {
 import { Info, AlertTriangle, AlertOctagon } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
 
-const alertsData = [
-    {
-        id: 1,
-        type: "error",
-        title: "Oil Filter Clogged for Destacker Unit",
-        description: "",
-        timestamp: "2024-07-01T10:00:00Z",
-        duration: "",
-    },
-    {
-        id: 2,
-        type: "error",
-        title: "Part Location Issue",
-        description: "",
-        timestamp: "2024-07-01T12:00:00Z",
-        duration: "",
-    },
-    {
-        id: 3,
-        type: "info",
-        title: "Destacker Unit Started",
-        description: "",
-        timestamp: "2024-07-01T13:00:00Z",
-        duration: "",
-    },
-    {
-        id: 4,
-        type: "warning",
-        title: "Double sheet feed",
-        description: "",
-        timestamp: "2024-07-01T15:00:00Z",
-        duration: "",
-    },
-];
-
 const Notes = () => {
-    const [events, setEvents] = useState(alertsData);
-    const [loading, setLoading] = useState(false);
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [opened, { open, close }] = useDisclosure(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    const fetchDevicesAndTags = async () => {
+        try {
+            const alertsResponse = await fetch(
+                "http://127.0.0.1:8000/api/alerts/"
+            );
+
+            if (!alertsResponse.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            const alertsData = await alertsResponse.json();
+
+            setEvents(alertsData);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching alerts:", error);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDevicesAndTags();
+    }, []);
 
     const formatTime = (timestamp) => {
         const date = new Date(timestamp);
@@ -86,6 +76,17 @@ const Notes = () => {
         }
     };
 
+    const openModal = (event) => {
+        setSelectedEvent(event);
+        if (!event.incident_dtls) {
+            open();
+        }
+    };
+
+    const isEventIncomplete = (event) => {
+        return !event.incident_dtls;
+    };
+
     return (
         <>
             <Modal
@@ -94,70 +95,88 @@ const Notes = () => {
                 size={"55rem"}
                 title="Incident Event"
             >
-                <form onSubmit={close}>
-                    <Grid>
-                        <Grid.Col span={6}>
-                            <TextInput placeholder="Enter Title" label="Title" required />
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                            <Select
-                                label="Type of Report"
-                                placeholder="Pick a Type"
-                                data={["Initial Report", "Follow-up Report", "Final Report"]}
-                                required
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={4}>
-                        <Select
-                                label="Category of the Incident"
-                                placeholder="Pick a category"
-                                data={["Breakdown", "Material Shortage"]}
-                                required
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={4}>
-                            <Select
-                                label="Sub-Category of the Incident"
-                                placeholder="Pick a sub-category"
-                                data={["Breakdown", "Material Shortage"]}
-                                required
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={4}>
-                            <Select
-                                label="Location of the Incident"
-                                placeholder="Pick a location"
-                                data={["Floor A", "Floor B", "Floor C"]}
-                                required
-                            />
-                        </Grid.Col>
-                        <Grid.Col>
-                            <Textarea
-                                placeholder="Enter the details of the Incident"
-                                label="Details of the Incident"
-                                autosize
-                                required
-                                minRows={5}
-                            />
-                        </Grid.Col>
-                    <Grid.Col span={6}>
-                        <TextInput placeholder="Enter Name" label="Report Issued by:" required />
-                    </Grid.Col>
-                    <Grid.Col span={6}>
-                        <Select
-                            label="Role of the Submitter"
-                            placeholder="Pick a role"
-                            data={["Supervisior", "Production Manager", "Machine Foreman"]}
-                            required
-                        />
-                    </Grid.Col>
-                    <Grid.Col>
-                    <Button type="submit" variant="filled">
-                        Submit
-                    </Button>
-                    </Grid.Col>
-                    </Grid>
-                </form>
+                {selectedEvent && (
+                    <form onSubmit={close}>
+                        <Grid>
+                            <Grid.Col span={6}>
+                                <TextInput
+                                    placeholder="Enter Title"
+                                    label="Title"
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                                <Select
+                                    label="Type of Report"
+                                    placeholder="Pick a Type"
+                                    data={[
+                                        "Initial Report",
+                                        "Follow-up Report",
+                                        "Final Report",
+                                    ]}
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={4}>
+                                <Select
+                                    label="Category of the Incident"
+                                    placeholder="Pick a category"
+                                    data={["Breakdown", "Material Shortage"]}
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={4}>
+                                <Select
+                                    label="Sub-Category of the Incident"
+                                    placeholder="Pick a sub-category"
+                                    data={["Breakdown", "Material Shortage"]}
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={4}>
+                                <Select
+                                    label="Location of the Incident"
+                                    placeholder="Pick a location"
+                                    data={["Floor A", "Floor B", "Floor C"]}
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col>
+                                <Textarea
+                                    placeholder="Enter the details of the Incident"
+                                    label="Details of the Incident"
+                                    autosize
+                                    required
+                                    minRows={5}
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                                <TextInput
+                                    placeholder="Enter Name"
+                                    label="Report Issued by:"
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                                <Select
+                                    label="Role of the Submitter"
+                                    placeholder="Pick a role"
+                                    data={[
+                                        "Supervisior",
+                                        "Production Manager",
+                                        "Machine Foreman",
+                                    ]}
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col>
+                                <Button type="submit" variant="filled">
+                                    Submit
+                                </Button>
+                            </Grid.Col>
+                        </Grid>
+                    </form>
+                )}
             </Modal>
             {loading ? (
                 <Text>Loading...</Text>
@@ -173,8 +192,14 @@ const Notes = () => {
                                 padding: "1rem",
                                 borderRadius: "8px",
                                 marginBottom: "1rem",
+                                borderLeft: isEventIncomplete(event)
+                                    ? "5px solid #228be8"
+                                    : "none",
+                                cursor: isEventIncomplete(event)
+                                    ? "pointer"
+                                    : "default",
                             }}
-                            onClick={open}
+                            onClick={() => openModal(event)}
                         >
                             <div
                                 style={{
@@ -200,16 +225,13 @@ const Notes = () => {
                                             marginBottom: "0.2rem",
                                         }}
                                     >
-                                        {event.title}
+                                        {event.name}
                                     </Text>
                                 </div>
                                 <Text size="sm" c="gray">
                                     {formatTime(event.timestamp)}
                                 </Text>
                             </div>
-                            <Text w={300} truncate="end">
-                                {event.description}
-                            </Text>
                         </Card>
                     ))}
                 </>

@@ -3,13 +3,14 @@ import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
 import { useState, useEffect } from "react";
-import { cards } from "../../data";
+import { cards, sensorsOpt } from "../../data";
 
 const MODashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
     const [topCards, setTopCards] = useState([]);
-    const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
-    const [sensorMenu, setSensorMenu] = useState("12");
+    const [staticCards, setStaticCards] = useState([]);
+    const [productionLineMenu, setProductionLineMenu] = useState("1");
+    const [tagMenu, setTagMenu] = useState("12");
     const [filteredChartData, setFilteredChartData] = useState([]);
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
@@ -20,44 +21,31 @@ const MODashboard = () => {
 
     useEffect(() => {
         fetchData();
-    }, [machineMenu, sensorMenu, rangeMenu]);
+    }, [productionLineMenu, tagMenu, rangeMenu]);
 
     const fetchDevicesAndTags = async () => {
         try {
-            const deviceResponse = await fetch(
-                "http://127.0.0.1:8000/api/devices/"
+            const lineResponse = await fetch(
+                "http://127.0.0.1:8000/api/productionlines/"
             );
-            const tagResponse = await fetch(
-                "http://127.0.0.1:8000/api/device-tags/"
-            );
-            if (!deviceResponse.ok || !tagResponse.ok) {
+            const tagResponse = await fetch("http://127.0.0.1:8000/api/tags/");
+
+            if (!lineResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
             }
-            const devicesData = await deviceResponse.json();
+
+            const linesData = await lineResponse.json();
             const tagsData = await tagResponse.json();
 
-            const uniqueDevices = Array.from(
-                new Set(devicesData.map((device) => device.DeviceId))
-            ).map((id) => devicesData.find((device) => device.DeviceId === id));
-            const uniqueTags = Array.from(
-                new Set(tagsData.map((tag) => tag.id))
-            ).map((id) => tagsData.find((tag) => tag.id === id));
-
-            setDevices(
-                uniqueDevices.filter(
-                    (device) => device && device.DeviceId && device.Name
-                )
-            );
-            setDeviceTags(
-                uniqueTags.filter((tag) => tag && tag.id && tag.Name)
-            );
+            setDevices(linesData);
+            setDeviceTags(sensorsOpt);
         } catch (error) {
             console.error("Error fetching devices or tags:", error);
         }
     };
 
     const fetchData = async () => {
-        if (machineMenu && sensorMenu) {
+        if (productionLineMenu && tagMenu) {
             try {
                 let startDate = new Date().toISOString();
                 let endDate = new Date().toISOString();
@@ -89,18 +77,34 @@ const MODashboard = () => {
                 }
 
                 const response = await fetch(
-                    `/ProdvizBack/api/device_logs/?DeviceID=${machineMenu}&TagId=${sensorMenu}&StartDate=${startDate}&EndDate=${endDate}`
+                    `http://127.0.0.1:8000/api/logs?LineId=${productionLineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
                 );
+
+                const MPresponse = await fetch(
+                    `http://127.0.0.1:8000/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
+                );
+
+                if (!MPresponse.ok) {
+                    throw new Error("Network response was not ok");
+                }
 
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
 
                 const data = await response.json();
-                const test = cards.filter(
-                    (card) => card.machine_id === machineMenu
+                const MPdata = await MPresponse.json();
+
+                const filter = MPdata.filter(
+                    (data) => data.line_id === +productionLineMenu
                 );
-                setTopCards(test[0]);
+
+                const staticData = cards.filter(
+                    (data) => data.line_id === productionLineMenu
+                );
+
+                setStaticCards(staticData[0]);
+                setTopCards(filter[0]);
                 setFilteredChartData(data);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -111,7 +115,7 @@ const MODashboard = () => {
 
     return (
         <>
-            <Grid columns={10} gutter="lg" mb="lg" grow>
+            <Grid columns={10} gutter="sm" mb="lg" grow>
                 <Grid.Col span={1}>
                     <Menu shadow="md" width={200}>
                         <Menu.Target>
@@ -186,7 +190,7 @@ const MODashboard = () => {
                                 c="green"
                                 fw={700}
                             >
-                                {topCards.TP}
+                                {topCards.production}
                             </Text>
                         </div>
                     </Card>
@@ -214,7 +218,7 @@ const MODashboard = () => {
                                 fw={700}
                                 c="indigo"
                             >
-                                {topCards.PR}%
+                                {staticCards.PR}%
                             </Text>
                         </div>
                     </Card>
@@ -242,7 +246,7 @@ const MODashboard = () => {
                                 c="teal"
                                 fw={700}
                             >
-                                {topCards.ER}%
+                                {staticCards.ER}%
                             </Text>
                         </div>
                     </Card>
@@ -270,7 +274,7 @@ const MODashboard = () => {
                                 c="orange"
                                 fw={700}
                             >
-                                {topCards.DT}
+                                {topCards.downtime}
                             </Text>
                         </div>
                     </Card>
@@ -281,15 +285,15 @@ const MODashboard = () => {
                     <div className="dropdown-chart">
                         <div className="machine-dropdown">
                             <Select
-                                label="Machine:"
+                                label="Production Line:"
                                 allowDeselect={false}
                                 placeholder="Pick value"
                                 data={devices.map((device) => ({
-                                    value: device.DeviceId.toString(),
-                                    label: device.Name,
+                                    value: device.id.toString(),
+                                    label: device.name,
                                 }))}
-                                value={machineMenu}
-                                onChange={setMachineMenu}
+                                value={productionLineMenu}
+                                onChange={setProductionLineMenu}
                             />
                         </div>
                         <div className="sensor-dropdown">
@@ -299,10 +303,10 @@ const MODashboard = () => {
                                 placeholder="Pick value"
                                 data={deviceTags.map((tag) => ({
                                     value: tag.id.toString(),
-                                    label: tag.Name,
+                                    label: tag.name,
                                 }))}
-                                value={sensorMenu}
-                                onChange={setSensorMenu}
+                                value={tagMenu}
+                                onChange={setTagMenu}
                             />
                         </div>
                     </div>

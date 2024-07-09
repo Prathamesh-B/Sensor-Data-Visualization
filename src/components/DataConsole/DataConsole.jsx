@@ -4,8 +4,8 @@ import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 
 const DataConsole = () => {
-    const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
-    const [sensorMenu, setSensorMenu] = useState("12");
+    const [productionLineMenu, setProductionLineMenu] = useState("1");
+    const [tagMenu, setTagMenu] = useState("12");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [sensorData, setSensorData] = useState([]);
@@ -27,34 +27,20 @@ const DataConsole = () => {
 
     const fetchDevicesAndTags = async () => {
         try {
-            const deviceResponse = await fetch(
-                "http://127.0.0.1:8000/api/devices/"
+            const lineResponse = await fetch(
+                "http://127.0.0.1:8000/api/productionlines/"
             );
-            const tagResponse = await fetch(
-                "http://127.0.0.1:8000/api/device-tags/"
-            );
-            if (!deviceResponse.ok || !tagResponse.ok) {
+            const tagResponse = await fetch("http://127.0.0.1:8000/api/tags/");
+
+            if (!lineResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
             }
-            const devicesData = await deviceResponse.json();
+
+            const linesData = await lineResponse.json();
             const tagsData = await tagResponse.json();
 
-            // Ensure unique and defined values for devices and tags
-            const uniqueDevices = Array.from(
-                new Set(devicesData.map((device) => device.DeviceId))
-            ).map((id) => devicesData.find((device) => device.DeviceId === id));
-            const uniqueTags = Array.from(
-                new Set(tagsData.map((tag) => tag.id))
-            ).map((id) => tagsData.find((tag) => tag.id === id));
-
-            setDevices(
-                uniqueDevices.filter(
-                    (device) => device && device.DeviceId && device.Name
-                )
-            );
-            setDeviceTags(
-                uniqueTags.filter((tag) => tag && tag.id && tag.Name)
-            );
+            setDevices(linesData);
+            setDeviceTags(tagsData);
         } catch (error) {
             console.error("Error fetching devices or tags:", error);
         }
@@ -69,21 +55,22 @@ const DataConsole = () => {
                 ? dayjs(endDate).toISOString()
                 : null;
 
-            const baseURL = "/ProdvizBack/api/device_logs";
+            const baseURL = "http://127.0.0.1:8000/api/logs/";
             const params = new URLSearchParams({
-                DeviceID: machineMenu,
-                TagId: sensorMenu,
+                LineId: productionLineMenu,
+                TagId: tagMenu,
                 StartDate: formattedStartDate,
                 EndDate: formattedEndDate,
             });
 
-            const url = `${baseURL}/?${params.toString()}`;
+            const url = `${baseURL}?${params.toString()}`;
 
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Failed to fetch sensor data");
             }
             const json = await response.json();
+            console.log(json);
             setSensorData(json);
             setError(null);
         } catch (error) {
@@ -100,12 +87,11 @@ const DataConsole = () => {
     };
 
     const rows = sensorData.map((data) => (
-        <Table.Tr key={data.EventDate}>
-            <Table.Td>{dayjs(data.EventDate).format("MMM DD, HH:mm")}</Table.Td>
-            <Table.Td>{data.DeviceId}</Table.Td>
-            <Table.Td>{deviceNames[data.DeviceId]}</Table.Td>
-            <Table.Td>{data.Tag}</Table.Td>
-            <Table.Td>{data.Value}</Table.Td>
+        <Table.Tr key={data.id}>
+            <Table.Td>{dayjs(data.timestamp).format("MMM DD, HH:mm")}</Table.Td>
+            <Table.Td>{data.value}</Table.Td>
+            <Table.Td>{deviceNames[data.line]}</Table.Td>
+            <Table.Td>{data.tag}</Table.Td>
         </Table.Tr>
     ));
 
@@ -120,15 +106,15 @@ const DataConsole = () => {
             <Grid grow gutter="md" justify="flex-start">
                 <Grid.Col span={6}>
                     <Select
-                        label="Machine:"
+                        label="Production Line:"
                         allowDeselect={false}
                         placeholder="Pick value"
                         data={devices.map((device) => ({
-                            value: device.DeviceId.toString(),
-                            label: device.Name,
+                            value: device.id.toString(),
+                            label: device.name,
                         }))}
-                        value={machineMenu}
-                        onChange={setMachineMenu}
+                        value={productionLineMenu}
+                        onChange={setProductionLineMenu}
                     />
                 </Grid.Col>
                 <Grid.Col span={6}>
@@ -138,10 +124,10 @@ const DataConsole = () => {
                         placeholder="Pick value"
                         data={deviceTags.map((tag) => ({
                             value: tag.id.toString(),
-                            label: tag.Name,
+                            label: tag.name,
                         }))}
-                        value={sensorMenu}
-                        onChange={setSensorMenu}
+                        value={tagMenu}
+                        onChange={setTagMenu}
                     />
                 </Grid.Col>
                 <Grid.Col span={6}>
@@ -204,11 +190,10 @@ const DataConsole = () => {
                 <Table verticalSpacing="sm">
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th>Event Date</Table.Th>
-                            <Table.Th>Device ID</Table.Th>
-                            <Table.Th>Name</Table.Th>
-                            <Table.Th>Tag</Table.Th>
+                            <Table.Th>Timestamp</Table.Th>
                             <Table.Th>Value</Table.Th>
+                            <Table.Th>Production Line</Table.Th>
+                            <Table.Th>Tag</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
@@ -216,7 +201,7 @@ const DataConsole = () => {
                             rows
                         ) : (
                             <Table.Tr>
-                                <Table.Td colSpan={5}>
+                                <Table.Td colSpan={4}>
                                     {error ? (
                                         <span style={{ color: "red" }}>
                                             {error}

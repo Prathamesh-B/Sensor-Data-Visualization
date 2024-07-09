@@ -7,8 +7,18 @@
 .contentWrapper {
     padding: 0.5rem;
     display: flex;
-    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.usermenu {
+    display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: space-between;
+}
+
+.logoutWrapper {
+    display: flex;
     justify-content: center;
+    align-items: center;
 }

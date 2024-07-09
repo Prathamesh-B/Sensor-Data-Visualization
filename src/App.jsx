@@ -3,11 +3,11 @@ import { useDisclosure } from "@mantine/hooks";
 import Navbar from "./components/Navbar/Navbar";
 import AppRoutes from "./routerConfig";
 import Login from "./components/Login/Login";
-import { useAuth } from "./context/AuthContext"; // Import useAuth hook
+import { useAuth } from "./context/AuthContext";
 
 function App() {
     const [opened, { toggle }] = useDisclosure();
-    const { isAuthenticated } = useAuth(); // Use the authentication state from context
+    const { isAuthenticated } = useAuth();
 
     return (
         <>
@@ -37,7 +37,7 @@ function App() {
                             />
                         </Group>
                     </AppShell.Header>
-                    <AppShell.Navbar p="md">
+                    <AppShell.Navbar p="sm">
                         <Navbar />
                     </AppShell.Navbar>
                     <AppShell.Main className="main">

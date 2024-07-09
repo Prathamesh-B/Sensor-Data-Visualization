@@ -119,8 +119,7 @@ const MODashboard = () => {
                                 shadow="sm"
                                 p="lg"
                                 radius="lg"
-                                className="latest-card"
-                                style={{ cursor: "pointer" }}
+                                className="latest-card menu-button"
                             >
                                 <div
                                     style={{
@@ -134,6 +133,7 @@ const MODashboard = () => {
                                     <img
                                         style={{ width: "2.5rem" }}
                                         src="./calendar.png"
+                                        alt="Calendar Icon"
                                     />
                                     <Text
                                         style={{ marginTop: "0.3rem" }}
@@ -175,6 +175,7 @@ const MODashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./production.png"
+                                    alt="Production Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Production
@@ -202,6 +203,7 @@ const MODashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./production-rate.png"
+                                    alt="Production Rate Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Production Rate
@@ -229,6 +231,7 @@ const MODashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./efficiency.png"
+                                    alt="Efficiency Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Efficiency
@@ -256,6 +259,7 @@ const MODashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./down-time.png"
+                                    alt="Downtime Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Downtime (mins)

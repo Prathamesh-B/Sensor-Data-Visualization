@@ -17,7 +17,7 @@ const Production = () => {
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
 
-    const getColorByStatus = (status) =>{
+    const getColorByStatus = (status) => {
         switch (status) {
             case "Running":
                 return "#05cf2d";
@@ -28,7 +28,7 @@ const Production = () => {
             default:
                 return "#000000";
         }
-    }
+    };
 
     useEffect(() => {
         fetchDevicesAndTags();
@@ -73,10 +73,13 @@ const Production = () => {
         <Table.Tr key={Status.name}>
             <Table.Td>{Status.name}</Table.Td>
             <Table.Td
-            style={{
-                fontWeight: 700,
-                color:getColorByStatus(Status.status)}}
-            >{Status.status}</Table.Td>
+                style={{
+                    fontWeight: 700,
+                    color: getColorByStatus(Status.status),
+                }}
+            >
+                {Status.status}
+            </Table.Td>
         </Table.Tr>
     ));
 
@@ -95,6 +98,7 @@ const Production = () => {
                                 <img
                                     style={{ width: "3rem" }}
                                     src="./production.png"
+                                    alt="Production Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Units Produced
@@ -117,15 +121,16 @@ const Production = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div  style={{ display: "flex", alignItems: "center" }}>
-                            <div  style={{ marginRight: "1rem" }}>
-                            <img
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
                                     style={{ width: "3rem" }}
                                     src="./production_target.png"
+                                    alt="Production Target Icon"
                                 />
-                            <Text size="sm" fw={400}>
-                                Production Target
-                            </Text>
+                                <Text size="sm" fw={400}>
+                                    Production Target
+                                </Text>
                             </div>
                             <Text
                                 style={{ fontSize: "2.5rem" }}
@@ -144,15 +149,16 @@ const Production = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div  style={{ display: "flex", alignItems: "center" }}>
-                            <div  style={{ marginRight: "1rem" }}>
-                            <img
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
                                     style={{ width: "3rem" }}
                                     src="./production-rate.png"
+                                    alt="Production Rate Icon"
                                 />
-                            <Text size="sm" fw={400}>
-                                Production Rate
-                            </Text>
+                                <Text size="sm" fw={400}>
+                                    Production Rate
+                                </Text>
                             </div>
                             <Text
                                 style={{ fontSize: "2.5rem" }}
@@ -171,15 +177,16 @@ const Production = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div  style={{ display: "flex", alignItems: "center" }}>
-                            <div  style={{ marginRight: "1rem" }}>
-                            <img
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
                                     style={{ width: "3rem" }}
                                     src="./down-time.png"
+                                    alt="Downtime Icon"
                                 />
-                            <Text size="sm" fw={400}>
-                                Avg Downtime (mins)
-                            </Text>
+                                <Text size="sm" fw={400}>
+                                    Avg Downtime (mins)
+                                </Text>
                             </div>
                             <Text
                                 style={{ fontSize: "2.5rem" }}

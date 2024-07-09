@@ -14,7 +14,7 @@ const dataSets = {
             { name: "Hitachi Zosen Press Line 1", unit: 254, time: 3 },
             { name: "Hitachi Zosen Press Line 2", unit: 256, time: 1 },
         ],
-        production: 252,
+        production: 1275,
         efficiency: "80",
         activeMachines: 5,
         downtime: 6,
@@ -28,7 +28,7 @@ const dataSets = {
             { name: "Hitachi Zosen Press Line 1", unit: 296, time: 3 },
             { name: "Hitachi Zosen Press Line 2", unit: 296, time: 1 },
         ],
-        production: 297,
+        production: 1487,
         efficiency: "78",
         activeMachines: 5,
         downtime: 3,
@@ -42,7 +42,7 @@ const dataSets = {
             { name: "Hitachi Zosen Press Line 1", unit: 2089, time: 3 },
             { name: "Hitachi Zosen Press Line 2", unit: 2086, time: 1 },
         ],
-        production: 2086,
+        production: 10453,
         efficiency: "85",
         activeMachines: 5,
         downtime: 13,
@@ -68,7 +68,7 @@ const SVPMDashboard = () => {
                                 shadow="sm"
                                 p="lg"
                                 radius="lg"
-                                className="latest-card"
+                                className="latest-card menu-button"
                                 style={{
                                     cursor: "pointer",
                                 }}
@@ -85,6 +85,7 @@ const SVPMDashboard = () => {
                                     <img
                                         style={{ width: "2.5rem" }}
                                         src="./calendar.png"
+                                        alt="Calendar Icon"
                                     />
                                     <Text
                                         style={{ marginTop: "0.3rem" }}
@@ -126,6 +127,7 @@ const SVPMDashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./production.png"
+                                    alt="Production Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Production
@@ -148,11 +150,14 @@ const SVPMDashboard = () => {
                         radius="lg"
                         className="latest-card"
                     >
-                        <div style={{ display: "flex", alignItems: "flex-end" }}>
+                        <div
+                            style={{ display: "flex", alignItems: "flex-end" }}
+                        >
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./efficiency.png"
+                                    alt="Efficiency Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Availability
@@ -181,6 +186,7 @@ const SVPMDashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./machine.png"
+                                    alt="Machine Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Active Lines
@@ -208,6 +214,7 @@ const SVPMDashboard = () => {
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./down-time.png"
+                                    alt="Downtime Icon"
                                 />
                                 <Text size="sm" fw={400}>
                                     Downtime (mins)
@@ -239,82 +246,80 @@ const SVPMDashboard = () => {
                     </Grid>
                     {dataSet.data.map((item, index) => (
                         <>
-                        <Grid grow key={index}>
-                            <Grid.Col span={3}>
-                                <Card
-                                    p="lg"
-                                    radius="lg"
-                                    className="latest-card"
-                                >
-                                    <Text size="xl" fw={500}>
-                                        {item.name}
-                                    </Text>
-                                </Card>
-                            </Grid.Col>
-                            <Grid.Col span={3}>
-                                <Card
-                                    
-                                    p="lg"
-                                    radius="lg"
-                                    className="latest-card"
-                                >
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                        }}
+                            <Grid grow key={index}>
+                                <Grid.Col span={3}>
+                                    <Card
+                                        p="lg"
+                                        radius="lg"
+                                        className="latest-card"
                                     >
-                                        <PackageCheck
-                                            style={{ marginRight: "1rem" }}
-                                            size={30}
-                                            strokeWidth={1}
-                                        />
-                                        <Text
-                                            size="xl"
-                                            fw={700}
-                                            c={"lime"}
-                                            style={{ fontSize: "1.6rem" }}
-                                        >
-                                            {item.unit}
+                                        <Text size="xl" fw={500}>
+                                            {item.name}
                                         </Text>
-                                    </div>
-                                </Card>
-                            </Grid.Col>
-                            <Grid.Col span={3}>
-                                <Card
-                                    
-                                    p="lg"
-                                    radius="lg"
-                                    className="latest-card"
-                                >
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                        }}
+                                    </Card>
+                                </Grid.Col>
+                                <Grid.Col span={3}>
+                                    <Card
+                                        p="lg"
+                                        radius="lg"
+                                        className="latest-card"
                                     >
-                                        <Hourglass
+                                        <div
                                             style={{
-                                                marginRight: "1rem",
-                                            }}
-                                            size={30}
-                                            strokeWidth={1}
-                                        />
-                                        <Text
-                                            size="xl"
-                                            fw={700}
-                                            c={"orange"}
-                                            style={{
-                                                fontSize: "1.6rem",
+                                                display: "flex",
+                                                alignItems: "center",
                                             }}
                                         >
-                                            {item.time}
-                                        </Text>
-                                    </div>
-                                </Card>
-                            </Grid.Col>
-                        </Grid>
-                        <Divider />
+                                            <PackageCheck
+                                                style={{ marginRight: "1rem" }}
+                                                size={30}
+                                                strokeWidth={1}
+                                            />
+                                            <Text
+                                                size="xl"
+                                                fw={700}
+                                                c={"lime"}
+                                                style={{ fontSize: "1.6rem" }}
+                                            >
+                                                {item.unit}
+                                            </Text>
+                                        </div>
+                                    </Card>
+                                </Grid.Col>
+                                <Grid.Col span={3}>
+                                    <Card
+                                        p="lg"
+                                        radius="lg"
+                                        className="latest-card"
+                                    >
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Hourglass
+                                                style={{
+                                                    marginRight: "1rem",
+                                                }}
+                                                size={30}
+                                                strokeWidth={1}
+                                            />
+                                            <Text
+                                                size="xl"
+                                                fw={700}
+                                                c={"orange"}
+                                                style={{
+                                                    fontSize: "1.6rem",
+                                                }}
+                                            >
+                                                {item.time}
+                                            </Text>
+                                        </div>
+                                    </Card>
+                                </Grid.Col>
+                            </Grid>
+                            <Divider />
                         </>
                     ))}
                 </Grid.Col>

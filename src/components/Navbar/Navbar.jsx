@@ -98,24 +98,27 @@ const Navbar = () => {
             </div>
             {isAuthenticated && (
                 <div className="nav-bottom">
-                    <div className="contentWrapper">
-                        <Avatar color={"blue"} radius={"lg"} mt="sm">
-                            {username && username.charAt(0).toUpperCase()}
-                        </Avatar>
-                        <div>
-                            <Text style={{ fontWeight: "bold" }} size="md">
-                                {username}
-                            </Text>
-                            <Text size="sm">{role}</Text>
+                    <div className="usermenu">
+                        <div className="contentWrapper">
+                            <Avatar color={"blue"} radius={"lg"} mt="sm">
+                                {username && username.charAt(0).toUpperCase()}
+                            </Avatar>
+                            <div style={{ paddingLeft: "0.5rem" }}>
+                                <Text style={{ fontWeight: "bold" }} size="md">
+                                    {username}
+                                </Text>
+                                <Text size="sm">{role}</Text>
+                            </div>
+                        </div>
+                        <div className="logoutWrapper">
+                            <LogOut
+                                strokeWidth={1}
+                                size={30}
+                                style={{ cursor: "pointer" }}
+                                onClick={logout}
+                            />
                         </div>
                     </div>
-                    <NavLink
-                        component="div"
-                        label="Logout"
-                        leftSection={<LogOut strokeWidth={1} />}
-                        mt="sm"
-                        onClick={logout}
-                    />
                 </div>
             )}
         </>

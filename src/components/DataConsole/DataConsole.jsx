@@ -199,12 +199,8 @@ const DataConsole = () => {
                         Refresh
                     </Button>
                 </Grid.Col>
-                <Grid.Col span={6} mt="auto">
-                    <Button>Apply</Button>
-                </Grid.Col>
             </Grid>
-
-            <Table.ScrollContainer minWidth={800}>
+            <Table.ScrollContainer mt={"md"} minWidth={800}>
                 <Table verticalSpacing="sm">
                     <Table.Thead>
                         <Table.Tr>

@@ -25,3 +25,12 @@
 .chart {
     margin-top: 1.5rem;
 }
+
+.menu-button {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.menu-button:hover {
+    background-color: #f0f0f0;
+}

@@ -14,11 +14,12 @@ const DataConsole = () => {
     const [deviceTags, setDeviceTags] = useState([]);
 
     const deviceNames = {
-        1: "Destacker Unit",
-        2: "Deep Drawing press",
-        3: "Piercing Press",
-        4: "Robotic Loader",
-        5: "Flaring Press",
+        1: "Hitachi Zosen Press Line 1",
+        2: "Hitachi Zosen Press Line 2",
+        3: "Schuller Press Line 1",
+        4: "Schuller Press Line 2",
+        5: "Komatsu Press Line 1",
+        6: "Komatsu Press Line 2",
     };
 
     useEffect(() => {

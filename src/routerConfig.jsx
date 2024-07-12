@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import DataConsole from "./components/DataConsole/DataConsole";
 import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
-import AddNote from "./components/AddNote/AddNote";
+import Report from "./components/Report/Report";
 import Production from "./components/Production/Production";
 import MODashboard from "./components/Dashboard/MODashboard";
 import SVPMDashboard from "./components/Dashboard/SVPMDashboard";
@@ -31,10 +31,10 @@ const AppRoutes = () => (
             }
         />
         <Route
-            path="/notes"
+            path="/report"
             element={
                 <ProtectedRoute>
-                    <AddNote />
+                    <Report />
                 </ProtectedRoute>
             }
         />

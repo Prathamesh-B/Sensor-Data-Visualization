@@ -62,11 +62,11 @@ const Navbar = () => {
                         />
                         <NavLink
                             component={Link}
-                            to="/notes"
+                            to="/report"
                             leftSection={<NotebookPen strokeWidth={1} />}
                             label="Reports"
                             mt="sm"
-                            active={location.pathname === "/notes"}
+                            active={location.pathname === "/report"}
                         />
                         <NavLink
                             component={Link}

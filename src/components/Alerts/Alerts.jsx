@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { Info, AlertTriangle, AlertOctagon } from "lucide-react";
 import { useDisclosure } from "@mantine/hooks";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 
 const Notes = () => {
     const [events, setEvents] = useState([]);
@@ -99,9 +100,34 @@ const Notes = () => {
                     <form onSubmit={close}>
                         <Grid>
                             <Grid.Col span={6}>
+                                <DatePickerInput
+                                    placeholder="Enter Date"
+                                    label="Date of the Incident"
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                                <TimeInput
+                                    label="Time of the Incident"
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={6}>
                                 <TextInput
                                     placeholder="Enter Title"
                                     label="Title"
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                            <Select
+                                    label="Severity of Report"
+                                    placeholder="Select the severity"
+                                    data={[
+                                        "Minor",
+                                        "Major",
+                                        "Critical",
+                                    ]}
                                     required
                                 />
                             </Grid.Col>
@@ -117,23 +143,23 @@ const Notes = () => {
                                     required
                                 />
                             </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={6}>
                                 <Select
                                     label="Category of the Incident"
                                     placeholder="Pick a category"
-                                    data={["Breakdown", "Material Shortage"]}
+                                    data={["Breakdown", "Unavailability of Resources", "Changeover Losses"]}
                                     required
                                 />
                             </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={6}>
                                 <Select
                                     label="Sub-Category of the Incident"
                                     placeholder="Pick a sub-category"
-                                    data={["Breakdown", "Material Shortage"]}
+                                    data={["Equipment", "Tool", "Fixture", "Automation"]}
                                     required
                                 />
                             </Grid.Col>
-                            <Grid.Col span={4}>
+                            <Grid.Col span={6}>
                                 <Select
                                     label="Location of the Incident"
                                     placeholder="Pick a location"
@@ -150,16 +176,23 @@ const Notes = () => {
                                     minRows={5}
                                 />
                             </Grid.Col>
-                            <Grid.Col span={6}>
-                                <TextInput
-                                    placeholder="Enter Name"
-                                    label="Report Issued by:"
+                            <Grid.Col span={4}>
+                                <DatePickerInput
+                                    placeholder="Enter Date"
+                                    label="Date of Incident being Resolved"
                                     required
                                 />
                             </Grid.Col>
-                            <Grid.Col span={6}>
+                            <Grid.Col span={4}>
+                                <TextInput
+                                    placeholder="Enter Name"
+                                    label="Reported by:"
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={4}>
                                 <Select
-                                    label="Role of the Submitter"
+                                    label="Role of the Reporter"
                                     placeholder="Pick a role"
                                     data={[
                                         "Supervisior",
@@ -170,8 +203,16 @@ const Notes = () => {
                                 />
                             </Grid.Col>
                             <Grid.Col>
+                                <Textarea
+                                    placeholder="Write notes"
+                                    label="Notes"
+                                    autosize
+                                    minRows={4}
+                                />
+                            </Grid.Col>
+                            <Grid.Col>
                                 <Button type="submit" variant="filled">
-                                    Submit
+                                    Save
                                 </Button>
                             </Grid.Col>
                         </Grid>

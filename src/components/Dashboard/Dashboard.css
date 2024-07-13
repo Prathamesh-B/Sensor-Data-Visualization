@@ -34,3 +34,36 @@
 .menu-button:hover {
     background-color: #f0f0f0;
 }
+
+.menu-button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 6.8rem;
+    width: 6.8rem;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.menu-button img {
+    width: 2.5rem;
+    transition: opacity 0.3s ease;
+}
+
+.menu-button .menu-text {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.menu-button:hover img {
+    opacity: 0.3;
+}
+
+.menu-button:hover .menu-text {
+    opacity: 1;
+    visibility: visible;
+}

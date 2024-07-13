@@ -187,7 +187,7 @@ const MODashboard = () => {
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <div>
+                            <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
                                     src="./production-rate.png"
@@ -293,9 +293,10 @@ const MODashboard = () => {
                                     alt="Calendar Icon"
                                 />
                                 <Text
+                                    className="menu-text"
                                     style={{ marginTop: "0.3rem" }}
-                                    size="sm"
-                                    fw={400}
+                                    size="lg"
+                                    fw={700}
                                 >
                                     {rangeMenu}
                                 </Text>
@@ -390,7 +391,7 @@ const MODashboard = () => {
                     <div className="dropdown-chart">
                         <div className="machine-dropdown">
                             <Select
-                                label="Production Line:"
+                                label="Production Line"
                                 allowDeselect={false}
                                 placeholder="Pick value"
                                 data={devices.map((device) => ({
@@ -403,7 +404,7 @@ const MODashboard = () => {
                         </div>
                         <div className="sensor-dropdown">
                             <Select
-                                label="Sensor:"
+                                label="Sensor"
                                 allowDeselect={false}
                                 placeholder="Pick value"
                                 data={deviceTags.map((tag) => ({
@@ -419,7 +420,7 @@ const MODashboard = () => {
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} size="xl">
-                        Alerts :
+                        Alerts
                     </Text>
                     <ScrollArea style={{ height: 400 }}>
                         <Alerts />

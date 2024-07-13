@@ -120,14 +120,10 @@ const Notes = () => {
                                 />
                             </Grid.Col>
                             <Grid.Col span={6}>
-                            <Select
+                                <Select
                                     label="Severity of Report"
                                     placeholder="Select the severity"
-                                    data={[
-                                        "Minor",
-                                        "Major",
-                                        "Critical",
-                                    ]}
+                                    data={["Minor", "Major", "Critical"]}
                                     required
                                 />
                             </Grid.Col>
@@ -147,7 +143,11 @@ const Notes = () => {
                                 <Select
                                     label="Category of the Incident"
                                     placeholder="Pick a category"
-                                    data={["Breakdown", "Unavailability of Resources", "Changeover Losses"]}
+                                    data={[
+                                        "Breakdown",
+                                        "Unavailability of Resources",
+                                        "Changeover Losses",
+                                    ]}
                                     required
                                 />
                             </Grid.Col>
@@ -155,7 +155,12 @@ const Notes = () => {
                                 <Select
                                     label="Sub-Category of the Incident"
                                     placeholder="Pick a sub-category"
-                                    data={["Equipment", "Tool", "Fixture", "Automation"]}
+                                    data={[
+                                        "Equipment",
+                                        "Tool",
+                                        "Fixture",
+                                        "Automation",
+                                    ]}
                                     required
                                 />
                             </Grid.Col>
@@ -224,14 +229,11 @@ const Notes = () => {
             ) : (
                 <>
                     {events.map((event) => (
-                        <Card
-                            shadow="sm"
-                            p="sm"
-                            mb="sm"
+                        <div
                             key={event.id}
                             style={{
                                 padding: "1rem",
-                                borderRadius: "8px",
+                                borderRadius: "4px",
                                 marginBottom: "1rem",
                                 borderLeft: isEventIncomplete(event)
                                     ? "5px solid #228be8"
@@ -239,8 +241,19 @@ const Notes = () => {
                                 cursor: isEventIncomplete(event)
                                     ? "pointer"
                                     : "default",
+                                backgroundColor: "#fff",
+                                transition: "background-color 0.2s",
                             }}
                             onClick={() => openModal(event)}
+                            onMouseEnter={(e) =>
+                                isEventIncomplete(event) &&
+                                (e.currentTarget.style.backgroundColor =
+                                    "#e9f5ff")
+                            }
+                            onMouseLeave={(e) =>
+                                isEventIncomplete(event) &&
+                                (e.currentTarget.style.backgroundColor = "#fff")
+                            }
                         >
                             <div
                                 style={{
@@ -273,7 +286,7 @@ const Notes = () => {
                                     {formatTime(event.timestamp)}
                                 </Text>
                             </div>
-                        </Card>
+                        </div>
                     ))}
                 </>
             )}

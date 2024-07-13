@@ -1,3 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Rokkitt&display=swap");
+
+.rokkitt-400 {
+    font-family: "Rokkitt", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    letter-spacing: 0.1em;
+    font-size: 30px;
+}
+
+.aclonica-regular {
+    font-family: "Aclonica", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
 .main {
     background-color: rgb(249, 250, 251);
 }
@@ -8,7 +25,7 @@
     font-weight: bold;
     color: white;
     text-align: center;
-    border-radius: 0.5rem;
+    padding: 2px;
 }
 
 a {

@@ -41,7 +41,7 @@ const Navbar = () => {
     return (
         <>
             <div className="nav-top">
-                <div className="logo">ProdViz</div>
+                <div className="logo rokkitt-400">ProdViz</div>
                 {isAuthenticated ? (
                     <>
                         <NavLink

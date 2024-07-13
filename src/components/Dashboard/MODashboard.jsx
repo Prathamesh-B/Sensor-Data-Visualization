@@ -1,4 +1,14 @@
-import { Menu, Card, Grid, ScrollArea, Text, Select } from "@mantine/core";
+import {
+    Menu,
+    Card,
+    Grid,
+    ScrollArea,
+    Text,
+    Select,
+    Modal,
+    Button,
+} from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
 import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
@@ -14,6 +24,16 @@ const MODashboard = () => {
     const [filteredChartData, setFilteredChartData] = useState([]);
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
+    const [customDateRange, setCustomDateRange] = useState({
+        start: null,
+        end: null,
+    });
+    const [modalOpened, setModalOpened] = useState(false);
+
+    const handleCustomRange = () => {
+        setRangeMenu("Custom");
+        setModalOpened(false);
+    };
 
     useEffect(() => {
         fetchDevicesAndTags();
@@ -21,7 +41,7 @@ const MODashboard = () => {
 
     useEffect(() => {
         fetchData();
-    }, [productionLineMenu, tagMenu, rangeMenu]);
+    }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
 
     const fetchDevicesAndTags = async () => {
         try {
@@ -55,6 +75,9 @@ const MODashboard = () => {
                         startDate =
                             new Date().toISOString().split("T")[0] +
                             "T00:00:00Z";
+                        endDate =
+                            new Date().toISOString().split("T")[0] +
+                            "T23:59:59Z";
                         break;
                     case "Yesterday":
                         var yesterday = new Date();
@@ -63,7 +86,7 @@ const MODashboard = () => {
                             yesterday.toISOString().split("T")[0] +
                             "T00:00:00Z";
                         endDate =
-                            new Date(yesterday).toISOString().split("T")[0] +
+                            yesterday.toISOString().split("T")[0] +
                             "T23:59:59Z";
                         break;
                     case "Last 7 Days":
@@ -71,6 +94,22 @@ const MODashboard = () => {
                         lastWeek.setDate(lastWeek.getDate() - 6);
                         startDate =
                             lastWeek.toISOString().split("T")[0] + "T00:00:00Z";
+                        endDate =
+                            new Date().toISOString().split("T")[0] +
+                            "T23:59:59Z";
+                        break;
+                    case "Custom":
+                        if (customDateRange.start && customDateRange.end) {
+                            startDate =
+                                customDateRange.start
+                                    .toISOString()
+                                    .split("T")[0] + "T00:00:00Z";
+                            endDate =
+                                customDateRange.end
+                                    .toISOString()
+                                    .split("T")[0] + "T23:59:59Z";
+                        }
+                        console.log(startDate, endDate);
                         break;
                     default:
                         break;
@@ -84,11 +123,7 @@ const MODashboard = () => {
                     `http://127.0.0.1:8000/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
                 );
 
-                if (!MPresponse.ok) {
-                    throw new Error("Network response was not ok");
-                }
-
-                if (!response.ok) {
+                if (!response.ok || !MPresponse.ok) {
                     throw new Error("Network response was not ok");
                 }
 
@@ -116,37 +151,154 @@ const MODashboard = () => {
     return (
         <>
             <Grid columns={10} gutter="sm" mb="lg" grow>
-                <Grid.Col span={1}>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./production.png"
+                                    alt="Production Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Production
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                c="green"
+                                fw={700}
+                            >
+                                {topCards.production}
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./production-rate.png"
+                                    alt="Production Rate Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Production Rate
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                fw={700}
+                                c="indigo"
+                            >
+                                {staticCards.PR}%
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./efficiency.png"
+                                    alt="Efficiency Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Efficiency
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                c="teal"
+                                fw={700}
+                            >
+                                {staticCards.ER}%
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./down-time.png"
+                                    alt="Downtime Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Downtime(mins)
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                c="orange"
+                                fw={700}
+                            >
+                                {topCards.downtime}
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col
+                    span={1}
+                    style={{
+                        paddingLeft: "1.2rem",
+                    }}
+                >
                     <Menu shadow="md" width={200}>
                         <Menu.Target>
                             <Card
                                 shadow="sm"
                                 p="lg"
-                                radius="lg"
                                 className="latest-card menu-button"
+                                style={{
+                                    borderRadius: "50%",
+                                    height: "6.8rem",
+                                    width: "6.8rem",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    position: "relative",
+                                    textAlign: "center",
+                                }}
                             >
-                                <div
-                                    style={{
-                                        height: "4rem",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        position: "relative",
-                                    }}
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./calendar.png"
+                                    alt="Calendar Icon"
+                                />
+                                <Text
+                                    style={{ marginTop: "0.3rem" }}
+                                    size="sm"
+                                    fw={400}
                                 >
-                                    <img
-                                        style={{ width: "2.5rem" }}
-                                        src="./calendar.png"
-                                        alt="Calendar Icon"
-                                    />
-                                    <Text
-                                        style={{ marginTop: "0.3rem" }}
-                                        size="sm"
-                                        fw={400}
-                                    >
-                                        {rangeMenu}
-                                    </Text>
-                                </div>
+                                    {rangeMenu}
+                                </Text>
                             </Card>
                         </Menu.Target>
                         <Menu.Dropdown>
@@ -164,120 +316,73 @@ const MODashboard = () => {
                             >
                                 Last 7 Days
                             </Menu.Item>
+                            <Menu.Divider />
+                            <Menu.Item onClick={() => setModalOpened(true)}>
+                                Custom Range
+                            </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
+                    <Modal
+                        opened={modalOpened}
+                        onClose={() => setModalOpened(false)}
+                        title="Select Custom Date Range"
+                        size="auto"
                     >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./production.png"
-                                    alt="Production Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Production
-                                </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                c="green"
-                                fw={700}
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                gap: "1rem",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    flex: 1,
+                                    borderRight: "1px solid #dee2e6",
+                                }}
                             >
-                                {topCards.production}
-                            </Text>
-                        </div>
-                    </Card>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./production-rate.png"
-                                    alt="Production Rate Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Production Rate
+                                <Text size="sm" fw={500}>
+                                    Start Date
                                 </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                fw={700}
-                                c="indigo"
-                            >
-                                {staticCards.PR}%
-                            </Text>
-                        </div>
-                    </Card>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./efficiency.png"
-                                    alt="Efficiency Icon"
+                                <DatePicker
+                                    placeholder="Pick start date"
+                                    value={customDateRange.start}
+                                    onChange={(date) =>
+                                        setCustomDateRange({
+                                            ...customDateRange,
+                                            start: date,
+                                        })
+                                    }
                                 />
-                                <Text size="sm" fw={400}>
-                                    Efficiency
-                                </Text>
                             </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                c="teal"
-                                fw={700}
-                            >
-                                {staticCards.ER}%
-                            </Text>
-                        </div>
-                    </Card>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./down-time.png"
-                                    alt="Downtime Icon"
+                            <div style={{ flex: 1 }}>
+                                <Text size="sm" fw={500}>
+                                    End Date
+                                </Text>
+                                <DatePicker
+                                    placeholder="Pick end date"
+                                    value={customDateRange.end}
+                                    onChange={(date) =>
+                                        setCustomDateRange({
+                                            ...customDateRange,
+                                            end: date,
+                                        })
+                                    }
                                 />
-                                <Text size="sm" fw={400}>
-                                    Downtime(mins)
-                                </Text>
                             </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                c="orange"
-                                fw={700}
-                            >
-                                {topCards.downtime}
-                            </Text>
                         </div>
-                    </Card>
+                        <Button
+                            onClick={handleCustomRange}
+                            style={{
+                                marginTop: "1rem",
+                                display: "block",
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }}
+                        >
+                            Set Custom Range
+                        </Button>
+                    </Modal>
                 </Grid.Col>
             </Grid>
             <Grid grow>

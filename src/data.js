@@ -197,6 +197,7 @@ export const products = [
     { id: 1, name: "Structural Steel Beams", unit_price: 150, desc: "Robust structural steel beams designed for construction and infrastructure projects, providing exceptional strength and durability for load-bearing applications." },
     { id: 2, name: "Silicone Gels", unit_price: 150, desc: "Soft, transparent silicone gels used in electronics and medical devices for their cushioning, insulating, and biocompatible properties." },
     { id: 3, name: "Tool Steel Rods", unit_price: 150, desc: "High-hardness tool steel rods crafted for manufacturing cutting tools, dies, and molds, ensuring long-lasting sharpness and wear resistance." },
+    { id: 4, name: "Stainless Steel Molds", unit_price: 150, desc: "High-hardness tool steel rods crafted for manufacturing cutting tools, dies, and molds, ensuring long-lasting sharpness and wear resistance." },
 ];
 
 export const production = [
@@ -219,11 +220,12 @@ export const production = [
 ]
 
 export const status = [
-    { id: 1, name: 'Destacker Unit', status: 'Running' },
-    { id: 2, name: 'Deep Drawing press', status: 'Running' },
-    { id: 3, name: 'Piercing Press', status: 'Running' },
-    { id: 4, name: 'Flaring Press', status: 'Under Maintenance' },
-    { id: 5, name: 'Robotic Unloader', status: 'Stopped' },
+    { id: 1, name: 'Hitachi Zosen Press Line 1', status: 'Running' },
+    { id: 2, name: 'Hitachi Zosen Press Line 2', status: 'Running' },
+    { id: 3, name: 'Schuller Press Line 1', status: 'Running' },
+    { id: 4, name: 'Schuller Press Line 2', status: 'Under Maintenance' },
+    { id: 5, name: 'Komatsu Press Line 1', status: 'Stopped' },
+    { id: 5, name: 'Komatsu Press Line 2', status: 'Stopped' },
 ]
 
 export const notifs = [
@@ -295,11 +297,12 @@ export const cards = [
 ]
 
 export const DTdata = [
-    { id: 1, machine_id: 1, machine_nm: "Mitsubishi 35", dwt_type: "Outage", start: "2024-06-01T02:45:00Z", end: "2024-06-01T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
-    { id: 2, machine_id: 2, machine_nm: "Laser Cutter", dwt_type: "Outage", start: "2024-06-03T02:45:00Z", end: "2024-06-03T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Ashish Kumar", shift: "Afternoon" },
-    { id: 3, machine_id: 3, machine_nm: "Stratos 42", dwt_type: "Maintenance", start: "2024-06-04T02:45:00Z", end: "2024-06-04T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
-    { id: 4, machine_id: 4, machine_nm: "Falcon 65", dwt_type: "Maintenance", start: "2024-06-05T02:45:00Z", end: "2024-06-05T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Nilesh Chutke", shift: "Afternoon" },
-    { id: 5, machine_id: 5, machine_nm: "Cypher 15", dwt_type: "Outage", start: "2024-06-06T02:45:00Z", end: "2024-06-06T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" }
+    { id: 1, machine_id: 1, machine_nm: "Hitachi Zosen Press Line 1", dwt_type: "Outage", start: "2024-06-01T02:45:00Z", end: "2024-06-01T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
+    { id: 2, machine_id: 2, machine_nm: "Hitachi Zosen Press Line 2", dwt_type: "Outage", start: "2024-06-03T02:45:00Z", end: "2024-06-03T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Ashish Kumar", shift: "Afternoon" },
+    { id: 3, machine_id: 3, machine_nm: "Schuller Press Line 1", dwt_type: "Maintenance", start: "2024-06-04T02:45:00Z", end: "2024-06-04T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
+    { id: 4, machine_id: 4, machine_nm: "Schuller Press Line 2", dwt_type: "Maintenance", start: "2024-06-05T02:45:00Z", end: "2024-06-05T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Nilesh Chutke", shift: "Afternoon" },
+    { id: 5, machine_id: 5, machine_nm: "Komatsu Press Line 1", dwt_type: "Outage", start: "2024-06-06T02:45:00Z", end: "2024-06-06T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" },
+    { id: 6, machine_id: 6, machine_nm: "Komatsu Press Line 2", dwt_type: "Outage", start: "2024-06-06T02:45:00Z", end: "2024-06-06T03:30:00Z", lost: "45", rc: "Sensor Failure", fm: "Rahul Singh", shift: "Afternoon" }
 ]
 
 export const sensorsOpt = [

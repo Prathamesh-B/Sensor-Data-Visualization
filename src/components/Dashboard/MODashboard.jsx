@@ -24,6 +24,7 @@ const MODashboard = () => {
     const [filteredChartData, setFilteredChartData] = useState([]);
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
+    const [status, setStatus] = useState("Running")
     const [customDateRange, setCustomDateRange] = useState({
         start: null,
         end: null,
@@ -72,9 +73,7 @@ const MODashboard = () => {
 
                 switch (rangeMenu) {
                     case "Today":
-                        startDate =
-                            new Date().toISOString().split("T")[0] +
-                            "T00:00:00Z";
+                        startDate = new Date().toISOString().split("T")[0] + "T00:00:00Z";
                         endDate =
                             new Date().toISOString().split("T")[0] +
                             "T23:59:59Z";
@@ -404,7 +403,7 @@ const MODashboard = () => {
                         </div>
                         <div className="sensor-dropdown">
                             <Select
-                                label="Sensor"
+                                label="Parameter"
                                 allowDeselect={false}
                                 placeholder="Pick value"
                                 data={deviceTags.map((tag) => ({
@@ -413,6 +412,16 @@ const MODashboard = () => {
                                 }))}
                                 value={tagMenu}
                                 onChange={setTagMenu}
+                            />
+                        </div>
+                        <div className="machine-dropdown">
+                            <Select
+                                label="Status"
+                                allowDeselect={false}
+                                placeholder="Pick value"
+                                data={["Running", "Running Slow","Scheduled Down","Just Went Down","Down","No Data","Not Scheduled","Tool Change","Andon is Active"]}
+                                value={status}
+                                // onChange={setProductionLineMenu}
                             />
                         </div>
                     </div>

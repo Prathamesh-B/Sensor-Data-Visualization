@@ -18,6 +18,8 @@ const Notes = () => {
     const [loading, setLoading] = useState(true);
     const [opened, { open, close }] = useDisclosure(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [CatData, setCatData] = useState("");
+    const [SubData, setSubData] = useState([]);
 
     const fetchDevicesAndTags = async () => {
         try {
@@ -77,6 +79,26 @@ const Notes = () => {
         }
     };
 
+    const getSubByCat = (CatData) => {
+        switch (CatData) {
+            case "Breakdown":
+                return ["Equipment", "Tool", "Fixture", "Automation"];
+            case "Unavailability of Resources":
+                return ["Raw Material Unavailable", "Manpower Unavailable", "Forklift Unavailable", "Logistic Pallet Unavailable"];
+            case "Changeover Losses":
+                return ["Line Change (Planned)", "Line Change (Unplanned)", "Coil Change"];
+            case "Speed Losses":
+                return ["Automation", "Equipment", "Fixture/Tool", "Material", "Manpower"];
+            default:
+                return [];
+        }
+    };
+
+    const handleCategoryChange = (value) => {
+        setCatData(value);
+        setSubData(getSubByCat(value));
+    };
+
     const openModal = (event) => {
         setSelectedEvent(event);
         if (!event.incident_dtls) {
@@ -120,10 +142,14 @@ const Notes = () => {
                                 />
                             </Grid.Col>
                             <Grid.Col span={6}>
-                                <Select
+                            <Select
                                     label="Severity of Report"
                                     placeholder="Select the severity"
-                                    data={["Minor", "Major", "Critical"]}
+                                    data={[
+                                        "Minor",
+                                        "Major",
+                                        "Critical",
+                                    ]}
                                     required
                                 />
                             </Grid.Col>
@@ -141,13 +167,18 @@ const Notes = () => {
                             </Grid.Col>
                             <Grid.Col span={6}>
                                 <Select
+                                    label="Location of the Incident"
+                                    placeholder="Pick a location"
+                                    data={["Floor A", "Floor B", "Floor C"]}
+                                    required
+                                />
+                            </Grid.Col>
+                            <Grid.Col span={6}>
+                                <Select
                                     label="Category of the Incident"
                                     placeholder="Pick a category"
-                                    data={[
-                                        "Breakdown",
-                                        "Unavailability of Resources",
-                                        "Changeover Losses",
-                                    ]}
+                                    data={["Breakdown", "Unavailability of Resources", "Changeover Losses", "Speed Losses"]}
+                                    onChange={handleCategoryChange}
                                     required
                                 />
                             </Grid.Col>
@@ -155,20 +186,7 @@ const Notes = () => {
                                 <Select
                                     label="Sub-Category of the Incident"
                                     placeholder="Pick a sub-category"
-                                    data={[
-                                        "Equipment",
-                                        "Tool",
-                                        "Fixture",
-                                        "Automation",
-                                    ]}
-                                    required
-                                />
-                            </Grid.Col>
-                            <Grid.Col span={6}>
-                                <Select
-                                    label="Location of the Incident"
-                                    placeholder="Pick a location"
-                                    data={["Floor A", "Floor B", "Floor C"]}
+                                    data= {SubData}
                                     required
                                 />
                             </Grid.Col>
@@ -229,11 +247,14 @@ const Notes = () => {
             ) : (
                 <>
                     {events.map((event) => (
-                        <div
+                        <Card
+                            shadow="sm"
+                            p="sm"
+                            mb="sm"
                             key={event.id}
                             style={{
                                 padding: "1rem",
-                                borderRadius: "4px",
+                                borderRadius: "8px",
                                 marginBottom: "1rem",
                                 borderLeft: isEventIncomplete(event)
                                     ? "5px solid #228be8"
@@ -241,19 +262,8 @@ const Notes = () => {
                                 cursor: isEventIncomplete(event)
                                     ? "pointer"
                                     : "default",
-                                backgroundColor: "#fff",
-                                transition: "background-color 0.2s",
                             }}
                             onClick={() => openModal(event)}
-                            onMouseEnter={(e) =>
-                                isEventIncomplete(event) &&
-                                (e.currentTarget.style.backgroundColor =
-                                    "#e9f5ff")
-                            }
-                            onMouseLeave={(e) =>
-                                isEventIncomplete(event) &&
-                                (e.currentTarget.style.backgroundColor = "#fff")
-                            }
                         >
                             <div
                                 style={{
@@ -286,7 +296,7 @@ const Notes = () => {
                                     {formatTime(event.timestamp)}
                                 </Text>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </>
             )}

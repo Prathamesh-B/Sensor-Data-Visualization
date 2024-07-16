@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Menu, Card, Grid, ScrollArea, Text, Divider } from "@mantine/core";
+import { Menu, Card, Grid, ScrollArea, Text, Divider, Button, Modal } from "@mantine/core";
 import Alerts from "../Alerts/Alerts";
 import { PackageCheck, Hourglass } from "lucide-react";
 import "./Dashboard.css";
+import { DatePicker } from "@mantine/dates";
 
 const SVPMDashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
+    const [customDateRange, setCustomDateRange] = useState({
+        start: null,
+        end: null,
+    });
+    const [modalOpened, setModalOpened] = useState(false);
+
+    const handleCustomRange = () => {
+        setRangeMenu("Custom");
+        setModalOpened(false);
+    };
     const [dataSet, setDataSet] = useState({
         data: [],
         production: 0,
@@ -90,38 +101,157 @@ const SVPMDashboard = () => {
     return (
         <>
             <Grid columns={10} gutter="lg" mb="lg" grow>
-                <Grid.Col span={1}>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./production.png"
+                                    alt="Production Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Production
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                c="green"
+                                fw={700}
+                            >
+                                {dataSet.production}
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div
+                            style={{ display: "flex", alignItems: "flex-end" }}
+                        >
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./efficiency.png"
+                                    alt="Availability Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Availability
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                c="indigo"
+                                fw={700}
+                            >
+                                {dataSet.availability}%
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./machine.png"
+                                    alt="Machine Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Active Lines
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                c="teal"
+                                fw={700}
+                            >
+                                {dataSet.activeMachines}
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col span={{ base: 4, lg: 2 }}>
+                    <Card
+                        shadow="sm"
+                        p="xs"
+                        radius="md"
+                        className="latest-card"
+                    >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                            <div style={{ marginRight: "1rem" }}>
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./down-time.png"
+                                    alt="Downtime Icon"
+                                />
+                                <Text size="sm" fw={400}>
+                                    Downtime(mins)
+                                </Text>
+                            </div>
+                            <Text
+                                style={{ fontSize: "3.5rem" }}
+                                c="orange"
+                                fw={700}
+                            >
+                                {dataSet.downtime}
+                            </Text>
+                        </div>
+                    </Card>
+                </Grid.Col>
+                <Grid.Col
+                    span={1}
+                    style={{
+                        paddingLeft: "1.2rem",
+                    }}
+                >
                     <Menu shadow="md" width={200}>
                         <Menu.Target>
                             <Card
                                 shadow="sm"
                                 p="lg"
-                                radius="lg"
                                 className="latest-card menu-button"
-                                style={{ cursor: "pointer" }}
+                                style={{
+                                    borderRadius: "50%",
+                                    height: "6.8rem",
+                                    width: "6.8rem",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    position: "relative",
+                                    textAlign: "center",
+                                }}
                             >
-                                <div
-                                    style={{
-                                        height: "4rem",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        position: "relative",
-                                    }}
+                                <img
+                                    style={{ width: "2.5rem" }}
+                                    src="./calendar.png"
+                                    alt="Calendar Icon"
+                                />
+                                <Text
+                                    className="menu-text"
+                                    style={{ marginTop: "0.3rem" }}
+                                    size="lg"
+                                    fw={700}
                                 >
-                                    <img
-                                        style={{ width: "2.5rem" }}
-                                        src="./calendar.png"
-                                        alt="Calendar Icon"
-                                    />
-                                    <Text
-                                        style={{ marginTop: "0.3rem" }}
-                                        size="sm"
-                                        fw={400}
-                                    >
-                                        {rangeMenu}
-                                    </Text>
-                                </div>
+                                    {rangeMenu}
+                                </Text>
                             </Card>
                         </Menu.Target>
                         <Menu.Dropdown>
@@ -139,122 +269,73 @@ const SVPMDashboard = () => {
                             >
                                 Last 7 Days
                             </Menu.Item>
+                            <Menu.Divider />
+                            <Menu.Item onClick={() => setModalOpened(true)}>
+                                Custom Range
+                            </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./production.png"
-                                    alt="Production Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Production
-                                </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                c="green"
-                                fw={700}
-                            >
-                                {dataSet.production}
-                            </Text>
-                        </div>
-                    </Card>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
+                    <Modal
+                        opened={modalOpened}
+                        onClose={() => setModalOpened(false)}
+                        title="Select Custom Date Range"
+                        size="auto"
                     >
                         <div
-                            style={{ display: "flex", alignItems: "flex-end" }}
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                gap: "1rem",
+                            }}
                         >
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./efficiency.png"
-                                    alt="Availability Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Availability
-                                </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                c="indigo"
-                                fw={700}
+                            <div
+                                style={{
+                                    flex: 1,
+                                    borderRight: "1px solid #dee2e6",
+                                }}
                             >
-                                {dataSet.availability}%
-                            </Text>
-                        </div>
-                    </Card>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./machine.png"
-                                    alt="Machine Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Active Lines
+                                <Text size="sm" fw={500}>
+                                    Start Date
                                 </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                c="teal"
-                                fw={700}
-                            >
-                                {dataSet.activeMachines}
-                            </Text>
-                        </div>
-                    </Card>
-                </Grid.Col>
-                <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="lg"
-                        radius="lg"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./down-time.png"
-                                    alt="Downtime Icon"
+                                <DatePicker
+                                    placeholder="Pick start date"
+                                    value={customDateRange.start}
+                                    onChange={(date) =>
+                                        setCustomDateRange({
+                                            ...customDateRange,
+                                            start: date,
+                                        })
+                                    }
                                 />
-                                <Text size="sm" fw={400}>
-                                    Downtime(mins)
-                                </Text>
                             </div>
-                            <Text
-                                style={{ fontSize: "2.5rem" }}
-                                c="orange"
-                                fw={700}
-                            >
-                                {dataSet.downtime}
-                            </Text>
+                            <div style={{ flex: 1 }}>
+                                <Text size="sm" fw={500}>
+                                    End Date
+                                </Text>
+                                <DatePicker
+                                    placeholder="Pick end date"
+                                    value={customDateRange.end}
+                                    onChange={(date) =>
+                                        setCustomDateRange({
+                                            ...customDateRange,
+                                            end: date,
+                                        })
+                                    }
+                                />
+                            </div>
                         </div>
-                    </Card>
+                        <Button
+                            onClick={handleCustomRange}
+                            style={{
+                                marginTop: "1rem",
+                                display: "block",
+                                marginLeft: "auto",
+                                marginRight: "auto",
+                            }}
+                        >
+                            Set Custom Range
+                        </Button>
+                    </Modal>
                 </Grid.Col>
             </Grid>
             <Grid grow>
@@ -279,7 +360,7 @@ const SVPMDashboard = () => {
                                         radius="lg"
                                         className="latest-card"
                                     >
-                                        <Text size="xl" fw={500}>
+                                        <Text size="lg" fw={600}>
                                             {item.name}
                                         </Text>
                                     </Card>

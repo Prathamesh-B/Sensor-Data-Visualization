@@ -8,14 +8,14 @@ import {
     NumberInput,
 } from "@mantine/core";
 import "./Production.css";
-import { status } from "../../data";
+import { DTdata, status,products } from "../../data";
 import { useEffect, useState } from "react";
 
 const Production = () => {
     const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
     const [sensorMenu, setSensorMenu] = useState("12");
-    const [devices, setDevices] = useState([]);
-    const [deviceTags, setDeviceTags] = useState([]);
+    // const [devices, setDevices] = useState([]);
+    // const [deviceTags, setDeviceTags] = useState([]);
 
     const getColorByStatus = (status) => {
         switch (status) {
@@ -45,25 +45,25 @@ const Production = () => {
             if (!deviceResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
             }
-            const devicesData = await deviceResponse.json();
-            const tagsData = await tagResponse.json();
+            // const devicesData = await deviceResponse.json();
+            // const tagsData = await tagResponse.json();
 
             // Ensure unique and defined values for devices and tags
-            const uniqueDevices = Array.from(
-                new Set(devicesData.map((device) => device.DeviceId))
-            ).map((id) => devicesData.find((device) => device.DeviceId === id));
-            const uniqueTags = Array.from(
-                new Set(tagsData.map((tag) => tag.id))
-            ).map((id) => tagsData.find((tag) => tag.id === id));
+            // const uniqueDevices = Array.from(
+            //     new Set(devicesData.map((device) => device.DeviceId))
+            // ).map((id) => devicesData.find((device) => device.DeviceId === id));
+            // const uniqueTags = Array.from(
+            //     new Set(tagsData.map((tag) => tag.id))
+            // ).map((id) => tagsData.find((tag) => tag.id === id));
 
-            setDevices(
-                uniqueDevices.filter(
-                    (device) => device && device.DeviceId && device.Name
-                )
-            );
-            setDeviceTags(
-                uniqueTags.filter((tag) => tag && tag.id && tag.Name)
-            );
+            // setDevices(
+            //     uniqueDevices.filter(
+            //         (device) => device && device.DeviceId && device.Name
+            //     )
+            // );
+            // setDeviceTags(
+            //     uniqueTags.filter((tag) => tag && tag.id && tag.Name)
+            // );
         } catch (error) {
             console.error("Error fetching devices or tags:", error);
         }
@@ -89,14 +89,14 @@ const Production = () => {
                 <Grid.Col span={{ base: 6, md: 3 }}>
                     <Card
                         shadow="sm"
-                        p="lg"
-                        radius="lg"
+                        p="xs"
+                        radius="md"
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <div style={{ marginRight: "1rem" }}>
                                 <img
-                                    style={{ width: "3rem" }}
+                                    style={{ width: "2.5rem" }}
                                     src="./production.png"
                                     alt="Production Icon"
                                 />
@@ -105,7 +105,7 @@ const Production = () => {
                                 </Text>
                             </div>
                             <Text
-                                style={{ fontSize: "2.5rem" }}
+                                style={{ fontSize: "3.5rem" }}
                                 c="blue"
                                 fw={700}
                             >
@@ -117,14 +117,14 @@ const Production = () => {
                 <Grid.Col span={{ base: 6, md: 3 }}>
                     <Card
                         shadow="sm"
-                        p="lg"
-                        radius="lg"
+                        p="xs"
+                        radius="md"
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <div style={{ marginRight: "1rem" }}>
                                 <img
-                                    style={{ width: "3rem" }}
+                                    style={{ width: "2.5rem" }}
                                     src="./production_target.png"
                                     alt="Production Target Icon"
                                 />
@@ -133,7 +133,7 @@ const Production = () => {
                                 </Text>
                             </div>
                             <Text
-                                style={{ fontSize: "2.5rem" }}
+                                style={{ fontSize: "3.5rem" }}
                                 fw={700}
                                 c="yellow"
                             >
@@ -145,14 +145,14 @@ const Production = () => {
                 <Grid.Col span={{ base: 6, md: 3 }}>
                     <Card
                         shadow="sm"
-                        p="lg"
-                        radius="lg"
+                        p="xs"
+                        radius="md"
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <div style={{ marginRight: "1rem" }}>
                                 <img
-                                    style={{ width: "3rem" }}
+                                    style={{ width: "2.5rem" }}
                                     src="./production-rate.png"
                                     alt="Production Rate Icon"
                                 />
@@ -161,7 +161,7 @@ const Production = () => {
                                 </Text>
                             </div>
                             <Text
-                                style={{ fontSize: "2.5rem" }}
+                                style={{ fontSize: "3.5rem" }}
                                 fw={700}
                                 c="lime"
                             >
@@ -173,14 +173,14 @@ const Production = () => {
                 <Grid.Col span={{ base: 6, md: 3 }}>
                     <Card
                         shadow="sm"
-                        p="lg"
-                        radius="lg"
+                        p="xs"
+                        radius="md"
                         className="latest-card"
                     >
                         <div style={{ display: "flex", alignItems: "center" }}>
                             <div style={{ marginRight: "1rem" }}>
                                 <img
-                                    style={{ width: "3rem" }}
+                                    style={{ width: "2.5rem" }}
                                     src="./down-time.png"
                                     alt="Downtime Icon"
                                 />
@@ -189,7 +189,7 @@ const Production = () => {
                                 </Text>
                             </div>
                             <Text
-                                style={{ fontSize: "2.5rem" }}
+                                style={{ fontSize: "3.5rem" }}
                                 fw={700}
                                 c="orange"
                             >
@@ -201,16 +201,16 @@ const Production = () => {
             </Grid>
             <Grid>
                 <Grid.Col span={8}>
-                    <Text size="xl">Add Production:</Text>
+                    <Text size="xl">Add Production</Text>
                     <Grid grow align="center" gutter="md">
                         <Grid.Col>
                             <Select
-                                label="Machine:"
+                                label="Line"
                                 allowDeselect={false}
                                 placeholder="Pick value"
-                                data={devices.map((device) => ({
-                                    value: device.DeviceId.toString(),
-                                    label: device.Name,
+                                data={DTdata.map((data) => ({
+                                    value: data.id.toString(),
+                                    label: data.machine_nm,
                                 }))}
                                 value={machineMenu}
                                 onChange={setMachineMenu}
@@ -218,12 +218,12 @@ const Production = () => {
                         </Grid.Col>
                         <Grid.Col>
                             <Select
-                                label="Sensor:"
+                                label="Product"
                                 allowDeselect={false}
                                 placeholder="Pick value"
-                                data={deviceTags.map((tag) => ({
-                                    value: tag.id.toString(),
-                                    label: tag.Name,
+                                data={products.map((data) => ({
+                                    value: data.id.toString(),
+                                    label: data.name,
                                 }))}
                                 value={sensorMenu}
                                 onChange={setSensorMenu}
@@ -239,7 +239,7 @@ const Production = () => {
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
                     <Text p={"sm"} size="xl">
-                        Machine Status:
+                        Line Status
                     </Text>
                     <Table.ScrollContainer>
                         <Table verticalSpacing="sm">

@@ -24,6 +24,7 @@ const MODashboard = () => {
     const [filteredChartData, setFilteredChartData] = useState([]);
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
+    const [status, setStatus] = useState("Running")
     const [customDateRange, setCustomDateRange] = useState({
         start: null,
         end: null,
@@ -72,9 +73,7 @@ const MODashboard = () => {
 
                 switch (rangeMenu) {
                     case "Today":
-                        startDate =
-                            new Date().toISOString().split("T")[0] +
-                            "T00:00:00Z";
+                        startDate = new Date().toISOString().split("T")[0] + "T00:00:00Z";
                         endDate =
                             new Date().toISOString().split("T")[0] +
                             "T23:59:59Z";

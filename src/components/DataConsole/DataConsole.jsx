@@ -120,7 +120,7 @@ const DataConsole = () => {
                 </Grid.Col>
                 <Grid.Col span={6}>
                     <Select
-                        label="Sensor:"
+                        label="Parameter"
                         allowDeselect={false}
                         placeholder="Pick value"
                         data={deviceTags.map((tag) => ({

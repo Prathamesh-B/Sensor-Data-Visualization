@@ -14,8 +14,8 @@ import { DTdata } from "../../data";
 const DowntimeReport = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [devices, setDevices] = useState([]);
-    const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
+    // const [devices, setDevices] = useState([]);
+    // const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
 
     useEffect(() => {
         fetchDevicesAndTags();
@@ -29,18 +29,18 @@ const DowntimeReport = () => {
             if (!deviceResponse.ok) {
                 throw new Error("Network response was not ok");
             }
-            const devicesData = await deviceResponse.json();
+            // const devicesData = await deviceResponse.json();
 
             // Ensure unique and defined values for devices and tags
-            const uniqueDevices = Array.from(
-                new Set(devicesData.map((device) => device.DeviceId))
-            ).map((id) => devicesData.find((device) => device.DeviceId === id));
+            // const uniqueDevices = Array.from(
+            //     new Set(devicesData.map((device) => device.DeviceId))
+            // ).map((id) => devicesData.find((device) => device.DeviceId === id));
 
-            setDevices(
-                uniqueDevices.filter(
-                    (device) => device && device.DeviceId && device.Name
-                )
-            );
+            // setDevices(
+            //     uniqueDevices.filter(
+            //         (device) => device && device.DeviceId && device.Name
+            //     )
+            // );
         } catch (error) {
             console.error("Error fetching devices or tags:", error);
         }
@@ -71,12 +71,12 @@ const DowntimeReport = () => {
                     <Autocomplete
                         label="Downtime Type: "
                         placeholder="Select a type"
-                        data={["Outages", "Maintenance"]}
+                        data={["Breakdown", "Unavailability of Resources", "Changeover Losses", "Speed Losses"]}
                     />
                 </Grid.Col>
                 <Grid.Col span={3}>
                     <DateTimePicker
-                        label="Start Date:"
+                        label="Start Date"
                         value={startDate}
                         onChange={(date) => setStartDate(date)}
                         placeholder="Pick start date and time"
@@ -85,7 +85,7 @@ const DowntimeReport = () => {
                 </Grid.Col>
                 <Grid.Col span={3}>
                     <DateTimePicker
-                        label="End Date:"
+                        label="End Date"
                         value={endDate}
                         onChange={(date) => setEndDate(date)}
                         placeholder="Pick end date and time"
@@ -93,17 +93,14 @@ const DowntimeReport = () => {
                     />
                 </Grid.Col>
                 <Grid.Col span={3} mt="auto">
-                    <Select
-                        label="Machine:"
-                        allowDeselect={false}
-                        placeholder="Pick value"
-                        data={devices.map((device) => ({
-                            value: device.DeviceId.toString(),
-                            label: device.Name,
-                        }))}
-                        value={machineMenu}
-                        onChange={setMachineMenu}
-                    />
+                <div className="machine-dropdown">
+                            <Select
+                                label="Production Line"
+                                allowDeselect={false}
+                                placeholder="Pick value"
+                                data={['Hitachi Zosen Press Line 1', 'Hitachi Zosen Press Line 2', 'Schuller Press Line 1', 'Schuller Press Line 2','Komatsu Press Line 1','Komatsu Press Line 2']}
+                            />
+                        </div>
                 </Grid.Col>
                 <Grid.Col span={6} mt="auto">
                     <Button>Apply</Button>

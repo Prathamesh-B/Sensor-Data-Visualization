@@ -133,7 +133,7 @@ const DataConsole = () => {
                 </Grid.Col>
                 <Grid.Col span={6}>
                     <DateTimePicker
-                        label="Start Date:"
+                        label="Start Date"
                         value={startDate}
                         onChange={(date) => setStartDate(date)}
                         placeholder="Pick start date and time"
@@ -142,7 +142,7 @@ const DataConsole = () => {
                 </Grid.Col>
                 <Grid.Col span={6}>
                     <DateTimePicker
-                        label="End Date:"
+                        label="End Date"
                         value={endDate}
                         onChange={(date) => setEndDate(date)}
                         placeholder="Pick end date and time"

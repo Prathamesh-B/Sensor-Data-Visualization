@@ -24,7 +24,7 @@ const MODashboard = () => {
     const [filteredChartData, setFilteredChartData] = useState([]);
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
-    const [status, setStatus] = useState("Running")
+    const [status, setStatus] = useState("Running");
     const [customDateRange, setCustomDateRange] = useState({
         start: null,
         end: null,
@@ -73,7 +73,9 @@ const MODashboard = () => {
 
                 switch (rangeMenu) {
                     case "Today":
-                        startDate = new Date().toISOString().split("T")[0] + "T00:00:00Z";
+                        startDate =
+                            new Date().toISOString().split("T")[0] +
+                            "T00:00:00Z";
                         endDate =
                             new Date().toISOString().split("T")[0] +
                             "T23:59:59Z";
@@ -151,15 +153,15 @@ const MODashboard = () => {
         switch (status) {
             case "Running":
                 return {
-                    background: "#28a745",
+                    background: "#9befae",
                     borderColor: "#29c64d",
-                    color: "white",
+                    color: "#218337",
                 };
             case "Running Slow":
                 return {
-                    background: "#fdd754",
-                    borderColor: "#ffc107",
-                    color: "white",
+                    background: "#f3e1a0",
+                    borderColor: "#6c5708",
+                    color: "#6c5708",
                 };
             case "Scheduled Down":
                 return {

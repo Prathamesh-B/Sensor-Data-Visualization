@@ -24,7 +24,6 @@ const MODashboard = () => {
     const [filteredChartData, setFilteredChartData] = useState([]);
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
-    const [status, setStatus] = useState("Running");
     const [customDateRange, setCustomDateRange] = useState({
         start: null,
         end: null,

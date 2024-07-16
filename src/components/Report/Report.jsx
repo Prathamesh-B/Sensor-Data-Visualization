@@ -52,14 +52,14 @@ const Report = () => {
                 </Grid.Col>
                 <Grid.Col span={3}>
                     <DateTimePicker
-                        label="Start Date:"
+                        label="Start Date"
                         placeholder="Pick start date and time"
                         mx="auto"
                     />
                 </Grid.Col>
                 <Grid.Col span={3}>
                     <DateTimePicker
-                        label="End Date:"
+                        label="End Date"
                         placeholder="Pick end date and time"
                         mx="auto"
                     />

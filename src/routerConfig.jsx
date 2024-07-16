@@ -9,6 +9,7 @@ import SVPMDashboard from "./components/Dashboard/SVPMDashboard";
 import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DowntimeReport from "./components/DowntimeReport/DowntimeReport";
+import FloorMap from "./components/FloorMap/FloorMap";
 
 const AppRoutes = () => (
     <Routes>
@@ -43,6 +44,14 @@ const AppRoutes = () => (
             element={
                 <ProtectedRoute>
                     <Production />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/floormap"
+            element={
+                <ProtectedRoute>
+                    <FloorMap />
                 </ProtectedRoute>
             }
         />

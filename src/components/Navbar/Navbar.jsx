@@ -7,6 +7,7 @@ import {
     UsersRound,
     Table2,
     FileClock,
+    Map,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -83,6 +84,14 @@ const Navbar = () => {
                             label="Production"
                             mt="sm"
                             active={location.pathname === "/production"}
+                        />
+                        <NavLink
+                            component={Link}
+                            to="/floormap"
+                            leftSection={<Map strokeWidth={1} />}
+                            label="Floor Map"
+                            mt="sm"
+                            active={location.pathname === "/floormap"}
                         />
                     </>
                 ) : (

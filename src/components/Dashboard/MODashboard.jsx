@@ -147,6 +147,76 @@ const MODashboard = () => {
         }
     };
 
+    const getStatusStyles = (status) => {
+        switch (status) {
+            case "Running":
+                return {
+                    background: "#28a745",
+                    borderColor: "#29c64d",
+                    color: "white",
+                };
+            case "Running Slow":
+                return {
+                    background: "#fdd754",
+                    borderColor: "#ffc107",
+                    color: "white",
+                };
+            case "Scheduled Down":
+                return {
+                    background: "#ff8c00",
+                    borderColor: "#ff8c00",
+                    color: "white",
+                };
+            case "Just Went Down":
+                return {
+                    background: "#fd7e14",
+                    borderColor: "#fd7e14",
+                    color: "white",
+                };
+            case "Down":
+                return {
+                    background: "#dc3545",
+                    borderColor: "#dc3545",
+                    color: "white",
+                };
+            case "No Data":
+                return {
+                    background: "#6c757d",
+                    borderColor: "#6c757d",
+                    color: "white",
+                };
+            case "Not Scheduled":
+                return {
+                    background: "#adb5bd",
+                    borderColor: "#adb5bd",
+                    color: "white",
+                };
+            case "Tool Change":
+                return {
+                    background: "#007bff",
+                    borderColor: "#007bff",
+                    color: "white",
+                };
+            case "Andon is Active":
+                return {
+                    background: "#e83e8c",
+                    borderColor: "#e83e8c",
+                    color: "white",
+                };
+            default:
+                return {
+                    background: "transparent",
+                    borderColor: "#ced4da",
+                    color: "black",
+                };
+        }
+    };
+
+    const lineStatus =
+        devices.find((line) => line.id.toString() === productionLineMenu)
+            ?.status || "No Data";
+    const statusStyles = getStatusStyles(lineStatus);
+
     return (
         <>
             <Grid columns={10} gutter="sm" mb="lg" grow>
@@ -322,67 +392,6 @@ const MODashboard = () => {
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
-                    <Modal
-                        opened={modalOpened}
-                        onClose={() => setModalOpened(false)}
-                        title="Select Custom Date Range"
-                        size="auto"
-                    >
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                gap: "1rem",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    flex: 1,
-                                    borderRight: "1px solid #dee2e6",
-                                }}
-                            >
-                                <Text size="sm" fw={500}>
-                                    Start Date
-                                </Text>
-                                <DatePicker
-                                    placeholder="Pick start date"
-                                    value={customDateRange.start}
-                                    onChange={(date) =>
-                                        setCustomDateRange({
-                                            ...customDateRange,
-                                            start: date,
-                                        })
-                                    }
-                                />
-                            </div>
-                            <div style={{ flex: 1 }}>
-                                <Text size="sm" fw={500}>
-                                    End Date
-                                </Text>
-                                <DatePicker
-                                    placeholder="Pick end date"
-                                    value={customDateRange.end}
-                                    onChange={(date) =>
-                                        setCustomDateRange({
-                                            ...customDateRange,
-                                            end: date,
-                                        })
-                                    }
-                                />
-                            </div>
-                        </div>
-                        <Button
-                            onClick={handleCustomRange}
-                            style={{
-                                marginTop: "1rem",
-                                display: "block",
-                                marginLeft: "auto",
-                                marginRight: "auto",
-                            }}
-                        >
-                            Set Custom Range
-                        </Button>
-                    </Modal>
                 </Grid.Col>
             </Grid>
             <Grid grow>
@@ -414,15 +423,26 @@ const MODashboard = () => {
                                 onChange={setTagMenu}
                             />
                         </div>
-                        <div className="machine-dropdown">
-                            <Select
-                                label="Status"
-                                allowDeselect={false}
-                                placeholder="Pick value"
-                                data={["Running", "Running Slow","Scheduled Down","Just Went Down","Down","No Data","Not Scheduled","Tool Change","Andon is Active"]}
-                                value={status}
-                                // onChange={setProductionLineMenu}
-                            />
+                        <div>
+                            {devices.length > 0 && (
+                                <>
+                                    <label className="m_8fdc1311">
+                                        Line Status
+                                    </label>
+                                    <div
+                                        className="line-status"
+                                        style={{
+                                            color: statusStyles.color,
+                                            backgroundColor:
+                                                statusStyles.background,
+                                            borderColor:
+                                                statusStyles.borderColor,
+                                        }}
+                                    >
+                                        {lineStatus}
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                     <Chart data={filteredChartData} />
@@ -436,6 +456,67 @@ const MODashboard = () => {
                     </ScrollArea>
                 </Grid.Col>
             </Grid>
+            <Modal
+                opened={modalOpened}
+                onClose={() => setModalOpened(false)}
+                title="Select Custom Date Range"
+                size="auto"
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: "1rem",
+                    }}
+                >
+                    <div
+                        style={{
+                            flex: 1,
+                            borderRight: "1px solid #dee2e6",
+                        }}
+                    >
+                        <Text size="sm" fw={500}>
+                            Start Date
+                        </Text>
+                        <DatePicker
+                            placeholder="Pick start date"
+                            value={customDateRange.start}
+                            onChange={(date) =>
+                                setCustomDateRange({
+                                    ...customDateRange,
+                                    start: date,
+                                })
+                            }
+                        />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                        <Text size="sm" fw={500}>
+                            End Date
+                        </Text>
+                        <DatePicker
+                            placeholder="Pick end date"
+                            value={customDateRange.end}
+                            onChange={(date) =>
+                                setCustomDateRange({
+                                    ...customDateRange,
+                                    end: date,
+                                })
+                            }
+                        />
+                    </div>
+                </div>
+                <Button
+                    onClick={handleCustomRange}
+                    style={{
+                        marginTop: "1rem",
+                        display: "block",
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                    }}
+                >
+                    Set Custom Range
+                </Button>
+            </Modal>
         </>
     );
 };

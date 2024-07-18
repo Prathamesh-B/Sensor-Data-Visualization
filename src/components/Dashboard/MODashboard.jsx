@@ -452,7 +452,7 @@ const MODashboard = () => {
                     <Text p={"sm"} size="xl">
                         Alerts
                     </Text>
-                    <ScrollArea style={{ height: 400 }}>
+                    <ScrollArea style={{ height: 450 }}>
                         <Alerts />
                     </ScrollArea>
                 </Grid.Col>

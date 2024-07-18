@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Grid, Button, Table, Select } from "@mantine/core";
-import { DateTimePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { formatDate } from "../../utils";
 import "./Report.css";
 
@@ -13,7 +13,7 @@ const Report = () => {
 
     useEffect(() => {
         fetchData();
-    }, [productionLineMenu]);
+    }, [productionLineMenu, startDate, endDate]);
 
     const fetchData = async () => {
         try {
@@ -21,9 +21,24 @@ const Report = () => {
                 "http://127.0.0.1:8000/api/productionlines/"
             );
             const tagResponse = await fetch("http://127.0.0.1:8000/api/tags/");
-            const alertsResponse = await fetch(
-                "http://127.0.0.1:8000/api/alerts/"
-            );
+
+            let alertsUrl = "http://127.0.0.1:8000/api/alerts/";
+            const params = [];
+
+            if (productionLineMenu) {
+                params.push(`Line=${productionLineMenu}`);
+            }
+
+            if (startDate && endDate) {
+                params.push(`StartDate=${startDate.toISOString()}`);
+                params.push(`EndDate=${endDate.toISOString()}`);
+            }
+
+            if (params.length > 0) {
+                alertsUrl += `?${params.join("&")}`;
+            }
+
+            const alertsResponse = await fetch(alertsUrl);
 
             if (!lineResponse.ok || !tagResponse.ok || !alertsResponse.ok) {
                 throw new Error("Network response was not ok");
@@ -52,7 +67,7 @@ const Report = () => {
         <Container>
             <Grid gutter="lg" mb="lg" mt={"13px"} grow>
                 <Grid.Col span={3}>
-                    <DateTimePicker
+                    <DatePickerInput
                         label="Start Date"
                         placeholder="Pick start date and time"
                         mx="auto"
@@ -61,7 +76,7 @@ const Report = () => {
                     />
                 </Grid.Col>
                 <Grid.Col span={3}>
-                    <DateTimePicker
+                    <DatePickerInput
                         label="End Date"
                         placeholder="Pick end date and time"
                         mx="auto"
@@ -73,7 +88,6 @@ const Report = () => {
                     <div className="machine-dropdown">
                         <Select
                             label="Production Line"
-                            allowDeselect={false}
                             placeholder="Pick value"
                             data={devices.map((device) => ({
                                 value: device.id.toString(),

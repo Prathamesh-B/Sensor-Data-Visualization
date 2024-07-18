@@ -18,11 +18,13 @@ const Notes = () => {
     const [loading, setLoading] = useState(true);
     const [opened, { open, close }] = useDisclosure(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [user, setUser] = useState({});
     const [CatData, setCatData] = useState("");
     const [SubData, setSubData] = useState([]);
 
     const fetchDevicesAndTags = async () => {
         try {
+            setLoading(true);
             const alertsResponse = await fetch(
                 "http://127.0.0.1:8000/api/alerts/"
             );
@@ -32,7 +34,6 @@ const Notes = () => {
             }
 
             const alertsData = await alertsResponse.json();
-
             setEvents(alertsData);
             setLoading(false);
         } catch (error) {
@@ -43,6 +44,12 @@ const Notes = () => {
 
     useEffect(() => {
         fetchDevicesAndTags();
+        const token = JSON.parse(localStorage.getItem("token"));
+
+        if (token) {
+            setUser(token);
+        }
+        console.log(user);
     }, []);
 
     const formatTime = (timestamp) => {
@@ -84,11 +91,26 @@ const Notes = () => {
             case "Breakdown":
                 return ["Equipment", "Tool", "Fixture", "Automation"];
             case "Unavailability of Resources":
-                return ["Raw Material Unavailable", "Manpower Unavailable", "Forklift Unavailable", "Logistic Pallet Unavailable"];
+                return [
+                    "Raw Material Unavailable",
+                    "Manpower Unavailable",
+                    "Forklift Unavailable",
+                    "Logistic Pallet Unavailable",
+                ];
             case "Changeover Losses":
-                return ["Line Change (Planned)", "Line Change (Unplanned)", "Coil Change"];
+                return [
+                    "Line Change (Planned)",
+                    "Line Change (Unplanned)",
+                    "Coil Change",
+                ];
             case "Speed Losses":
-                return ["Automation", "Equipment", "Fixture/Tool", "Material", "Manpower"];
+                return [
+                    "Automation",
+                    "Equipment",
+                    "Fixture/Tool",
+                    "Material",
+                    "Manpower",
+                ];
             default:
                 return [];
         }
@@ -110,6 +132,53 @@ const Notes = () => {
         return !event.incident_dtls;
     };
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+    
+        const formData = new FormData(event.target);
+        const incidentDate = new Date(formData.get("incident_date")).toISOString().split('T')[0];
+        const resolveDate = new Date(formData.get("resolve_date")).toISOString().split('T')[0];
+    
+        const data = {
+            name: selectedEvent.name,
+            type: selectedEvent.type,
+            date: incidentDate,
+            time: formData.get("incident_time"),
+            report_title: formData.get("report_title"),
+            severity: formData.get("severity"),
+            report_type: formData.get("report_type"),
+            location: formData.get("location"),
+            report_category: formData.get("category"),
+            report_sub_cat: formData.get("sub_category"),
+            incident_dtls: formData.get("incident_details"),
+            resolve_date: resolveDate,
+            issued: formData.get("reported_by"),
+            role: formData.get("role"),
+            comment: formData.get("comment"),
+        };
+    
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/alerts/${selectedEvent.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+    
+            const result = await response.json();
+            console.log("Data posted successfully:", result);
+            await fetchDevicesAndTags();
+            close();
+        } catch (error) {
+            console.error("Error posting data:", error);
+        }
+    };
+
     return (
         <>
             <Modal
@@ -119,10 +188,11 @@ const Notes = () => {
                 title="Incident Event"
             >
                 {selectedEvent && (
-                    <form onSubmit={close}>
+                    <form onSubmit={handleSubmit}>
                         <Grid>
                             <Grid.Col span={6}>
                                 <DatePickerInput
+                                    name="incident_date"
                                     placeholder="Enter Date"
                                     label="Date of the Incident"
                                     required
@@ -130,31 +200,31 @@ const Notes = () => {
                             </Grid.Col>
                             <Grid.Col span={6}>
                                 <TimeInput
+                                    name="incident_time"
                                     label="Time of the Incident"
                                     required
                                 />
                             </Grid.Col>
                             <Grid.Col span={6}>
                                 <TextInput
+                                    name="report_title"
                                     placeholder="Enter Title"
                                     label="Title"
                                     required
                                 />
                             </Grid.Col>
                             <Grid.Col span={6}>
-                            <Select
+                                <Select
+                                    name="severity"
                                     label="Severity of Report"
                                     placeholder="Select the severity"
-                                    data={[
-                                        "Minor",
-                                        "Major",
-                                        "Critical",
-                                    ]}
+                                    data={["Minor", "Major", "Critical"]}
                                     required
                                 />
                             </Grid.Col>
                             <Grid.Col span={6}>
                                 <Select
+                                    name="report_type"
                                     label="Type of Report"
                                     placeholder="Pick a Type"
                                     data={[
@@ -167,6 +237,7 @@ const Notes = () => {
                             </Grid.Col>
                             <Grid.Col span={6}>
                                 <Select
+                                    name="location"
                                     label="Location of the Incident"
                                     placeholder="Pick a location"
                                     data={["Floor A", "Floor B", "Floor C"]}
@@ -175,23 +246,31 @@ const Notes = () => {
                             </Grid.Col>
                             <Grid.Col span={6}>
                                 <Select
+                                    name="category"
                                     label="Category of the Incident"
                                     placeholder="Pick a category"
-                                    data={["Breakdown", "Unavailability of Resources", "Changeover Losses", "Speed Losses"]}
+                                    data={[
+                                        "Breakdown",
+                                        "Unavailability of Resources",
+                                        "Changeover Losses",
+                                        "Speed Losses",
+                                    ]}
                                     onChange={handleCategoryChange}
                                     required
                                 />
                             </Grid.Col>
                             <Grid.Col span={6}>
                                 <Select
+                                    name="sub_category"
                                     label="Sub-Category of the Incident"
                                     placeholder="Pick a sub-category"
-                                    data= {SubData}
+                                    data={SubData}
                                     required
                                 />
                             </Grid.Col>
                             <Grid.Col>
                                 <Textarea
+                                    name="incident_details"
                                     placeholder="Enter the details of the Incident"
                                     label="Details of the Incident"
                                     autosize
@@ -201,6 +280,7 @@ const Notes = () => {
                             </Grid.Col>
                             <Grid.Col span={4}>
                                 <DatePickerInput
+                                    name="resolve_date"
                                     placeholder="Enter Date"
                                     label="Date of Incident being Resolved"
                                     required
@@ -208,27 +288,32 @@ const Notes = () => {
                             </Grid.Col>
                             <Grid.Col span={4}>
                                 <TextInput
+                                    name="reported_by"
                                     placeholder="Enter Name"
                                     label="Reported by:"
+                                    defaultValue={user.username}
                                     required
                                 />
                             </Grid.Col>
                             <Grid.Col span={4}>
                                 <Select
+                                    name="role"
                                     label="Role of the Reporter"
                                     placeholder="Pick a role"
                                     data={[
                                         "Supervisior",
                                         "Production Manager",
-                                        "Machine Foreman",
+                                        "Machine Operator",
                                     ]}
+                                    defaultValue={user.role}
                                     required
                                 />
                             </Grid.Col>
                             <Grid.Col>
                                 <Textarea
-                                    placeholder="Write notes"
-                                    label="Notes"
+                                    name="comment"
+                                    placeholder="Write comment"
+                                    label="Comment"
                                     autosize
                                     minRows={4}
                                 />

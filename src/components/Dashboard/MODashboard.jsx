@@ -55,7 +55,7 @@ const MODashboard = () => {
             }
 
             const linesData = await lineResponse.json();
-            const tagsData = await tagResponse.json();
+            // const tagsData = await tagResponse.json();
 
             setDevices(linesData);
             setDeviceTags(sensorsOpt);
@@ -158,33 +158,33 @@ const MODashboard = () => {
                 };
             case "Running Slow":
                 return {
-                    background: "#f3e1a0",
-                    borderColor: "#6c5708",
-                    color: "#6c5708",
+                    background: "#fbffa7",
+                    borderColor: "#d5b023",
+                    color: "#a08108",
                 };
             case "Scheduled Down":
                 return {
-                    background: "#ff8c00",
-                    borderColor: "#ff8c00",
-                    color: "white",
+                    background: "#c3ebff",
+                    borderColor: "#005682",
+                    color: "#005682",
                 };
             case "Just Went Down":
                 return {
-                    background: "#fd7e14",
+                    background: "#ffecdd",
                     borderColor: "#fd7e14",
-                    color: "white",
+                    color: "#fa7200",
                 };
             case "Down":
                 return {
-                    background: "#dc3545",
-                    borderColor: "#dc3545",
-                    color: "white",
+                    background: "#ffd1d6",
+                    borderColor: "#f10017",
+                    color: "#ff0018",
                 };
             case "No Data":
                 return {
-                    background: "#6c757d",
+                    background: "#ececec",
                     borderColor: "#6c757d",
-                    color: "white",
+                    color: "#6c757d",
                 };
             case "Not Scheduled":
                 return {

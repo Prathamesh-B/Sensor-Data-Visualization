@@ -6,6 +6,7 @@ import "./Report.css";
 
 const Report = () => {
     const [devices, setDevices] = useState([]);
+    const [reportType, setReportType] = useState("Info");
     const [productionLineMenu, setProductionLineMenu] = useState("");
     const [alerts, setAlerts] = useState([]);
     const [startDate, setStartDate] = useState(null);
@@ -45,7 +46,6 @@ const Report = () => {
             }
 
             const linesData = await lineResponse.json();
-            // const tagsData = await tagResponse.json();
             const alertsData = await alertsResponse.json();
 
             setDevices(linesData);
@@ -63,9 +63,112 @@ const Report = () => {
         (alert) => alert.incident_dtls !== null
     );
 
+    const headers = () => {
+        switch (reportType) {
+            case "Alert":
+                return (
+                    <>
+                        <Table.Th>Time</Table.Th>
+                        <Table.Th>Title</Table.Th>
+                        <Table.Th>Details</Table.Th>
+                        <Table.Th>Severity</Table.Th>
+                        <Table.Th>Type</Table.Th>
+                        <Table.Th>Location</Table.Th>
+                        <Table.Th>Category</Table.Th>
+                        <Table.Th>Sub-Category</Table.Th>
+                        <Table.Th>Reported By</Table.Th>
+                        <Table.Th>Role</Table.Th>
+                    </>
+                );
+            case "Downtime":
+                return (
+                    <>
+                        <Table.Th>Time</Table.Th>
+                        <Table.Th>Line Name</Table.Th>
+                        <Table.Th>Foreman</Table.Th>
+                        <Table.Th>Shift</Table.Th>
+                        <Table.Th>Root Cause</Table.Th>
+                        <Table.Th>Time Lost</Table.Th>
+                    </>
+                );
+            case "Info":
+                return (
+                    <>
+                        <Table.Th>Time</Table.Th>
+                        <Table.Th>Title</Table.Th>
+                        <Table.Th>Details</Table.Th>
+                        <Table.Th>Location</Table.Th>
+                        <Table.Th>Category</Table.Th>
+                        <Table.Th>Sub-Category</Table.Th>
+                        <Table.Th>Reported By</Table.Th>
+                        <Table.Th>Role</Table.Th>
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+
+    const rows = (alert) => {
+        switch (reportType) {
+            case "Alert":
+                return (
+                    
+                    <>
+                        <Table.Td>{formatDate(alert.timestamp)}</Table.Td>
+                        <Table.Td>{alert.report_title || alert.name}</Table.Td>
+                        <Table.Td>{alert.incident_dtls}</Table.Td>
+                        <Table.Td>{alert.severity}</Table.Td>
+                        <Table.Td>{alert.type}</Table.Td>
+                        <Table.Td>{alert.location}</Table.Td>
+                        <Table.Td>{alert.report_category}</Table.Td>
+                        <Table.Td>{alert.report_sub_cat}</Table.Td>
+                        <Table.Td>{alert.issued}</Table.Td>
+                        <Table.Td>{alert.role}</Table.Td>
+                    </>
+                );
+            case "Downtime":
+                return (
+                    <>
+                        <Table.Td>{formatDate(alert.timestamp)}</Table.Td>
+                        <Table.Td>{alert.machine_nm}</Table.Td>
+                        <Table.Td>{alert.foreman}</Table.Td>
+                        <Table.Td>{alert.shift}</Table.Td>
+                        <Table.Td>{alert.rootcause}</Table.Td>
+                        <Table.Td>{alert.time_lost}</Table.Td>
+                    </>
+                );
+            case "Info":
+                return (
+                    <>
+                        <Table.Td>{formatDate(alert.timestamp)}</Table.Td>
+                        <Table.Td>{alert.report_title || alert.name}</Table.Td>
+                        <Table.Td>{alert.incident_dtls}</Table.Td>
+                        <Table.Td>{alert.location}</Table.Td>
+                        <Table.Td>{alert.report_category}</Table.Td>
+                        <Table.Td>{alert.report_sub_cat}</Table.Td>
+                        <Table.Td>{alert.issued}</Table.Td>
+                        <Table.Td>{alert.role}</Table.Td>
+                    </>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
         <Container>
             <Grid gutter="lg" mb="lg" mt={"13px"} grow>
+                <Grid.Col span={3}>
+                    <Select
+                        label="Report Type"
+                        placeholder="Pick a type"
+                        mx="auto"
+                        data={["Alert", "Info", "Downtime"]}
+                        value={reportType}
+                        onChange={setReportType}
+                    />
+                </Grid.Col>
                 <Grid.Col span={3}>
                     <DatePickerInput
                         label="Start Date"
@@ -106,35 +209,13 @@ const Report = () => {
                 <Table verticalSpacing="sm">
                     <Table.Thead>
                         <Table.Tr>
-                            <Table.Th>Time</Table.Th>
-                            <Table.Th>Title</Table.Th>
-                            <Table.Th>Details</Table.Th>
-                            <Table.Th>Severity</Table.Th>
-                            <Table.Th>Type</Table.Th>
-                            <Table.Th>Location</Table.Th>
-                            <Table.Th>Category</Table.Th>
-                            <Table.Th>Sub-Category</Table.Th>
-                            <Table.Th>Reported By</Table.Th>
-                            <Table.Th>Role</Table.Th>
+                            {headers()}
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
                         {filteredAlerts.map((alert) => (
                             <Table.Tr key={alert.id}>
-                                <Table.Td>
-                                    {formatDate(alert.timestamp)}
-                                </Table.Td>
-                                <Table.Td>
-                                    {alert.report_title || alert.name}
-                                </Table.Td>
-                                <Table.Td>{alert.incident_dtls}</Table.Td>
-                                <Table.Td>{alert.type}</Table.Td>
-                                <Table.Td>{alert.type}</Table.Td>
-                                <Table.Td>{alert.location}</Table.Td>
-                                <Table.Td>{alert.report_category}</Table.Td>
-                                <Table.Td>{alert.report_sub_cat}</Table.Td>
-                                <Table.Td>{alert.issued}</Table.Td>
-                                <Table.Td>{alert.role}</Table.Td>
+                                {rows(alert)}
                             </Table.Tr>
                         ))}
                     </Table.Tbody>

@@ -14,7 +14,7 @@ const getStatusStyles = (status) => {
             return {
                 background: "#ffc107",
                 borderColor: "#ffc107",
-                color: "black",
+                color: "white",
             };
         case "Scheduled Down":
             return {

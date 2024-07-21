@@ -18,8 +18,8 @@ const getStatusStyles = (status) => {
             };
         case "Scheduled Down":
             return {
-                background: "#ff8c00",
-                borderColor: "#ff8c00",
+                background: "#005682",
+                borderColor: "#005682",
                 color: "white",
             };
         case "Just Went Down":
@@ -181,55 +181,55 @@ const FloorMap = () => {
                 <h3>Legend</h3>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#28a745" }}
+                    style={{ backgroundColor: "#28a745", color: "white" }}
                 >
                     Running
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#ffc107" }}
+                    style={{ backgroundColor: "#ffc107", color: "white" }}
                 >
                     Running Slow
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#ff8c00" }}
+                    style={{ backgroundColor: "#005682", color: "white" }}
                 >
                     Scheduled Down
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#fd7e14" }}
+                    style={{ backgroundColor: "#fd7e14", color: "white" }}
                 >
                     Just Went Down
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#dc3545" }}
+                    style={{ backgroundColor: "#dc3545", color: "white" }}
                 >
                     Down
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#6c757d" }}
+                    style={{ backgroundColor: "#6c757d", color: "white" }}
                 >
                     No Data
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#adb5bd" }}
+                    style={{ backgroundColor: "#adb5bd", color: "white" }}
                 >
                     Not Scheduled
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#007bff" }}
+                    style={{ backgroundColor: "#007bff", color: "white" }}
                 >
                     Tool Change
                 </div>
                 <div
                     className="legend-item"
-                    style={{ backgroundColor: "#e83e8c" }}
+                    style={{ backgroundColor: "#e83e8c", color: "white" }}
                 >
                     Andon is Active
                 </div>

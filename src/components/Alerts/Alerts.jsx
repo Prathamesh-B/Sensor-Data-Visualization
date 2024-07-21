@@ -89,7 +89,13 @@ const Notes = () => {
     const getSubByCat = (CatData) => {
         switch (CatData) {
             case "Breakdown":
-                return ["Equipment", "Tool", "Fixture", "Automation"];
+                return [
+                    "Equipment",
+                    "Tool",
+                    "Fixture",
+                    "Automation",
+                    "Overheat"
+                ];
             case "Unavailability of Resources":
                 return [
                     "Raw Material Unavailable",
@@ -107,9 +113,7 @@ const Notes = () => {
                 return [
                     "Automation",
                     "Equipment",
-                    "Fixture/Tool",
-                    "Material",
-                    "Manpower",
+                    "Tool",
                 ];
             default:
                 return [];
@@ -228,9 +232,9 @@ const Notes = () => {
                                     label="Type of Report"
                                     placeholder="Pick a Type"
                                     data={[
-                                        "Initial Report",
-                                        "Follow-up Report",
-                                        "Final Report",
+                                        "Info",
+                                        "Error",
+                                        "Warning",
                                     ]}
                                     required
                                 />
@@ -253,7 +257,7 @@ const Notes = () => {
                                         "Breakdown",
                                         "Unavailability of Resources",
                                         "Changeover Losses",
-                                        "Speed Losses",
+                                        "Breakage",
                                     ]}
                                     onChange={handleCategoryChange}
                                     required

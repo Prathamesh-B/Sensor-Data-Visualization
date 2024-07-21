@@ -29,10 +29,11 @@
 .menu-button {
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background-color: #f0f0f0;
 }
 
 .menu-button:hover {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
 }
 
 .menu-button {
@@ -49,23 +50,24 @@
 
 .menu-button img {
     width: 2.5rem;
+    opacity: 0.3;
     transition: opacity 0.3s ease;
 }
 
 .menu-button .menu-text {
     position: absolute;
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1;
+    visibility: visible;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .menu-button:hover img {
-    opacity: 0.3;
+    opacity: 1;
 }
 
 .menu-button:hover .menu-text {
-    opacity: 1;
-    visibility: visible;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .line-status {

@@ -62,11 +62,11 @@ const Notes = () => {
 
     const getBackgroundColorByType = (type) => {
         switch (type) {
-            case "info":
+            case "Info":
                 return "#05cf2d";
-            case "warning":
+            case "Warning":
                 return "#ffa618";
-            case "error":
+            case "Error":
                 return "#ff0026";
             default:
                 return "#000000";
@@ -75,11 +75,11 @@ const Notes = () => {
 
     const getIconByType = (type) => {
         switch (type) {
-            case "info":
+            case "Info":
                 return <Info size={16} />;
-            case "warning":
+            case "Warning":
                 return <AlertTriangle size={16} />;
-            case "error":
+            case "Error":
                 return <AlertOctagon size={16} />;
             default:
                 return null;
@@ -232,9 +232,9 @@ const Notes = () => {
                                     label="Type of Report"
                                     placeholder="Pick a Type"
                                     data={[
-                                        "Info",
-                                        "Error",
-                                        "Warning",
+                                        "Initial",
+                                        "Follow-up",
+                                        "Final",
                                     ]}
                                     required
                                 />

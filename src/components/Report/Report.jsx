@@ -6,7 +6,7 @@ import "./Report.css";
 
 const Report = () => {
     const [devices, setDevices] = useState([]);
-    const [reportType, setReportType] = useState("Info");
+    const [reportType, setReportType] = useState("");
     const [productionLineMenu, setProductionLineMenu] = useState("");
     const [alerts, setAlerts] = useState([]);
     const [startDate, setStartDate] = useState(null);
@@ -14,20 +14,22 @@ const Report = () => {
 
     useEffect(() => {
         fetchData();
-    }, [productionLineMenu, startDate, endDate]);
+    }, [productionLineMenu, startDate, endDate, reportType]);
 
     const fetchData = async () => {
         try {
-            const lineResponse = await fetch(
-                "http://127.0.0.1:8000/api/productionlines/"
-            );
+            const lineResponse = await fetch("http://127.0.0.1:8000/api/productionlines/");
             const tagResponse = await fetch("http://127.0.0.1:8000/api/tags/");
-
+            
             let alertsUrl = "http://127.0.0.1:8000/api/alerts/";
             const params = [];
 
             if (productionLineMenu) {
                 params.push(`Line=${productionLineMenu}`);
+            }
+
+            if (reportType) {
+                params.push(`Type=${reportType}`);
             }
 
             if (startDate && endDate) {
@@ -59,13 +61,11 @@ const Report = () => {
         fetchData();
     };
 
-    const filteredAlerts = alerts.filter(
-        (alert) => alert.incident_dtls !== null
-    );
+    const filteredAlerts = alerts.filter((alert) =>alert.incident_dtls !== null && alert.type === reportType);
 
     const headers = () => {
         switch (reportType) {
-            case "Alert":
+            case "Error":
                 return (
                     <>
                         <Table.Th>Time</Table.Th>
@@ -80,15 +80,27 @@ const Report = () => {
                         <Table.Th>Role</Table.Th>
                     </>
                 );
-            case "Downtime":
+            case "Warning":
                 return (
+                    // <>
+                    //     <Table.Th>Time</Table.Th>
+                    //     <Table.Th>Line Name</Table.Th>
+                    //     <Table.Th>Foreman</Table.Th>
+                    //     <Table.Th>Shift</Table.Th>
+                    //     <Table.Th>Root Cause</Table.Th>
+                    //     <Table.Th>Time Lost</Table.Th>
+                    // </>
                     <>
                         <Table.Th>Time</Table.Th>
-                        <Table.Th>Line Name</Table.Th>
-                        <Table.Th>Foreman</Table.Th>
-                        <Table.Th>Shift</Table.Th>
-                        <Table.Th>Root Cause</Table.Th>
-                        <Table.Th>Time Lost</Table.Th>
+                        <Table.Th>Title</Table.Th>
+                        <Table.Th>Details</Table.Th>
+                        <Table.Th>Severity</Table.Th>
+                        <Table.Th>Type</Table.Th>
+                        <Table.Th>Location</Table.Th>
+                        <Table.Th>Category</Table.Th>
+                        <Table.Th>Sub-Category</Table.Th>
+                        <Table.Th>Reported By</Table.Th>
+                        <Table.Th>Role</Table.Th>
                     </>
                 );
             case "Info":
@@ -97,6 +109,8 @@ const Report = () => {
                         <Table.Th>Time</Table.Th>
                         <Table.Th>Title</Table.Th>
                         <Table.Th>Details</Table.Th>
+                        <Table.Th>Severity</Table.Th>
+                        <Table.Th>Type</Table.Th>
                         <Table.Th>Location</Table.Th>
                         <Table.Th>Category</Table.Th>
                         <Table.Th>Sub-Category</Table.Th>
@@ -111,9 +125,8 @@ const Report = () => {
 
     const rows = (alert) => {
         switch (reportType) {
-            case "Alert":
+            case "Error":
                 return (
-                    
                     <>
                         <Table.Td>{formatDate(alert.timestamp)}</Table.Td>
                         <Table.Td>{alert.report_title || alert.name}</Table.Td>
@@ -127,15 +140,27 @@ const Report = () => {
                         <Table.Td>{alert.role}</Table.Td>
                     </>
                 );
-            case "Downtime":
+            case "Warning":
                 return (
+                    // <>
+                    //     <Table.Td>{formatDate(alert.timestamp)}</Table.Td>
+                    //     <Table.Td>{alert.line_id}</Table.Td>
+                    //     <Table.Td>{alert.foreman}</Table.Td>
+                    //     <Table.Td>{alert.shift}</Table.Td>
+                    //     <Table.Td>{alert.rootcause}</Table.Td>
+                    //     <Table.Td>{alert.time_lost}</Table.Td>
+                    // </>
                     <>
                         <Table.Td>{formatDate(alert.timestamp)}</Table.Td>
-                        <Table.Td>{alert.machine_nm}</Table.Td>
-                        <Table.Td>{alert.foreman}</Table.Td>
-                        <Table.Td>{alert.shift}</Table.Td>
-                        <Table.Td>{alert.rootcause}</Table.Td>
-                        <Table.Td>{alert.time_lost}</Table.Td>
+                        <Table.Td>{alert.report_title || alert.name}</Table.Td>
+                        <Table.Td>{alert.incident_dtls}</Table.Td>
+                        <Table.Td>{alert.severity}</Table.Td>
+                        <Table.Td>{alert.type}</Table.Td>
+                        <Table.Td>{alert.location}</Table.Td>
+                        <Table.Td>{alert.report_category}</Table.Td>
+                        <Table.Td>{alert.report_sub_cat}</Table.Td>
+                        <Table.Td>{alert.issued}</Table.Td>
+                        <Table.Td>{alert.role}</Table.Td>
                     </>
                 );
             case "Info":
@@ -144,6 +169,8 @@ const Report = () => {
                         <Table.Td>{formatDate(alert.timestamp)}</Table.Td>
                         <Table.Td>{alert.report_title || alert.name}</Table.Td>
                         <Table.Td>{alert.incident_dtls}</Table.Td>
+                        <Table.Td>{alert.severity}</Table.Td>
+                        <Table.Td>{alert.type}</Table.Td>
                         <Table.Td>{alert.location}</Table.Td>
                         <Table.Td>{alert.report_category}</Table.Td>
                         <Table.Td>{alert.report_sub_cat}</Table.Td>
@@ -164,7 +191,7 @@ const Report = () => {
                         label="Report Type"
                         placeholder="Pick a type"
                         mx="auto"
-                        data={["Alert", "Info", "Downtime"]}
+                        data={["Error", "Info", "Warning"]}
                         value={reportType}
                         onChange={setReportType}
                     />

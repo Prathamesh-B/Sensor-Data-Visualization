@@ -10,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DowntimeReport from "./components/DowntimeReport/DowntimeReport";
 import FloorMap from "./components/FloorMap/FloorMap";
+import EditMap from "./components/FloorMap/EditMap";
 import OEE from "./components/OEE/OEE";
 
 const AppRoutes = () => (
@@ -49,14 +50,6 @@ const AppRoutes = () => (
             }
         />
         <Route
-            path="/floormap"
-            element={
-                <ProtectedRoute>
-                    <FloorMap />
-                </ProtectedRoute>
-            }
-        />
-        <Route
             path="/dwr"
             element={
                 <ProtectedRoute>
@@ -85,6 +78,24 @@ const AppRoutes = () => (
             element={
                 <ProtectedRoute>
                     <OEE />
+                </ProtectedRoute>
+            }
+        />
+        
+        <Route
+            path="/floormap"
+            element={
+                <ProtectedRoute>
+                    <FloorMap />
+                </ProtectedRoute>
+            }
+        />
+        
+        <Route
+            path="/editmap"
+            element={
+                <ProtectedRoute>
+                    <EditMap />
                 </ProtectedRoute>
             }
         />

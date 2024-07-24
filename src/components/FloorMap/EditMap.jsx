@@ -67,7 +67,7 @@ const getStatusStyles = (status) => {
     }
 };
 
-const FloorMap = () => {
+const EditMap = () => {
     const [devices, setDevices] = useState([]);
     const [positions, setPositions] = useState({});
 
@@ -102,6 +102,44 @@ const FloorMap = () => {
         }
     };
 
+    const savePositions = (updatedPositions) => {
+        localStorage.setItem(
+            "devicePositions",
+            JSON.stringify(updatedPositions)
+        );
+    };
+
+    const onDragStop = (id, d) => {
+        setPositions((prevPositions) => {
+            const newPositions = {
+                ...prevPositions,
+                [id]: {
+                    ...prevPositions[id],
+                    x: d.x,
+                    y: d.y,
+                },
+            };
+            savePositions(newPositions);
+            return newPositions;
+        });
+    };
+
+    const onResizeStop = (id, ref, position) => {
+        setPositions((prevPositions) => {
+            const newPositions = {
+                ...prevPositions,
+                [id]: {
+                    ...prevPositions[id],
+                    width: ref.style.width,
+                    height: ref.style.height,
+                    ...position,
+                },
+            };
+            savePositions(newPositions);
+            return newPositions;
+        });
+    };
+
     return (
         <div className="floor-map">
             {devices.map((device) => {
@@ -120,8 +158,10 @@ const FloorMap = () => {
                             height: position.height,
                         }}
                         position={{ x: position.x, y: position.y }}
-                        enableResizing={false}
-                        disableDragging={true}
+                        onDragStop={(e, d) => onDragStop(device.id, d)}
+                        onResizeStop={(e, direction, ref, delta, position) =>
+                            onResizeStop(device.id, ref, position)
+                        }
                         bounds="parent"
                         style={{
                             backgroundColor: statusStyles.background,
@@ -198,4 +238,4 @@ const FloorMap = () => {
     );
 };
 
-export default FloorMap;
+export default EditMap;

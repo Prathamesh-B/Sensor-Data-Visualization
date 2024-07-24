@@ -10,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DowntimeReport from "./components/DowntimeReport/DowntimeReport";
 import FloorMap from "./components/FloorMap/FloorMap";
+import OEE from "./components/OEE/OEE";
 
 const AppRoutes = () => (
     <Routes>
@@ -76,6 +77,14 @@ const AppRoutes = () => (
             element={
                 <ProtectedRoute>
                     <SVPMDashboard />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/mop"
+            element={
+                <ProtectedRoute>
+                    <OEE />
                 </ProtectedRoute>
             }
         />

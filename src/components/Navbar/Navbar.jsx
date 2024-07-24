@@ -12,6 +12,7 @@ import {
     LayoutTemplate,
     Pencil,
     AreaChart,
+    MonitorDot
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -86,6 +87,14 @@ const Navbar = () => {
                             childrenOffset={25}
                             defaultOpened
                         >
+                            <NavLink
+                                component={Link}
+                                to="/mop"
+                                leftSection={<MonitorDot strokeWidth={1} />}
+                                label="Machine Performance"
+                                mt="sm"
+                                active={location.pathname === "/mop"}
+                            />
                             <NavLink
                                 component={Link}
                                 to="/dwr"

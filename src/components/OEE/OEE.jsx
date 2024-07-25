@@ -1,22 +1,22 @@
 import { Button, Card, Container, Grid, Select, Text } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { useState, useEffect } from "react"
-import Chart from "../Chart/Chart";
+import { BarGraph, PieGraph } from "../Chart/Chart";
 const OEE = () => {
   
-  const [productionLineMenu, setProductionLineMenu] = useState("")
+  const [productionLineMenu, setProductionLineMenu] = useState("1")
   const [devices, setDevices] = useState([])
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-  const [topCards, setTopCards] = useState([]);
+  // const [topCards, setTopCards] = useState([]);
 
-  useEffect(() =>{
-    fetchData()
-  }, [productionLineMenu, startDate, endDate])
+  // useEffect(() =>{
+  //   fetchData()
+  // }, )
   
   useEffect(() => {
     fetchDevicesAndTime();
-  }, []);
+  }, [productionLineMenu, startDate, endDate]);
 
   const fetchDevicesAndTime = async () =>{
     try{
@@ -43,44 +43,44 @@ const OEE = () => {
     }
   }
 
-  const fetchData = async () =>{
-    try{
+  // const fetchData = async () =>{
+  //   try{
       
       
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/logs?LineId=${productionLineMenu}&StartDate=${startDate}&EndDate=${endDate}`
-      );
+  //     const response = await fetch(
+  //       `http://127.0.0.1:8000/api/logs?LineId=${productionLineMenu}&StartDate=${startDate}&EndDate=${endDate}`
+  //     );
 
-      const MPresponse = await fetch(
-        `http://127.0.0.1:8000/api/machine-performance/`
-      );
+  //     const MPresponse = await fetch(
+  //       `http://127.0.0.1:8000/api/machine-performance/`
+  //     );
 
-      const params = []
+  //     const params = []
 
-      if(productionLineMenu){
-        params.push(`Line = ${productionLineMenu}`)
-      }
+  //     if(productionLineMenu){
+  //       params.push(`Line = ${productionLineMenu}`)
+  //     }
 
-      if (startDate && endDate) {
-        params.push(`StartDate=${startDate.toISOString()}`);
-        params.push(`EndDate=${endDate.toISOString()}`);
-      }
+  //     if (startDate && endDate) {
+  //       params.push(`StartDate=${startDate.toISOString()}`);
+  //       params.push(`EndDate=${endDate.toISOString()}`);
+  //     }
 
-      if(!response.ok || !MPresponse.ok){
-        throw new Error("Network response wasn't okie");
-      }
+  //     if(!response.ok || !MPresponse.ok){
+  //       throw new Error("Network response wasn't okie");
+  //     }
 
-      const MPdata = await MPresponse.json();
-      const filter = MPdata.filter(
-        (data) => data.line_id === +productionLineMenu
-      );
-      setTopCards(filter[0]);
+  //     const MPdata = await MPresponse.json();
+  //     const filter = MPdata.filter(
+  //       (data) => data.line_id === +productionLineMenu
+  //     );
+  //     setTopCards(filter[0]);
 
-    }
-    catch(error){
-      console.error("Error fetching Devices: ", error);
-    }
-  }
+  //   }
+  //   catch(error){
+  //     console.error("Error fetching Devices: ", error);
+  //   }
+  // }
 
   const getStatusStyles = (status) => {
     switch (status) {
@@ -152,7 +152,7 @@ const OEE = () => {
   const statusStyles = getStatusStyles(lineStatus);
 
   const handleFetchClick = () =>{
-    fetchData()
+    // fetchData()
   }
 
 
@@ -204,43 +204,55 @@ const OEE = () => {
           radius="md"
           >
             <Text
-            style={{ fontSize: "2rem", textAlign: "center" }}
+            style={{ fontSize: "2rem", fontWeight: 700, textAlign: "center" }}
             >Overall Equipment Efficiency</Text>
             <div
               style={{
-                fontWeight: 700,
-                display: "flex"
+                // fontWeight: 700,
+                fontSize: "1.1rem",
+                display: "flex",
+                alignItems: "center"
               }}
               >
+                Current Status:
                 <div 
                 style={{
                 fontSize: "1.5rem",
                 fontWeight: 700,
                 color: statusStyles.color,
-                paddingLeft: "15px"
+                paddingLeft: "1rem",
+                paddingRight: "6rem"
               }}>
                   {lineStatus}
                 </div>
+                DownTime (mins): 
                 <div 
                 style={{
                 fontSize: "1.5rem",
                 fontWeight: 700,
                 color: "orange",
-                paddingLeft: "15px"
+                paddingLeft: "1rem"
               }}>
-                  DT(mins){topCards.downtime}
+                  DT
+                  {/* {topCards.downtime} */}
                 </div>
+            </div>
+            <div
+            style={{
+              fontSize: "1.1rem",
+              display: "flex",
+              alignItems: "center"
+            }}
+            >
             </div>
             <div
             style={{display: "flex"}}
             >
               <div>
-                <label>Chart to show what was downtime and what was active time (PieChart)</label>
-                <Chart />
+                <PieGraph />
               </div>
               <div>
-                <label>Chart to show Availability, efficiency, and quality (Bargraph)</label>
-                <Chart />
+                <BarGraph />
               </div>
             </div>
           </Card>

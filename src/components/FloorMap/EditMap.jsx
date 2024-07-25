@@ -44,7 +44,7 @@ const getStatusStyles = (status) => {
             return {
                 background: "#adb5bd",
                 borderColor: "#adb5bd",
-                color: "black",
+                color: "white",
             };
         case "Tool Change":
             return {

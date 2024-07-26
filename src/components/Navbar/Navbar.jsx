@@ -12,7 +12,7 @@ import {
     LayoutTemplate,
     Pencil,
     AreaChart,
-    MonitorDot
+    MonitorDot,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -62,7 +62,6 @@ const Navbar = () => {
                             label="Console"
                             leftSection={<Scroll strokeWidth={1} />}
                             childrenOffset={25}
-                            defaultOpened
                         >
                             <NavLink
                                 component={Link}
@@ -85,7 +84,6 @@ const Navbar = () => {
                             label="OEE"
                             leftSection={<AreaChart strokeWidth={1} />}
                             childrenOffset={25}
-                            defaultOpened
                         >
                             <NavLink
                                 component={Link}
@@ -116,7 +114,6 @@ const Navbar = () => {
                             label="Layout"
                             leftSection={<Map strokeWidth={1} />}
                             childrenOffset={25}
-                            defaultOpened
                         >
                             <NavLink
                                 component={Link}

@@ -2,21 +2,23 @@ import { Button, Card, Container, Grid, Select, Text } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { useState, useEffect } from "react"
 import { BarGraph, PieGraph } from "../Chart/Chart";
-const OEE = () => {
+const Oee = () => {
   
   const [productionLineMenu, setProductionLineMenu] = useState("1")
   const [devices, setDevices] = useState([])
-  const [startDate, setStartDate] = useState(null)
-  const [endDate, setEndDate] = useState(null)
-  // const [topCards, setTopCards] = useState([]);
+  const [topCards, setTopCards] = useState([]);
+  const [customDateRange, setCustomDateRange] = useState({
+    start: null,
+    end: null,
+});
 
-  // useEffect(() =>{
-  //   fetchData()
-  // }, )
+  useEffect(() =>{
+      fetchData();
+    },  [])
   
   useEffect(() => {
     fetchDevicesAndTime();
-  }, [productionLineMenu, startDate, endDate]);
+  }, [productionLineMenu]);
 
   const fetchDevicesAndTime = async () =>{
     try{
@@ -26,11 +28,6 @@ const OEE = () => {
 
       if(productionLineMenu){
         params.push(`Line = ${productionLineMenu}`)
-      }
-
-      if (startDate && endDate) {
-        params.push(`StartDate=${startDate.toISOString()}`);
-        params.push(`EndDate=${endDate.toISOString()}`);
       }
       if (!lineResponse.ok) {
         throw new Error("Network response was not ok");
@@ -43,44 +40,45 @@ const OEE = () => {
     }
   }
 
-  // const fetchData = async () =>{
-  //   try{
-      
-      
-  //     const response = await fetch(
-  //       `http://127.0.0.1:8000/api/logs?LineId=${productionLineMenu}&StartDate=${startDate}&EndDate=${endDate}`
-  //     );
-
-  //     const MPresponse = await fetch(
-  //       `http://127.0.0.1:8000/api/machine-performance/`
-  //     );
-
-  //     const params = []
-
-  //     if(productionLineMenu){
-  //       params.push(`Line = ${productionLineMenu}`)
-  //     }
-
-  //     if (startDate && endDate) {
-  //       params.push(`StartDate=${startDate.toISOString()}`);
-  //       params.push(`EndDate=${endDate.toISOString()}`);
-  //     }
-
-  //     if(!response.ok || !MPresponse.ok){
-  //       throw new Error("Network response wasn't okie");
-  //     }
-
-  //     const MPdata = await MPresponse.json();
-  //     const filter = MPdata.filter(
-  //       (data) => data.line_id === +productionLineMenu
-  //     );
-  //     setTopCards(filter[0]);
-
-  //   }
-  //   catch(error){
-  //     console.error("Error fetching Devices: ", error);
-  //   }
-  // }
+  const fetchData = async () =>{
+    try {
+      let startDate = new Date().toISOString();
+      let endDate = new Date().toISOString();
+      if (!customDateRange || !customDateRange.start || !customDateRange.end) {
+        throw new Error("Invalid date range provided");
+      }
+      if (customDateRange.start && customDateRange.end) {
+        startDate =
+            customDateRange.start
+                .toISOString()
+                .split("T")[0] + "T00:00:00Z";
+        endDate =
+            customDateRange.end
+                .toISOString()
+                .split("T")[0] + "T23:59:59Z";
+      }
+      console.log(startDate, endDate);
+  
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
+      );
+  
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+  
+      const data = await response.json();
+  
+      const topCardsData = data.find(item => item.line_id === parseInt(productionLineMenu));
+      if (topCardsData) {
+        setTopCards({
+          downtime: topCardsData.downtime,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  }
 
   const getStatusStyles = (status) => {
     switch (status) {
@@ -152,7 +150,7 @@ const OEE = () => {
   const statusStyles = getStatusStyles(lineStatus);
 
   const handleFetchClick = () =>{
-    // fetchData()
+    fetchData()
   }
 
 
@@ -178,8 +176,13 @@ const OEE = () => {
               label="Start Date"
               placeholder="Pick start date and time"
               mx="auto"
-              value={startDate}
-              onChange={setStartDate}
+              value={customDateRange.start}
+              onChange={(date) =>
+                  setCustomDateRange({
+                    ...customDateRange,
+                    start: date,
+                  })
+              }
             />
           </Grid.Col>
           <Grid.Col span={4}>
@@ -187,8 +190,13 @@ const OEE = () => {
               label="End Date"
               placeholder="Pick end date and time"
               mx="auto"
-              value={endDate}
-              onChange={setEndDate}
+              value={customDateRange.end}
+              onChange={(date) =>
+                setCustomDateRange({
+                  ...customDateRange,
+                  end: date,
+                })
+              }
             />
           </Grid.Col>
           <Grid.Col span={4}>
@@ -208,7 +216,6 @@ const OEE = () => {
             >Overall Equipment Efficiency</Text>
             <div
               style={{
-                // fontWeight: 700,
                 fontSize: "1.1rem",
                 display: "flex",
                 alignItems: "center"
@@ -216,25 +223,24 @@ const OEE = () => {
               >
                 Current Status:
                 <div 
-                style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                color: statusStyles.color,
-                paddingLeft: "1rem",
-                paddingRight: "6rem"
-              }}>
+                  style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
+                  color: statusStyles.color,
+                  paddingLeft: "1rem",
+                  paddingRight: "6rem"
+                }}>
                   {lineStatus}
                 </div>
                 DownTime (mins): 
                 <div 
-                style={{
-                fontSize: "1.5rem",
-                fontWeight: 700,
-                color: "orange",
-                paddingLeft: "1rem"
-              }}>
-                  DT
-                  {/* {topCards.downtime} */}
+                  style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
+                  color: "orange",
+                  paddingLeft: "1rem"
+                }}>
+                  {topCards.downtime}
                 </div>
             </div>
             <div
@@ -345,4 +351,4 @@ const OEE = () => {
   )
 }
 
-export default OEE
+export default Oee;

@@ -138,6 +138,12 @@ const MODashboard = () => {
                     (data) => data.line_id === productionLineMenu
                 );
 
+                if (filter.length > 0) {
+                    // Assuming downtime is a property in the filter[0] object
+                    const downtimeInMinutes = Math.round(filter[0].downtime / 60);
+                    filter[0].downtime = downtimeInMinutes; // Update the downtime with the rounded value
+                }
+
                 setStaticCards(staticData[0]);
                 setTopCards(filter[0]);
                 setFilteredChartData(data);
@@ -188,9 +194,9 @@ const MODashboard = () => {
                 };
             case "Not Scheduled":
                 return {
-                    background: "#adb5bd",
-                    borderColor: "#adb5bd",
-                    color: "white",
+                    background: "#f1f1f1",
+                    borderColor: "#9f9f9f",
+                    color: "#9f9f9f",
                 };
             case "Tool Change":
                 return {

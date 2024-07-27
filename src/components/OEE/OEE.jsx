@@ -8,8 +8,8 @@ const Oee = () => {
   const [devices, setDevices] = useState([])
   const [topCards, setTopCards] = useState([]);
   const [customDateRange, setCustomDateRange] = useState({
-    start: null,
-    end: null,
+    start: new Date(),
+    end: new Date(),
 });
 
   useEffect(() =>{
@@ -72,7 +72,7 @@ const Oee = () => {
       const topCardsData = data.find(item => item.line_id === parseInt(productionLineMenu));
       if (topCardsData) {
         setTopCards({
-          downtime: topCardsData.downtime,
+          downtime: Math.round(topCardsData.downtime / 60),
         });
       }
     } catch (error) {

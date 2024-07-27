@@ -66,7 +66,7 @@ const SVPMDashboard = () => {
                     data: apiData.map((item) => ({
                         name: item.line_name,
                         unit: item.production,
-                        time: item.downtime,
+                        time: Math.round(item.downtime / 60),
                     })),
                     production: apiData.reduce(
                         (sum, item) => sum + item.production,
@@ -74,9 +74,8 @@ const SVPMDashboard = () => {
                     ),
                     availability: 75,
                     activeMachines: apiData.length,
-                    downtime: apiData.reduce(
-                        (sum, item) => sum + item.downtime,
-                        0
+                    downtime: Math.round(
+                        apiData.reduce((sum, item) => sum + item.downtime, 0) / 60
                     ),
                 };
 

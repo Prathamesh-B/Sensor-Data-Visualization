@@ -43,7 +43,7 @@ const MODashboard = () => {
     useEffect(() => {
         const intervalId = setInterval(() => {
             fetchData();
-        }, 10000); // Fetch data every 10 seconds
+        }, 5000); // Fetch data every 5 seconds
 
         return () => clearInterval(intervalId);
     }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);

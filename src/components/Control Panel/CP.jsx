@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
     Button,
     Card,
@@ -6,11 +7,10 @@ import {
     Slider,
     Switch,
     Text,
+    Select,
 } from "@mantine/core";
 import { Gauge } from "lucide-react";
-import { useState } from "react";
 import { phase, current, temp, freq } from "../../data";
-import { useEffect } from "react";
 
 const Cp = () => {
     const [Vry, setVry] = useState(445);
@@ -21,8 +21,17 @@ const Cp = () => {
     const [Cy, setCy] = useState(330);
     const [Cb, setCb] = useState(330);
     const [Freq, setFreq] = useState(55);
-    const [countdown, setCountdown] = useState(30);
     const [isRandom, setIsRandom] = useState(false);
+    const [intervalSeconds, setIntervalSeconds] = useState("30");
+    const [countdown, setCountdown] = useState(parseInt(intervalSeconds));
+
+    const intervalOptions = [
+        { label: "5 sec", value: "5" },
+        { label: "15 sec", value: "15" },
+        { label: "30 sec", value: "30" },
+        { label: "1 min", value: "60" },
+        { label: "5 min", value: "300" },
+    ];
 
     const generateRandomValues = () => {
         setVry(
@@ -101,7 +110,7 @@ const Cp = () => {
                         generateRandomValues();
                         const data = { Vry, Vyb, Vbr, Temp, Cr, Cy, Cb, Freq };
                         sendDataToBackend(data);
-                        return 30;
+                        return parseInt(intervalSeconds);
                     }
                     return prevCount - 1;
                 });
@@ -110,7 +119,13 @@ const Cp = () => {
             clearInterval(interval);
         }
         return () => clearInterval(interval);
-    }, [isRandom, generateRandomValues, Vry, Vyb, Vbr, Temp, Cr, Cy, Cb, Freq]);
+    }, [isRandom, intervalSeconds, Vry, Vyb, Vbr, Temp, Cr, Cy, Cb, Freq]);
+
+    useEffect(() => {
+        if (isRandom) {
+            setCountdown(parseInt(intervalSeconds));
+        }
+    }, [intervalSeconds, isRandom]);
 
     const handleSubmit = () => {
         const data = {
@@ -480,9 +495,21 @@ const Cp = () => {
                             }
                         />
                         {isRandom && (
-                            <Text size="lg" weight={700} mt="md">
-                                Next request: {countdown} seconds
-                            </Text>
+                            <>
+                                <Select
+                                    data={intervalOptions}
+                                    value={intervalSeconds}
+                                    onChange={(value) => {
+                                        setIntervalSeconds(value);
+                                        setCountdown(parseInt(value));
+                                    }}
+                                    placeholder="Select interval"
+                                    radius="sm"
+                                />
+                                <Text size="lg" weight={700} mt="md">
+                                    Next request: {countdown} seconds
+                                </Text>
+                            </>
                         )}
                     </Grid.Col>
                     <Grid.Col span={3}>

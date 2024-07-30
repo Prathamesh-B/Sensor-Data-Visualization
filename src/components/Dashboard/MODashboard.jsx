@@ -37,10 +37,15 @@ const MODashboard = () => {
 
     useEffect(() => {
         fetchDevicesAndTags();
+        fetchData();
     }, []);
 
     useEffect(() => {
-        fetchData();
+        const intervalId = setInterval(() => {
+            fetchData();
+        }, 10000); // Fetch data every 10 seconds
+
+        return () => clearInterval(intervalId);
     }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
 
     const fetchDevicesAndTags = async () => {
@@ -140,7 +145,9 @@ const MODashboard = () => {
 
                 if (filter.length > 0) {
                     // Assuming downtime is a property in the filter[0] object
-                    const downtimeInMinutes = Math.round(filter[0].downtime / 60);
+                    const downtimeInMinutes = Math.round(
+                        filter[0].downtime / 60
+                    );
                     filter[0].downtime = downtimeInMinutes; // Update the downtime with the rounded value
                 }
 

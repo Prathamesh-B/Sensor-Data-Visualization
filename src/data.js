@@ -381,16 +381,16 @@ export const sensorsOpt = [
 ]
 
 export const phase = [
-    {min: 330, max: 440},
-    { id: 1, value: 330, label: '330' },
-    { id: 2, value: 385, label: '385' },
-    { id: 3, value: 440, label: '440' },
+    {min: 410 , max: 480},
+    { id: 1, value: 410, label: '410' },
+    { id: 2, value: 445, label: '445' },
+    { id: 3, value: 480, label: '480' },
 ]
 
 export const current = [
-    { value: 2, label: '2' },
-    { value: 8, label: '8' },
-    { value: 15, label: '15' }
+    { value: 220, label: '220' },
+    { value: 330, label: '330' },
+    { value: 440, label: '440' }
 ]
 
 export const temp = [
@@ -400,7 +400,8 @@ export const temp = [
 ]
 
 export const freq = [
-    {min: 49, max: 59},
+    {min: 49, max: 60},
     {value: 49, label: '49'},
-    {value: 59, label: '59'},
+    {value: 55, label: '55'},
+    {value: 60, label: '60'},
 ]

@@ -12,6 +12,7 @@ import DowntimeReport from "./components/DowntimeReport/DowntimeReport";
 import FloorMap from "./components/FloorMap/FloorMap";
 import EditMap from "./components/FloorMap/EditMap";
 import OEE from "./components/OEE/OEE";
+import Cp from "./components/Control Panel/CP";
 
 const AppRoutes = () => (
     <Routes>
@@ -90,6 +91,14 @@ const AppRoutes = () => (
                 </ProtectedRoute>
             }
         />
+        <Route
+            path="/control"
+            element={
+                <ProtectedRoute>
+                    <Cp />
+                </ProtectedRoute>
+            }
+        />
         
         <Route
             path="/editmap"
@@ -100,6 +109,7 @@ const AppRoutes = () => (
             }
         />
     </Routes>
+    
 );
 
 export default AppRoutes;

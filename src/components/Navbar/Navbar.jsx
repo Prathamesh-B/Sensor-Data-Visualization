@@ -47,7 +47,14 @@ const Navbar = () => {
     return (
         <>
             <div className="nav-top">
-                <div className="logo rokkitt-400">ProdViz</div>
+                <div className="logo rokkitt-400">
+                    {/* use prodviz logo from public/images */}
+                    <img
+                        src="./images/ProdVizLogo.png"
+                        alt="ProdViz Logo"
+                        style={{ height: "4rem" }}
+                    />
+                </div>
                 {isAuthenticated ? (
                     <>
                         <NavLink

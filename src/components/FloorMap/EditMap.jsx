@@ -81,7 +81,7 @@ const EditMap = () => {
     const fetchDevices = async () => {
         try {
             const response = await fetch(
-                "http://127.0.0.1:8000/api/productionlines/"
+                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
             );
             if (!response.ok) {
                 throw new Error("Network response was not ok");

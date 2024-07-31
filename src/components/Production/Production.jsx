@@ -37,10 +37,10 @@ const Production = () => {
     const fetchDevicesAndTags = async () => {
         try {
             const deviceResponse = await fetch(
-                "http://127.0.0.1:8000/api/devices/"
+                `${import.meta.env.VITE_BACKEND_URL}/api/devices/`
             );
             const tagResponse = await fetch(
-                "http://127.0.0.1:8000/api/device-tags/"
+                `${import.meta.env.VITE_BACKEND_URL}/api/device-tags/`
             );
             if (!deviceResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
@@ -97,7 +97,7 @@ const Production = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./production.png"
+                                    src="./images/production.png"
                                     alt="Production Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -125,7 +125,7 @@ const Production = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./production_target.png"
+                                    src="./images/production_target.png"
                                     alt="Production Target Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -153,7 +153,7 @@ const Production = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./production-rate.png"
+                                    src="./images/production-rate.png"
                                     alt="Production Rate Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -181,7 +181,7 @@ const Production = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./down-time.png"
+                                    src="./images/down-time.png"
                                     alt="Downtime Icon"
                                 />
                                 <Text size="sm" fw={400}>

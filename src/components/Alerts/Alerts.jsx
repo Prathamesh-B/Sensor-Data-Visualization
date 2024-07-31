@@ -26,7 +26,7 @@ const Notes = () => {
         try {
             setLoading(true);
             const alertsResponse = await fetch(
-                "http://127.0.0.1:8000/api/alerts/"
+                `${import.meta.env.VITE_BACKEND_URL}/api/alerts/`
             );
 
             if (!alertsResponse.ok) {
@@ -162,7 +162,7 @@ const Notes = () => {
         };
     
         try {
-            const response = await fetch(`http://127.0.0.1:8000/api/alerts/${selectedEvent.id}`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/alerts/${selectedEvent.id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

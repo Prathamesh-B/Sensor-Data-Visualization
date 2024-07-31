@@ -57,7 +57,7 @@ const SVPMDashboard = () => {
                     break;
             }
             const response = await fetch(
-                `http://127.0.0.1:8000/api/machine-performance?StartDate=${startDate}&EndDate=${endDate}`
+                `${import.meta.env.VITE_BACKEND_URL}/api/machine-performance?StartDate=${startDate}&EndDate=${endDate}`
             );
             const apiData = await response.json();
 
@@ -111,7 +111,7 @@ const SVPMDashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./production.png"
+                                    src="./images/production.png"
                                     alt="Production Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -141,7 +141,7 @@ const SVPMDashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./efficiency.png"
+                                    src="./images/efficiency.png"
                                     alt="Availability Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -169,7 +169,7 @@ const SVPMDashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./machine.png"
+                                    src="./images/machine.png"
                                     alt="Machine Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -197,7 +197,7 @@ const SVPMDashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./down-time.png"
+                                    src="./images/down-time.png"
                                     alt="Downtime Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -240,7 +240,7 @@ const SVPMDashboard = () => {
                             >
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./calendar.png"
+                                    src="./images/calendar.png"
                                     alt="Calendar Icon"
                                 />
                                 <Text

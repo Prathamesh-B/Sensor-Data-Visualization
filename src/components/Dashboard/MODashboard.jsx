@@ -51,9 +51,9 @@ const MODashboard = () => {
     const fetchDevicesAndTags = async () => {
         try {
             const lineResponse = await fetch(
-                "http://127.0.0.1:8000/api/productionlines/"
+                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
             );
-            const tagResponse = await fetch("http://127.0.0.1:8000/api/tags/");
+            const tagResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tags/`);
 
             if (!lineResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
@@ -121,11 +121,11 @@ const MODashboard = () => {
                 }
 
                 const response = await fetch(
-                    `http://127.0.0.1:8000/api/logs?LineId=${productionLineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
+                    `${import.meta.env.VITE_BACKEND_URL}/api/logs?LineId=${productionLineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
                 );
 
                 const MPresponse = await fetch(
-                    `http://127.0.0.1:8000/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
+                    `${import.meta.env.VITE_BACKEND_URL}/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
                 );
 
                 if (!response.ok || !MPresponse.ok) {
@@ -245,7 +245,7 @@ const MODashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./production.png"
+                                    src="./images/production.png"
                                     alt="Production Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -273,7 +273,7 @@ const MODashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./production-rate.png"
+                                    src="./images/production-rate.png"
                                     alt="Production Rate Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -301,7 +301,7 @@ const MODashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./efficiency.png"
+                                    src="./images/efficiency.png"
                                     alt="Efficiency Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -329,7 +329,7 @@ const MODashboard = () => {
                             <div style={{ marginRight: "1rem" }}>
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./down-time.png"
+                                    src="./images/down-time.png"
                                     alt="Downtime Icon"
                                 />
                                 <Text size="sm" fw={400}>
@@ -372,7 +372,7 @@ const MODashboard = () => {
                             >
                                 <img
                                     style={{ width: "2.5rem" }}
-                                    src="./calendar.png"
+                                    src="./images/calendar.png"
                                     alt="Calendar Icon"
                                 />
                                 <Text

@@ -29,9 +29,9 @@ const DataConsole = () => {
     const fetchDevicesAndTags = async () => {
         try {
             const lineResponse = await fetch(
-                "http://127.0.0.1:8000/api/productionlines/"
+                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
             );
-            const tagResponse = await fetch("http://127.0.0.1:8000/api/tags/");
+            const tagResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tags/`);
 
             if (!lineResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
@@ -56,7 +56,7 @@ const DataConsole = () => {
                 ? dayjs(endDate).toISOString()
                 : null;
 
-            const baseURL = "http://127.0.0.1:8000/api/logs/";
+            const baseURL = `${import.meta.env.VITE_BACKEND_URL}/api/logs/`;
             const params = new URLSearchParams({
                 LineId: productionLineMenu,
                 TagId: tagMenu,

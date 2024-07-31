@@ -22,7 +22,7 @@ const Oee = () => {
 
   const fetchDevicesAndTime = async () =>{
     try{
-      const lineResponse = await fetch("http://127.0.0.1:8000/api/productionlines/")
+      const lineResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`)
 
       const params = []
 
@@ -60,7 +60,7 @@ const Oee = () => {
       console.log(startDate, endDate);
   
       const response = await fetch(
-        `http://127.0.0.1:8000/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
       );
   
       if (!response.ok) {
@@ -275,7 +275,7 @@ const Oee = () => {
               <div style={{ marginRight: "1rem" }}>
                 <img
                   style={{ width: "3.5rem" }}
-                  src="./available.png"
+                  src="./images/available.png"
                   alt="Availability Icon"
                 />
                 <Text size="md" fw={400}>
@@ -302,7 +302,7 @@ const Oee = () => {
               <div style={{ marginRight: "1rem" }}>
                 <img
                   style={{ width: "3.5rem" }}
-                  src="./efficiency.png"
+                  src="./images/efficiency.png"
                   alt="Efficiency Icon"
                 />
                 <Text size="md" fw={400}>
@@ -329,7 +329,7 @@ const Oee = () => {
               <div style={{ marginRight: "1rem" }}>
                 <img
                   style={{ width: "3.5rem" }}
-                  src="./quality.png"
+                  src="./images/quality.png"
                   alt="Quality Icon"
                 />
                 <Text size="md" fw={400}>

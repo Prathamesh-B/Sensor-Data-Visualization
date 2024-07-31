@@ -24,7 +24,7 @@ const DowntimeReport = () => {
     const fetchDevicesAndTags = async () => {
         try {
             const deviceResponse = await fetch(
-                "http://127.0.0.1:8000/api/devices/"
+                `${import.meta.env.VITE_BACKEND_URL}/api/devices/`
             );
             if (!deviceResponse.ok) {
                 throw new Error("Network response was not ok");

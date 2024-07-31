@@ -46,7 +46,7 @@ const Login = () => {
                 height: "100vh",
             }}
         >
-            <h1 className="website-name">ProdViz</h1>
+            <div className="website-name"><img src="./images/ProdVizLogo.png" alt="ProdViz Logo" style={{ width: "10rem" }}/></div>
             <div style={{ padding: "20px" }} className="container">
                 <p className="title">Welcome</p>
                 <form onSubmit={handleSubmit}>

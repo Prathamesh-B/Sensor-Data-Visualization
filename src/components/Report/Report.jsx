@@ -18,10 +18,10 @@ const Report = () => {
 
     const fetchData = async () => {
         try {
-            const lineResponse = await fetch("http://127.0.0.1:8000/api/productionlines/");
-            const tagResponse = await fetch("http://127.0.0.1:8000/api/tags/");
+            const lineResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`);
+            const tagResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tags/`);
             
-            let alertsUrl = "http://127.0.0.1:8000/api/alerts/";
+            let alertsUrl = `${import.meta.env.VITE_BACKEND_URL}/api/alerts/`;
             const params = [];
 
             if (productionLineMenu) {

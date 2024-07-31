@@ -20,12 +20,10 @@
 }
 
 .logo {
+    display: flex;
+    justify-content: center;
     background: #228be8;
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: white;
     text-align: center;
-    padding: 2px;
 }
 
 a {

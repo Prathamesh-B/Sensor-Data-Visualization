@@ -79,7 +79,7 @@ const Cp = () => {
     const sendDataToBackend = async (data) => {
         try {
             const response = await fetch(
-                "http://127.0.0.1:8000/api/control-panel-data/",
+                `${import.meta.env.VITE_BACKEND_URL}/api/control-panel-data/`,
                 {
                     method: "POST",
                     headers: {

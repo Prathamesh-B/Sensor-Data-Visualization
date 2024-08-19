@@ -36,24 +36,30 @@ const MODashboard = () => {
     };
 
     useEffect(() => {
-        fetchDevicesAndTags();
-        fetchData();
-    }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
+        const fetchAndUpdateData = async () => {
+            await fetchDevicesAndTags();
+            await fetchData();
+        };
 
-    useEffect(() => {
+        fetchAndUpdateData(); // Initial fetch when component mounts
+
         const intervalId = setInterval(() => {
-            fetchData();
-        }, 5000); // Fetch data every 5 seconds
+            fetchAndUpdateData(); // Fetch data every 5 seconds
+        }, 5000);
 
-        return () => clearInterval(intervalId);
-    }, []);
+        return () => {
+            clearInterval(intervalId); // Clean up interval
+        };
+    }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
 
     const fetchDevicesAndTags = async () => {
         try {
             const lineResponse = await fetch(
                 `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
             );
-            const tagResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tags/`);
+            const tagResponse = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/tags/`
+            );
 
             if (!lineResponse.ok || !tagResponse.ok) {
                 throw new Error("Network response was not ok");
@@ -121,11 +127,15 @@ const MODashboard = () => {
                 }
 
                 const response = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/logs?LineId=${productionLineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
+                    `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/logs/?LineId=${productionLineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
                 );
 
                 const MPresponse = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
+                    `${
+                        import.meta.env.VITE_BACKEND_URL
+                    }/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
                 );
 
                 if (!response.ok || !MPresponse.ok) {

@@ -48,7 +48,7 @@ const Login = () => {
         >
             <div className="website-name"><img src="./images/ProdVizLogo.png" alt="ProdViz Logo" style={{ width: "10rem" }}/></div>
             <div style={{ padding: "20px" }} className="container">
-                <p className="title">Welcome</p>
+                <p className="title">Login</p>
                 <form onSubmit={handleSubmit}>
                     <div className="group">
                         <label className="label" htmlFor="username">
@@ -76,7 +76,7 @@ const Login = () => {
                     </div>
                     {error && <p className="error">{error}</p>}{" "}
                     <button type="submit" className="btn">
-                        Login
+                        Submit
                     </button>
                 </form>
                 <p className="p">Forgot password? Contact support</p>

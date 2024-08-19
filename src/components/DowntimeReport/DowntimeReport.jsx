@@ -1,130 +1,139 @@
-import { useEffect, useState } from "react";
-import {
-    Container,
-    Grid,
-    Button,
-    Table,
-    Autocomplete,
-    Select,
-} from "@mantine/core";
-import { DateTimePicker } from "@mantine/dates";
-import { formatDate } from "../../utils";
-import { DTdata } from "../../data";
+import { useState } from "react";
+import { Button, Container, Table } from "@mantine/core";
+import { DatePicker } from "@mantine/dates";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 
-const DowntimeReport = () => {
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    // const [devices, setDevices] = useState([]);
-    // const [machineMenu, setMachineMenu] = useState("DIDa1B2c3D4");
+const DowntimeAnalysis = () => {
+    const [selectedDate, setSelectedDate] = useState(null);
 
-    useEffect(() => {
-        fetchDevicesAndTags();
-    }, []);
+    const handleDownloadPDF = () => {
+        const doc = new jsPDF("landscape"); // Set the page to horizontal (landscape) orientation
+        doc.text("Downtime Analysis Report", 10, 10);
 
-    const fetchDevicesAndTags = async () => {
-        try {
-            const deviceResponse = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/devices/`
-            );
-            if (!deviceResponse.ok) {
-                throw new Error("Network response was not ok");
-            }
-            // const devicesData = await deviceResponse.json();
+        // Column headers
+        const columns = [
+            { title: "PressLine", dataKey: "pressLine" },
+            { title: "Breakdown Losses", dataKey: "breakdownLosses" },
+            { title: "Changeover Losses", dataKey: "changeoverLosses" },
+            {
+                title: "Unavailability of Resources",
+                dataKey: "unavailabilityResources",
+            },
+            { title: "Shutdown Losses", dataKey: "shutdownLosses" },
+            { title: "Speed Loss", dataKey: "speedLoss" },
+            { title: "Pno", dataKey: "pno" },
+            { title: "Date", dataKey: "date" },
+        ];
 
-            // Ensure unique and defined values for devices and tags
-            // const uniqueDevices = Array.from(
-            //     new Set(devicesData.map((device) => device.DeviceId))
-            // ).map((id) => devicesData.find((device) => device.DeviceId === id));
+        // Data for the table
+        const data = [
+            [
+                "Machine 1",
+                "Reason 1",
+                "Reason 1",
+                "Reason 1",
+                "Reason 1",
+                "Reason 1",
+                "Reason 1",
+                "Reason 1",
+                "Remark",
+            ],
+            [
+                "Machine 2",
+                "Reason 2",
+                "Reason 2",
+                "Reason 2",
+                "Reason 2",
+                "Reason 2",
+                "Reason 2",
+                "Reason 2",
+                "",
+            ],
+            [
+                "Machine 3",
+                "Reason 3",
+                "Reason 3",
+                "Reason 3",
+                "Reason 3",
+                "Reason 3",
+                "Reason 3",
+                "Reason 3",
+                "",
+            ],
+            [
+                "Machine 4",
+                "Reason 4",
+                "Reason 4",
+                "Reason 4",
+                "Reason 4",
+                "Reason 4",
+                "Reason 4",
+                "Reason 4",
+                "",
+            ],
+            [
+                "Machine 5",
+                "Reason 5",
+                "Reason 5",
+                "Reason 5",
+                "Reason 5",
+                "Reason 5",
+                "Reason 5",
+                "Reason 5",
+                "",
+            ],
+            // Empty rows for 3-5 rows
+            Array(9).fill(""),
+            Array(9).fill(""),
+            Array(9).fill(""),
+        ];
 
-            // setDevices(
-            //     uniqueDevices.filter(
-            //         (device) => device && device.DeviceId && device.Name
-            //     )
-            // );
-        } catch (error) {
-            console.error("Error fetching devices or tags:", error);
-        }
+        // Generating the table
+        doc.autoTable({
+            head: [columns.map((col) => col.title)],
+            body: data,
+            theme: "grid",
+            startY: 15,
+            styles: { cellPadding: 3, fontSize: 10 },
+            columnStyles: {
+                0: { cellWidth: 40 }, // PressLine
+                1: { cellWidth: 30 }, // Breakdown Losses
+                2: { cellWidth: 30 }, // Changeover Losses
+                3: { cellWidth: 50 }, // Unavailability of Resources
+                4: { cellWidth: 30 }, // Shutdown Losses
+                5: { cellWidth: 30 }, // Speed Loss
+                6: { cellWidth: 30 }, // Pno
+                7: { cellWidth: 30 }, // Date
+            },
+        });
+
+        doc.save("downtime_analysis_report.pdf");
     };
-
-    const handleFetchData = async () => {};
-
-    const rows = DTdata.map((data) => (
-        <Table.Tr key={data.id}>
-            <Table.Td>{formatDate(data.start)}</Table.Td>
-            <Table.Td>{formatDate(data.end)}</Table.Td>
-            <Table.Td>{data.lost}</Table.Td>
-            <Table.Td>{data.machine_nm}</Table.Td>
-            <Table.Td>{data.rc}</Table.Td>
-            <Table.Td>{data.fm}</Table.Td>
-            <Table.Td>{data.shift}</Table.Td>
-        </Table.Tr>
-    ));
-
-    useEffect(() => {
-        handleFetchData();
-    }, []);
 
     return (
         <Container>
-            <Grid gutter="md" justify="flex-start" mt={"12px"}>
-                <Grid.Col span={3} mt="auto">
-                    <Autocomplete
-                        label="Downtime Type: "
-                        placeholder="Select a type"
-                        data={["Breakdown", "Unavailability of Resources", "Changeover Losses", "Speed Losses"]}
-                    />
-                </Grid.Col>
-                <Grid.Col span={3}>
-                    <DateTimePicker
-                        label="Start Date"
-                        value={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        placeholder="Pick start date and time"
-                        mx="auto"
-                    />
-                </Grid.Col>
-                <Grid.Col span={3}>
-                    <DateTimePicker
-                        label="End Date"
-                        value={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        placeholder="Pick end date and time"
-                        mx="auto"
-                    />
-                </Grid.Col>
-                <Grid.Col span={3} mt="auto">
-                <div className="machine-dropdown">
-                            <Select
-                                label="Production Line"
-                                allowDeselect={false}
-                                placeholder="Pick value"
-                                data={['Hitachi Zosen Press Line 1', 'Hitachi Zosen Press Line 2', 'Schuller Press Line 1', 'Schuller Press Line 2','Komatsu Press Line 1','Komatsu Press Line 2']}
+            <Table withBorder>
+                <tbody>
+                    <tr>
+                        <td>Date:</td>
+                        <td>
+                            <DatePicker
+                                value={selectedDate}
+                                onChange={setSelectedDate}
+                                placeholder="Pick a date"
                             />
-                        </div>
-                </Grid.Col>
-                <Grid.Col span={6} mt="auto">
-                    <Button>Apply</Button>
-                </Grid.Col>
-            </Grid>
-
-            <Table.ScrollContainer minWidth={800}>
-                <Table verticalSpacing="sm">
-                    <Table.Thead>
-                        <Table.Tr>
-                            <Table.Th>Start Time</Table.Th>
-                            <Table.Th>End Time</Table.Th>
-                            <Table.Th>Time Lost (mins)</Table.Th>
-                            <Table.Th>Machine Name</Table.Th>
-                            <Table.Th>Root Cause</Table.Th>
-                            <Table.Th>Foreman</Table.Th>
-                            <Table.Th>Shift</Table.Th>
-                        </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>{rows}</Table.Tbody>
-                </Table>
-            </Table.ScrollContainer>
+                        </td>
+                        <td>
+                            <Button onClick={handleDownloadPDF}>
+                                Download Report
+                            </Button>
+                        </td>
+                    </tr>
+                </tbody>
+            </Table>
         </Container>
     );
 };
 
-export default DowntimeReport;
+export default DowntimeAnalysis;

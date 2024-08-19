@@ -38,7 +38,7 @@ const MODashboard = () => {
     useEffect(() => {
         fetchDevicesAndTags();
         fetchData();
-    }, []);
+    }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -46,7 +46,7 @@ const MODashboard = () => {
         }, 5000); // Fetch data every 5 seconds
 
         return () => clearInterval(intervalId);
-    }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
+    }, []);
 
     const fetchDevicesAndTags = async () => {
         try {

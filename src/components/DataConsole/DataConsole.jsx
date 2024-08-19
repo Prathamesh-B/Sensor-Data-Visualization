@@ -100,7 +100,7 @@ const DataConsole = () => {
         if (startDate && endDate) {
             handleFetchData();
         }
-    }, [startDate, endDate]);
+    }, [startDate, endDate, productionLineMenu, tagMenu]);
 
     return (
         <Container>

@@ -3,16 +3,12 @@ import {
     BarChart2,
     LayoutDashboard,
     LogOut,
-    NotebookPen,
     UsersRound,
     Table2,
     FileClock,
     Map,
     Scroll,
-    LayoutTemplate,
-    Pencil,
     AreaChart,
-    MonitorDot,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
@@ -61,14 +57,15 @@ const Navbar = () => {
                             component={Link}
                             to={getDashboardLink()}
                             leftSection={<LayoutDashboard strokeWidth={1} />}
-                            mt="sm"
                             label="Dashboard"
                             active={location.pathname === getDashboardLink()}
+                            mt="sm"
                         />
                         <NavLink
-                            label="Console"
+                            label="Reports"
                             leftSection={<Scroll strokeWidth={1} />}
                             childrenOffset={25}
+                            mt="sm"
                         >
                             <NavLink
                                 component={Link}
@@ -77,28 +74,6 @@ const Navbar = () => {
                                 label="Data Console"
                                 mt="sm"
                                 active={location.pathname === "/console"}
-                            />
-                            <NavLink
-                                component={Link}
-                                to="/report"
-                                leftSection={<NotebookPen strokeWidth={1} />}
-                                label="Reports"
-                                mt="sm"
-                                active={location.pathname === "/report"}
-                            />
-                        </NavLink>
-                        <NavLink
-                            label="OEE"
-                            leftSection={<AreaChart strokeWidth={1} />}
-                            childrenOffset={25}
-                        >
-                            <NavLink
-                                component={Link}
-                                to="/mop"
-                                leftSection={<MonitorDot strokeWidth={1} />}
-                                label="Machine Performance"
-                                mt="sm"
-                                active={location.pathname === "/mop"}
                             />
                             <NavLink
                                 component={Link}
@@ -116,29 +91,47 @@ const Navbar = () => {
                                 mt="sm"
                                 active={location.pathname === "/production"}
                             />
+                            {/* <NavLink
+                                component={Link}
+                                to="/report"
+                                leftSection={<NotebookPen strokeWidth={1} />}
+                                label="Reports"
+                                mt="sm"
+                                active={location.pathname === "/report"}
+                            /> */}
                         </NavLink>
                         <NavLink
-                            label="Layout"
+                            component={Link}
+                            label="Performance Metrics"
+                            leftSection={<AreaChart strokeWidth={1} />}
+                            to="/mop"
+                            active={location.pathname === "/mop"}
+                            mt="sm"
+                        />
+                        <NavLink
+                            component={Link}
+                            to="/floormap"
+                            label="Production View"
                             leftSection={<Map strokeWidth={1} />}
-                            childrenOffset={25}
-                        >
-                            <NavLink
-                                component={Link}
-                                to="/floormap"
-                                leftSection={<LayoutTemplate strokeWidth={1} />}
-                                label="Floor Map"
-                                mt="sm"
-                                active={location.pathname === "/floormap"}
-                            />
-                            <NavLink
-                                component={Link}
-                                to="/editmap"
-                                leftSection={<Pencil strokeWidth={1} />}
-                                label="Edit Map"
-                                mt="sm"
-                                active={location.pathname === "/editmap"}
-                            />
-                        </NavLink>
+                            active={location.pathname === "/floormap"}
+                            mt="sm"
+                        />
+                        {/* <NavLink
+                            component={Link}
+                            to="/floormap"
+                            leftSection={<LayoutTemplate strokeWidth={1} />}
+                            label="Floor Map"
+                            mt="sm"
+                            active={location.pathname === "/floormap"}
+                        />
+                        <NavLink
+                            component={Link}
+                            to="/editmap"
+                            leftSection={<Pencil strokeWidth={1} />}
+                            label="Edit Map"
+                            mt="sm"
+                            active={location.pathname === "/editmap"}
+                        /> */}
                     </>
                 ) : (
                     <NavLink

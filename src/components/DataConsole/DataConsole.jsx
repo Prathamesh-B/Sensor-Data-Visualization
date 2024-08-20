@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Container, Grid, Button, Table, Select } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
+import { fetchDevicesAndTags } from "../../services/BackendAPIs";
 
 const DataConsole = () => {
     const [productionLineMenu, setProductionLineMenu] = useState("1");
-    const [tagMenu, setTagMenu] = useState("12");
+    const [tagMenu, setTagMenu] = useState("1");
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [sensorData, setSensorData] = useState([]);
@@ -13,39 +14,10 @@ const DataConsole = () => {
     const [devices, setDevices] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
 
-    const deviceNames = {
-        1: "Hitachi Zosen Press Line 1",
-        2: "Hitachi Zosen Press Line 2",
-        3: "Schuller Press Line 1",
-        4: "Schuller Press Line 2",
-        5: "Komatsu Press Line 1",
-        6: "Komatsu Press Line 2",
-    };
-
     useEffect(() => {
-        fetchDevicesAndTags();
+        fetchDevicesAndTags(setDevices, setDeviceTags);
     }, []);
 
-    const fetchDevicesAndTags = async () => {
-        try {
-            const lineResponse = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
-            );
-            const tagResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/tags/`);
-
-            if (!lineResponse.ok || !tagResponse.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            const linesData = await lineResponse.json();
-            const tagsData = await tagResponse.json();
-
-            setDevices(linesData);
-            setDeviceTags(tagsData);
-        } catch (error) {
-            console.error("Error fetching devices or tags:", error);
-        }
-    };
 
     const handleFetchData = async () => {
         try {
@@ -56,7 +28,7 @@ const DataConsole = () => {
                 ? dayjs(endDate).toISOString()
                 : null;
 
-            const baseURL = `${import.meta.env.VITE_BACKEND_URL}/api/logs/`;
+            const baseURL = `${import.meta.env.VITE_BACKEND_URL}/api/daqlogs/`;
             const params = new URLSearchParams({
                 LineId: productionLineMenu,
                 TagId: tagMenu,
@@ -91,7 +63,7 @@ const DataConsole = () => {
         <Table.Tr key={data.id}>
             <Table.Td>{dayjs(data.timestamp).format("MMM DD, HH:mm")}</Table.Td>
             <Table.Td>{data.value}</Table.Td>
-            <Table.Td>{deviceNames[data.line]}</Table.Td>
+            <Table.Td>{data.line}</Table.Td>
             <Table.Td>{data.tag}</Table.Td>
         </Table.Tr>
     ));

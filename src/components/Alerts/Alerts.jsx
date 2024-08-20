@@ -52,15 +52,10 @@ const Notes = () => {
         console.log(user);
     }, []);
 
-    const formatTime = (timestamp) => {
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false, // Use 24-hour format
-        });
-    };
+    const formatTime = (timeString) => {
+        const [hours, minutes] = timeString.split(":");
+        return `${hours}:${minutes}`;
+    };    
 
     const getBackgroundColorByType = (type) => {
         switch (type) {

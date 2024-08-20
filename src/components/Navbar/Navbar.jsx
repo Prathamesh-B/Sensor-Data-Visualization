@@ -9,17 +9,27 @@ import {
     Map,
     Scroll,
     AreaChart,
+    BadgePlus,
+    Users,
+    Tag,
+    Cog,
+    Factory,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
 import { useAuth } from "../../context/AuthContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";    
 
 const Navbar = () => {
     const location = useLocation();
     const { isAuthenticated, logout } = useAuth();
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
+    const [openNavLink, setOpenNavLink] = useState(null);
+
+    const handleNavLinkClick = (navLinkId) => {
+        setOpenNavLink((prev) => (prev === navLinkId ? null : navLinkId));
+    };
 
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
@@ -62,10 +72,28 @@ const Navbar = () => {
                             mt="sm"
                         />
                         <NavLink
+                            component={Link}
+                            to="/floormap"
+                            label="Production View"
+                            leftSection={<Map strokeWidth={1} />}
+                            active={location.pathname === "/floormap"}
+                            mt="sm"
+                        />
+                        <NavLink
+                            component={Link}
+                            label="Performance Metrics"
+                            leftSection={<AreaChart strokeWidth={1} />}
+                            to="/mop"
+                            active={location.pathname === "/mop"}
+                            mt="sm"
+                        />
+                        <NavLink
                             label="Reports"
                             leftSection={<Scroll strokeWidth={1} />}
                             childrenOffset={25}
                             mt="sm"
+                            onClick={() => handleNavLinkClick("reports")}
+                            opened={openNavLink === "reports"}
                         >
                             <NavLink
                                 component={Link}
@@ -91,38 +119,55 @@ const Navbar = () => {
                                 mt="sm"
                                 active={location.pathname === "/production"}
                             />
-                            {/* <NavLink
-                                component={Link}
-                                to="/report"
-                                leftSection={<NotebookPen strokeWidth={1} />}
-                                label="Reports"
-                                mt="sm"
-                                active={location.pathname === "/report"}
-                            /> */}
                         </NavLink>
                         <NavLink
-                            component={Link}
-                            label="Performance Metrics"
-                            leftSection={<AreaChart strokeWidth={1} />}
-                            to="/mop"
-                            active={location.pathname === "/mop"}
+                            label="Master"
+                            leftSection={<BadgePlus strokeWidth={1} />}
+                            childrenOffset={25}
                             mt="sm"
-                        />
-                        <NavLink
-                            component={Link}
-                            to="/floormap"
-                            label="Production View"
-                            leftSection={<Map strokeWidth={1} />}
-                            active={location.pathname === "/floormap"}
-                            mt="sm"
-                        />
+                            onClick={() => handleNavLinkClick("master")}
+                            opened={openNavLink === "master"}
+                        >
+                            <NavLink
+                                label="Users"
+                                to="/user"
+                                leftSection={<Users strokeWidth={1} />}
+                                mt="sm"
+                                component={Link}
+                                active={location.pathname === "/user"}
+                            />
+                            <NavLink
+                                label="Tags"
+                                to="/tag"
+                                leftSection={<Tag strokeWidth={1} />}
+                                mt="sm"
+                                component={Link}
+                                active={location.pathname === "/tag"}
+                            />
+                            <NavLink
+                                label="Machines"
+                                to="/machine"
+                                leftSection={<Cog strokeWidth={1} />}
+                                mt="sm"
+                                component={Link}
+                                active={location.pathname === "/machine"}
+                            />
+                            <NavLink
+                                label="Lines"
+                                to="/line"
+                                leftSection={<Factory strokeWidth={1} />}
+                                mt="sm"
+                                component={Link}
+                                active={location.pathname === "/line"}
+                            />
+                        </NavLink>
                         {/* <NavLink
                             component={Link}
-                            to="/floormap"
-                            leftSection={<LayoutTemplate strokeWidth={1} />}
-                            label="Floor Map"
+                            to="/report"
+                            leftSection={<NotebookPen strokeWidth={1} />}
+                            label="Reports"
                             mt="sm"
-                            active={location.pathname === "/floormap"}
+                            active={location.pathname === "/report"}
                         />
                         <NavLink
                             component={Link}

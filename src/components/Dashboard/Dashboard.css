@@ -5,10 +5,6 @@
     text-align: center;
 }
 
-.machine-dropdown {
-    max-width: 250px;
-}
-
 .dropdown-chart {
     display: flex;
     margin: 1rem;
@@ -18,8 +14,13 @@
     padding: 0 1rem;
 }
 
+.machine-dropdown {
+    padding-right: 1rem;
+    /* max-width: 250px; */
+}
+
 .sensor-dropdown {
-    padding: 0 1rem;
+    padding-right: 1rem;
 }
 
 .chart {

@@ -2,71 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, FileInput, TextInput, Select } from "@mantine/core";
 import { Rnd } from "react-rnd";
 import "./FloorMap.css";
-
-const getStatusStyles = (status) => {
-    switch (status) {
-        case "Running":
-            return {
-                background: "#28a745",
-                borderColor: "#28a745",
-                color: "white",
-            };
-        case "Running Slow":
-            return {
-                background: "#ffc107",
-                borderColor: "#ffc107",
-                color: "white",
-            };
-        case "Scheduled Down":
-            return {
-                background: "#005682",
-                borderColor: "#005682",
-                color: "white",
-            };
-        case "Just Went Down":
-            return {
-                background: "#fd7e14",
-                borderColor: "#fd7e14",
-                color: "white",
-            };
-        case "Down":
-            return {
-                background: "#dc3545",
-                borderColor: "#dc3545",
-                color: "white",
-            };
-        case "No Data":
-            return {
-                background: "#6c757d",
-                borderColor: "#6c757d",
-                color: "white",
-            };
-        case "Not Scheduled":
-            return {
-                background: "#adb5bd",
-                borderColor: "#adb5bd",
-                color: "white",
-            };
-        case "Tool Change":
-            return {
-                background: "#007bff",
-                borderColor: "#007bff",
-                color: "white",
-            };
-        case "Andon is Active":
-            return {
-                background: "#e83e8c",
-                borderColor: "#e83e8c",
-                color: "white",
-            };
-        default:
-            return {
-                background: "transparent",
-                borderColor: "#ced4da",
-                color: "black",
-            };
-    }
-};
+import { getStatusStyles } from "./MapFunctions";
 
 const EditMap = () => {
     const [devices, setDevices] = useState([]);
@@ -81,7 +17,7 @@ const EditMap = () => {
     const fetchDevices = async () => {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
+                `${import.meta.env.VITE_BACKEND_URL}/api/lines/`
             );
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -279,7 +215,9 @@ const EditMap = () => {
                             style={{
                                 backgroundColor: statusStyles.background,
                                 borderRadius: "0.25rem",
-                                borderColor: isSelected ? "#228be8" : statusStyles.borderColor,
+                                borderColor: isSelected
+                                    ? "#228be8"
+                                    : statusStyles.borderColor,
                                 color: statusStyles.color,
                                 borderWidth: isSelected ? "3px" : "1px",
                                 borderStyle: isSelected ? "dashed" : "none",

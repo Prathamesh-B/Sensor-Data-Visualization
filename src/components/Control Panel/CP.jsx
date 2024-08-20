@@ -13,6 +13,8 @@ import { Gauge } from "lucide-react";
 import { phase, current, temp, freq } from "../../data";
 
 const Cp = () => {
+    const [productionLineMenu, setProductionLineMenu] = useState("1");
+    const [devices, setDevices] = useState([]);
     const [Vry, setVry] = useState(445);
     const [Vyb, setVyb] = useState(445);
     const [Vbr, setVbr] = useState(445);
@@ -25,6 +27,10 @@ const Cp = () => {
     const [intervalSeconds, setIntervalSeconds] = useState("30");
     const [countdown, setCountdown] = useState(parseInt(intervalSeconds));
 
+    useEffect(() => {
+        fetchDevicesAndTags();
+    }, []);
+
     const intervalOptions = [
         { label: "5 sec", value: "5" },
         { label: "15 sec", value: "15" },
@@ -32,6 +38,23 @@ const Cp = () => {
         { label: "1 min", value: "60" },
         { label: "5 min", value: "300" },
     ];
+    const fetchDevicesAndTags = async () => {
+        try {
+            const lineResponse = await fetch(
+                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
+            );
+
+            if (!lineResponse.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            const linesData = await lineResponse.json();
+
+            setDevices(linesData);
+        } catch (error) {
+            console.error("Error fetching devices or tags:", error);
+        }
+    };
 
     const generateRandomValues = () => {
         setVry(
@@ -149,6 +172,21 @@ const Cp = () => {
                 </h1>
             </div>
             <Container>
+                <Grid>
+                    <Grid.Col span={4} offset={4}>
+                        <Select
+                            label="Machine:"
+                            allowDeselect={false}
+                            placeholder="Pick value"
+                            data={devices.map((device) => ({
+                                value: device.id.toString(),
+                                label: device.name,
+                            }))}
+                            value={productionLineMenu}
+                            onChange={setProductionLineMenu}
+                        />
+                    </Grid.Col>
+                </Grid>
                 <Grid gutter="lg" mb="lg">
                     <Grid.Col span={3}>
                         <Card shadow="sm" p="lg" radius="lg">

@@ -13,6 +13,7 @@ import FloorMap from "./components/FloorMap/FloorMap";
 import EditMap from "./components/FloorMap/EditMap";
 import OEE from "./components/OEE/OEE";
 import Cp from "./components/Control Panel/CP";
+import Sim from "./components/Simulator/Sim";
 
 const AppRoutes = () => (
     <Routes>
@@ -99,7 +100,14 @@ const AppRoutes = () => (
                 </ProtectedRoute>
             }
         />
-        
+        <Route
+            path="/simulator"
+            element={
+                <ProtectedRoute>
+                    <Sim />
+                </ProtectedRoute>
+            }
+        />
         <Route
             path="/editmap"
             element={

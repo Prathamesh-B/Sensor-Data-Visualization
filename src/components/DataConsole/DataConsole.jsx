@@ -120,6 +120,19 @@ const DataConsole = () => {
                 </Grid.Col>
                 <Grid.Col span={6}>
                     <Select
+                        label="Machine:"
+                        allowDeselect={false}
+                        placeholder="Pick value"
+                        data={devices.map((device) => ({
+                            value: device.id.toString(),
+                            label: device.name,
+                        }))}
+                        value={productionLineMenu}
+                        onChange={setProductionLineMenu}
+                    />
+                </Grid.Col>
+                <Grid.Col span={4}>
+                    <Select
                         label="Parameter"
                         allowDeselect={false}
                         placeholder="Pick value"
@@ -131,7 +144,7 @@ const DataConsole = () => {
                         onChange={setTagMenu}
                     />
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={4}>
                     <DateTimePicker
                         label="Start Date"
                         value={startDate}
@@ -140,7 +153,7 @@ const DataConsole = () => {
                         mx="auto"
                     />
                 </Grid.Col>
-                <Grid.Col span={6}>
+                <Grid.Col span={4}>
                     <DateTimePicker
                         label="End Date"
                         value={endDate}

@@ -10,7 +10,7 @@ const getStatusStyles = (status) => {
                 borderColor: "#28a745",
                 color: "white",
             };
-        case "Running Slow":
+        case "Under Maintenance":
             return {
                 background: "#ffc107",
                 borderColor: "#ffc107",
@@ -78,7 +78,7 @@ const FloorMap = () => {
     const fetchDevices = async () => {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
+                `${import.meta.env.VITE_BACKEND_URL}/api/lines/`
             );
             if (!response.ok) {
                 throw new Error("Network response was not ok");

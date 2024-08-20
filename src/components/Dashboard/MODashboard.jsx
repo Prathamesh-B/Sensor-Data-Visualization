@@ -13,16 +13,19 @@ import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
 import { useState, useEffect } from "react";
-import { cards, sensorsOpt } from "../../data";
+import { fetchDevicesAndTags, fetchData } from "../../services/BackendAPIs";
+import { getStatusStyles } from "../../utils/Styles";
 
 const MODashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
     const [topCards, setTopCards] = useState([]);
     const [staticCards, setStaticCards] = useState([]);
     const [productionLineMenu, setProductionLineMenu] = useState("1");
-    const [tagMenu, setTagMenu] = useState("12");
+    const [machineMenu, setMachineMenu] = useState("1");
+    const [tagMenu, setTagMenu] = useState("1");
     const [filteredChartData, setFilteredChartData] = useState([]);
-    const [devices, setDevices] = useState([]);
+    const [line, setLine] = useState([]);
+    const [machine, setMachine] = useState([]);
     const [deviceTags, setDeviceTags] = useState([]);
     const [customDateRange, setCustomDateRange] = useState({
         start: null,
@@ -37,8 +40,16 @@ const MODashboard = () => {
 
     useEffect(() => {
         const fetchAndUpdateData = async () => {
-            await fetchDevicesAndTags();
-            await fetchData();
+            fetchDevicesAndTags(setLine, setMachine, setDeviceTags);
+            fetchData(
+                setStaticCards,
+                setTopCards,
+                setFilteredChartData,
+                customDateRange,
+                productionLineMenu,
+                tagMenu,
+                rangeMenu
+            );
         };
 
         fetchAndUpdateData(); // Initial fetch when component mounts
@@ -52,192 +63,8 @@ const MODashboard = () => {
         };
     }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
 
-    const fetchDevicesAndTags = async () => {
-        try {
-            const lineResponse = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`
-            );
-            const tagResponse = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/tags/`
-            );
-
-            if (!lineResponse.ok || !tagResponse.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            const linesData = await lineResponse.json();
-            // const tagsData = await tagResponse.json();
-
-            setDevices(linesData);
-            setDeviceTags(sensorsOpt);
-        } catch (error) {
-            console.error("Error fetching devices or tags:", error);
-        }
-    };
-
-    const fetchData = async () => {
-        if (productionLineMenu && tagMenu) {
-            try {
-                let startDate = new Date().toISOString();
-                let endDate = new Date().toISOString();
-
-                switch (rangeMenu) {
-                    case "Today":
-                        startDate =
-                            new Date().toISOString().split("T")[0] +
-                            "T00:00:00Z";
-                        endDate =
-                            new Date().toISOString().split("T")[0] +
-                            "T23:59:59Z";
-                        break;
-                    case "Yesterday":
-                        var yesterday = new Date();
-                        yesterday.setDate(yesterday.getDate() - 1);
-                        startDate =
-                            yesterday.toISOString().split("T")[0] +
-                            "T00:00:00Z";
-                        endDate =
-                            yesterday.toISOString().split("T")[0] +
-                            "T23:59:59Z";
-                        break;
-                    case "Last 7 Days":
-                        var lastWeek = new Date();
-                        lastWeek.setDate(lastWeek.getDate() - 6);
-                        startDate =
-                            lastWeek.toISOString().split("T")[0] + "T00:00:00Z";
-                        endDate =
-                            new Date().toISOString().split("T")[0] +
-                            "T23:59:59Z";
-                        break;
-                    case "Custom":
-                        if (customDateRange.start && customDateRange.end) {
-                            startDate =
-                                customDateRange.start
-                                    .toISOString()
-                                    .split("T")[0] + "T00:00:00Z";
-                            endDate =
-                                customDateRange.end
-                                    .toISOString()
-                                    .split("T")[0] + "T23:59:59Z";
-                        }
-                        console.log(startDate, endDate);
-                        break;
-                    default:
-                        break;
-                }
-
-                const response = await fetch(
-                    `${
-                        import.meta.env.VITE_BACKEND_URL
-                    }/api/logs/?LineId=${productionLineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
-                );
-
-                const MPresponse = await fetch(
-                    `${
-                        import.meta.env.VITE_BACKEND_URL
-                    }/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
-                );
-
-                if (!response.ok || !MPresponse.ok) {
-                    throw new Error("Network response was not ok");
-                }
-
-                const data = await response.json();
-                const MPdata = await MPresponse.json();
-
-                const filter = MPdata.filter(
-                    (data) => data.line_id === +productionLineMenu
-                );
-
-                const staticData = cards.filter(
-                    (data) => data.line_id === productionLineMenu
-                );
-
-                if (filter.length > 0) {
-                    // Assuming downtime is a property in the filter[0] object
-                    const downtimeInMinutes = Math.round(
-                        filter[0].downtime / 60
-                    );
-                    filter[0].downtime = downtimeInMinutes; // Update the downtime with the rounded value
-                }
-
-                setStaticCards(staticData[0]);
-                setTopCards(filter[0]);
-                setFilteredChartData(data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setFilteredChartData([]);
-            }
-        }
-    };
-
-    const getStatusStyles = (status) => {
-        switch (status) {
-            case "Running":
-                return {
-                    background: "#9befae",
-                    borderColor: "#29c64d",
-                    color: "#218337",
-                };
-            case "Running Slow":
-                return {
-                    background: "#fbffa7",
-                    borderColor: "#d5b023",
-                    color: "#a08108",
-                };
-            case "Scheduled Down":
-                return {
-                    background: "#c3ebff",
-                    borderColor: "#005682",
-                    color: "#005682",
-                };
-            case "Just Went Down":
-                return {
-                    background: "#ffecdd",
-                    borderColor: "#fd7e14",
-                    color: "#fa7200",
-                };
-            case "Down":
-                return {
-                    background: "#ffd1d6",
-                    borderColor: "#f10017",
-                    color: "#ff0018",
-                };
-            case "No Data":
-                return {
-                    background: "#ececec",
-                    borderColor: "#6c757d",
-                    color: "#6c757d",
-                };
-            case "Not Scheduled":
-                return {
-                    background: "#f1f1f1",
-                    borderColor: "#9f9f9f",
-                    color: "#9f9f9f",
-                };
-            case "Tool Change":
-                return {
-                    background: "#007bff",
-                    borderColor: "#007bff",
-                    color: "white",
-                };
-            case "Andon is Active":
-                return {
-                    background: "#e83e8c",
-                    borderColor: "#e83e8c",
-                    color: "white",
-                };
-            default:
-                return {
-                    background: "transparent",
-                    borderColor: "#ced4da",
-                    color: "black",
-                };
-        }
-    };
-
     const lineStatus =
-        devices.find((line) => line.id.toString() === productionLineMenu)
+        line.find((line) => line.id.toString() === productionLineMenu)
             ?.status || "No Data";
     const statusStyles = getStatusStyles(lineStatus);
 
@@ -426,12 +253,25 @@ const MODashboard = () => {
                                 label="Production Line"
                                 allowDeselect={false}
                                 placeholder="Pick value"
-                                data={devices.map((device) => ({
+                                data={line.map((device) => ({
                                     value: device.id.toString(),
                                     label: device.name,
                                 }))}
                                 value={productionLineMenu}
                                 onChange={setProductionLineMenu}
+                            />
+                        </div>
+                        <div className="sensor-dropdown">
+                            <Select
+                                label="Machine"
+                                allowDeselect={false}
+                                placeholder="Pick value"
+                                data={machine.map((device) => ({
+                                    value: device.id.toString(),
+                                    label: device.name,
+                                }))}
+                                value={machineMenu}
+                                onChange={setMachineMenu}
                             />
                         </div>
                         <div className="sensor-dropdown">
@@ -448,7 +288,7 @@ const MODashboard = () => {
                             />
                         </div>
                         <div>
-                            {devices.length > 0 && (
+                            {line.length > 0 && (
                                 <>
                                     <label className="m_8fdc1311">
                                         Line Status

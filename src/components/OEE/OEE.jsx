@@ -2,43 +2,55 @@ import { Button, Card, Container, Grid, Select, Text } from "@mantine/core"
 import { DatePickerInput } from "@mantine/dates"
 import { useState, useEffect } from "react"
 import { BarGraph, PieGraph } from "../Chart/Chart";
+import { fetchDevicesAndTags } from "../../services/BackendAPIs";
+
 const Oee = () => {
   
   const [productionLineMenu, setProductionLineMenu] = useState("1")
   const [devices, setDevices] = useState([])
   const [topCards, setTopCards] = useState([]);
+  const [line, setLine] = useState([]);
   const [customDateRange, setCustomDateRange] = useState({
     start: new Date(),
     end: new Date(),
 });
 
-  useEffect(() =>{
-      fetchData();
-    },  [])
+useEffect(() => {
+  const fetchData = async () => {
+      fetchDevicesAndTags(setLine);
+  };
+
+  fetchData();
+}, []);
+
+
+  // useEffect(() =>{
+  //     fetchData();
+  //   },  [])
   
-  useEffect(() => {
-    fetchDevicesAndTime();
-  }, [productionLineMenu]);
+  // useEffect(() => {
+  //   fetchDevicesAndTime();
+  // }, [productionLineMenu]);
 
-  const fetchDevicesAndTime = async () =>{
-    try{
-      const lineResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`)
+  // const fetchDevicesAndTime = async () =>{
+  //   try{
+  //     const lineResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/productionlines/`)
 
-      const params = []
+  //     const params = []
 
-      if(productionLineMenu){
-        params.push(`Line = ${productionLineMenu}`)
-      }
-      if (!lineResponse.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const lineData = await lineResponse.json();
-      setDevices(lineData)
-    }
-    catch(error){
-      console.error("Error fetching Devices: ", error);
-    }
-  }
+  //     if(productionLineMenu){
+  //       params.push(`Line = ${productionLineMenu}`)
+  //     }
+  //     if (!lineResponse.ok) {
+  //       throw new Error("Network response was not ok");
+  //     }
+  //     const lineData = await lineResponse.json();
+  //     setDevices(lineData)
+  //   }
+  //   catch(error){
+  //     console.error("Error fetching Devices: ", error);
+  //   }
+  // }
 
   const fetchData = async () =>{
     try {
@@ -163,10 +175,10 @@ const Oee = () => {
               label="Production Line"
               placeholder="Pick a value"
               mx="auto"
-              data={devices.map((device) => ({
+              data={line.map((device) => ({
                 value: device.id.toString(),
                 label: device.name,
-              }))}
+            }))}
               value={productionLineMenu}
               onChange={setProductionLineMenu}
             />

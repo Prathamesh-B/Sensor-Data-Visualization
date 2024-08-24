@@ -20,9 +20,8 @@ import {
 import { getStatusStyles } from "../../utils/Styles";
 
 const MODashboard = () => {
+    const [metrics, setMetrics] = useState({});
     const [rangeMenu, setRangeMenu] = useState("Today");
-    const [topCards, setTopCards] = useState({});
-    const [staticCards, setStaticCards] = useState({});
     const [productionLines, setProductionLines] = useState([]);
     const [productionLineMenu, setProductionLineMenu] = useState("1");
     const [machineMenu, setMachineMenu] = useState("1");
@@ -67,8 +66,7 @@ const MODashboard = () => {
             }
 
             fetchChartData(
-                setStaticCards,
-                setTopCards,
+                setMetrics,
                 setFilteredChartData,
                 customDateRange,
                 productionLineMenu,
@@ -125,7 +123,7 @@ const MODashboard = () => {
                     {renderCard({
                         title: "Production",
                         iconSrc: "./images/production.png",
-                        value: topCards.production,
+                        value: metrics?.production || 0,
                         color: "green",
                     })}
                 </Grid.Col>
@@ -133,7 +131,7 @@ const MODashboard = () => {
                     {renderCard({
                         title: "Production Rate",
                         iconSrc: "./images/production-rate.png",
-                        value: `${staticCards.PR}%`,
+                        value: `${metrics?.production_rate || 0}%`,
                         color: "indigo",
                     })}
                 </Grid.Col>
@@ -141,7 +139,7 @@ const MODashboard = () => {
                     {renderCard({
                         title: "Efficiency",
                         iconSrc: "./images/efficiency.png",
-                        value: `${staticCards.ER}%`,
+                        value: `${metrics?.efficiency || 0}%`,
                         color: "teal",
                     })}
                 </Grid.Col>
@@ -149,7 +147,7 @@ const MODashboard = () => {
                     {renderCard({
                         title: "Downtime(mins)",
                         iconSrc: "./images/down-time.png",
-                        value: topCards.downtime,
+                        value: metrics?.downtime || 0,
                         color: "orange",
                     })}
                 </Grid.Col>

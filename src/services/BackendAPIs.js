@@ -1,4 +1,3 @@
-import { cards } from "../data";
 import { getDateRange } from "../utils/Dates";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -39,7 +38,24 @@ export const fetchProductionLineDetails = async () => {
     }
 };
 
-export const fetchChartData = async (setStaticCards, setTopCards, setFilteredChartData, customDateRange, productionLineMenu, machineMenu, tagMenu, rangeMenu) => {
+export const fetchProductionMetrics = async (lineId, startDate, endDate) => {
+    try {
+        const response = await fetch(
+            `${BACKEND_URL}/api/production-metrics/?line_id=${lineId}&start_date=${startDate}&end_date=${endDate}`
+        );
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching production metrics:", error);
+        return null;
+    }
+};
+
+export const fetchChartData = async (setMetrics, setFilteredChartData, customDateRange, productionLineMenu, machineMenu, tagMenu, rangeMenu) => {
     if (productionLineMenu && machineMenu && tagMenu) {
         try {
             const { startDate, endDate } = getDateRange(rangeMenu, customDateRange);
@@ -48,32 +64,15 @@ export const fetchChartData = async (setStaticCards, setTopCards, setFilteredCha
                 `${import.meta.env.VITE_BACKEND_URL}/api/daqlogs/?LineId=${productionLineMenu}&MachineId=${machineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
             );
 
-            const MPresponse = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/machine-performance/?StartDate=${startDate}&EndDate=${endDate}`
-            );
-
-            if (!response.ok || !MPresponse.ok) {
+            if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
 
+            const LineMetrices = await fetchProductionMetrics(productionLineMenu, startDate, endDate);
+
             const data = await response.json();
-            const MPdata = await MPresponse.json();
 
-            const filter = MPdata.filter(
-                (data) => data.line_id === +productionLineMenu
-            );
-
-            const staticData = cards.filter(
-                (data) => data.line_id === productionLineMenu
-            );
-
-            if (filter.length > 0) {
-                const downtimeInMinutes = Math.round(filter[0].downtime);
-                filter[0].downtime = downtimeInMinutes; // Update the downtime with the rounded value
-            }
-
-            setStaticCards(staticData[0]);
-            setTopCards(filter[0]);
+            setMetrics(LineMetrices);
             setFilteredChartData(data);
         } catch (error) {
             console.error("Error fetching data:", error);

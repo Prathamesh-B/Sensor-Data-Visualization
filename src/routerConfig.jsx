@@ -14,6 +14,7 @@ import EditMap from "./components/FloorMap/EditMap";
 import OEE from "./components/OEE/OEE";
 import Cp from "./components/Control Panel/CP";
 import Sim from "./components/Simulator/Sim";
+import Users from "./components/Master/Users";
 
 const AppRoutes = () => (
     <Routes>
@@ -83,7 +84,6 @@ const AppRoutes = () => (
                 </ProtectedRoute>
             }
         />
-        
         <Route
             path="/floormap"
             element={
@@ -116,8 +116,15 @@ const AppRoutes = () => (
                 </ProtectedRoute>
             }
         />
+        <Route
+            path="/users"
+            element={
+                <ProtectedRoute>
+                    <Users />
+                </ProtectedRoute>
+            }
+        />
     </Routes>
-    
 );
 
 export default AppRoutes;

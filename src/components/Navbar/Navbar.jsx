@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Avatar, NavLink, Text } from "@mantine/core";
 import {
     BarChart2,
@@ -15,10 +16,9 @@ import {
     Cog,
     Factory,
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
 import "./Navbar.css";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { useEffect, useState } from "react";    
 
 const Navbar = () => {
     const location = useLocation();
@@ -130,7 +130,7 @@ const Navbar = () => {
                         >
                             <NavLink
                                 label="Users"
-                                to="/user"
+                                to="/users"
                                 leftSection={<Users strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}

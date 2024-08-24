@@ -12,183 +12,148 @@ import { DatePicker } from "@mantine/dates";
 import "./Dashboard.css";
 import Alerts from "../Alerts/Alerts";
 import Chart from "../Chart/Chart";
-import { useState, useEffect } from "react";
-import { fetchDevicesAndTags, fetchData } from "../../services/BackendAPIs";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import {
+    fetchProductionLineDetails,
+    fetchChartData,
+} from "../../services/BackendAPIs";
 import { getStatusStyles } from "../../utils/Styles";
 
 const MODashboard = () => {
     const [rangeMenu, setRangeMenu] = useState("Today");
-    const [topCards, setTopCards] = useState([]);
-    const [staticCards, setStaticCards] = useState([]);
+    const [topCards, setTopCards] = useState({});
+    const [staticCards, setStaticCards] = useState({});
+    const [productionLines, setProductionLines] = useState([]);
     const [productionLineMenu, setProductionLineMenu] = useState("1");
     const [machineMenu, setMachineMenu] = useState("1");
     const [tagMenu, setTagMenu] = useState("1");
     const [filteredChartData, setFilteredChartData] = useState([]);
-    const [line, setLine] = useState([]);
-    const [machine, setMachine] = useState([]);
-    const [deviceTags, setDeviceTags] = useState([]);
     const [customDateRange, setCustomDateRange] = useState({
         start: null,
         end: null,
     });
     const [modalOpened, setModalOpened] = useState(false);
 
-    const handleCustomRange = () => {
+    const handleCustomRange = useCallback(() => {
         setRangeMenu("Custom");
         setModalOpened(false);
-    };
+    }, []);
 
     useEffect(() => {
         const fetchAndUpdateData = async () => {
-            fetchDevicesAndTags(setLine, setMachine, setDeviceTags);
-            fetchData(
+            const lineData = await fetchProductionLineDetails();
+            setProductionLines(lineData);
+
+            const currentLine = lineData.find(
+                (line) => line.id.toString() === productionLineMenu
+            );
+            const machines = currentLine?.machines || [];
+
+            if (
+                !machines.some(
+                    (machine) => machine.id.toString() === machineMenu
+                )
+            ) {
+                setMachineMenu(machines[0]?.id.toString() || "");
+            }
+
+            const currentMachine = machines.find(
+                (machine) => machine.id.toString() === machineMenu
+            );
+            const tags = currentMachine?.tags || [];
+
+            if (!tags.some((tag) => tag.id.toString() === tagMenu)) {
+                setTagMenu(tags[0]?.id.toString() || "");
+            }
+
+            fetchChartData(
                 setStaticCards,
                 setTopCards,
                 setFilteredChartData,
                 customDateRange,
                 productionLineMenu,
+                machineMenu,
                 tagMenu,
                 rangeMenu
             );
         };
 
-        fetchAndUpdateData(); // Initial fetch when component mounts
+        fetchAndUpdateData();
 
-        const intervalId = setInterval(() => {
-            fetchAndUpdateData(); // Fetch data every 5 seconds
-        }, 5000);
+        const intervalId = setInterval(fetchAndUpdateData, 5000);
 
-        return () => {
-            clearInterval(intervalId); // Clean up interval
-        };
-    }, [productionLineMenu, tagMenu, rangeMenu, customDateRange]);
+        return () => clearInterval(intervalId);
+    }, [productionLineMenu, machineMenu, rangeMenu, tagMenu, customDateRange]);
 
-    const lineStatus =
-        line.find((line) => line.id.toString() === productionLineMenu)
-            ?.status || "No Data";
-    const statusStyles = getStatusStyles(lineStatus);
+    const selectedLine = useMemo(
+        () =>
+            productionLines.find(
+                (line) => line.id.toString() === productionLineMenu
+            ),
+        [productionLines, productionLineMenu]
+    );
+
+    const lineStatus = selectedLine?.status || "No Data";
+
+    const renderCard = useCallback(
+        ({ title, iconSrc, value, color }) => (
+            <Card shadow="sm" p="xs" radius="md" className="latest-card">
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <div style={{ marginRight: "1rem" }}>
+                        <img
+                            style={{ width: "2.5rem" }}
+                            src={iconSrc}
+                            alt={`${title} Icon`}
+                        />
+                        <Text size="sm" fw={400}>
+                            {title}
+                        </Text>
+                    </div>
+                    <Text style={{ fontSize: "3.5rem" }} fw={700} c={color}>
+                        {value}
+                    </Text>
+                </div>
+            </Card>
+        ),
+        []
+    );
 
     return (
         <>
             <Grid columns={10} gutter="sm" mb="lg" grow>
                 <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="xs"
-                        radius="md"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./images/production.png"
-                                    alt="Production Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Production
-                                </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "3.5rem" }}
-                                c="green"
-                                fw={700}
-                            >
-                                {topCards.production}
-                            </Text>
-                        </div>
-                    </Card>
+                    {renderCard({
+                        title: "Production",
+                        iconSrc: "./images/production.png",
+                        value: topCards.production,
+                        color: "green",
+                    })}
                 </Grid.Col>
                 <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="xs"
-                        radius="md"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./images/production-rate.png"
-                                    alt="Production Rate Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Production Rate
-                                </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "3.5rem" }}
-                                fw={700}
-                                c="indigo"
-                            >
-                                {staticCards.PR}%
-                            </Text>
-                        </div>
-                    </Card>
+                    {renderCard({
+                        title: "Production Rate",
+                        iconSrc: "./images/production-rate.png",
+                        value: `${staticCards.PR}%`,
+                        color: "indigo",
+                    })}
                 </Grid.Col>
                 <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="xs"
-                        radius="md"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./images/efficiency.png"
-                                    alt="Efficiency Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Efficiency
-                                </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "3.5rem" }}
-                                c="teal"
-                                fw={700}
-                            >
-                                {staticCards.ER}%
-                            </Text>
-                        </div>
-                    </Card>
+                    {renderCard({
+                        title: "Efficiency",
+                        iconSrc: "./images/efficiency.png",
+                        value: `${staticCards.ER}%`,
+                        color: "teal",
+                    })}
                 </Grid.Col>
                 <Grid.Col span={{ base: 4, lg: 2 }}>
-                    <Card
-                        shadow="sm"
-                        p="xs"
-                        radius="md"
-                        className="latest-card"
-                    >
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <div style={{ marginRight: "1rem" }}>
-                                <img
-                                    style={{ width: "2.5rem" }}
-                                    src="./images/down-time.png"
-                                    alt="Downtime Icon"
-                                />
-                                <Text size="sm" fw={400}>
-                                    Downtime(mins)
-                                </Text>
-                            </div>
-                            <Text
-                                style={{ fontSize: "3.5rem" }}
-                                c="orange"
-                                fw={700}
-                            >
-                                {topCards.downtime}
-                            </Text>
-                        </div>
-                    </Card>
+                    {renderCard({
+                        title: "Downtime(mins)",
+                        iconSrc: "./images/down-time.png",
+                        value: topCards.downtime,
+                        color: "orange",
+                    })}
                 </Grid.Col>
-                <Grid.Col
-                    span={1}
-                    style={{
-                        paddingLeft: "1.2rem",
-                    }}
-                >
+                <Grid.Col span={1} style={{ paddingLeft: "1.2rem" }}>
                     <Menu shadow="md" width={200}>
                         <Menu.Target>
                             <Card
@@ -248,60 +213,68 @@ const MODashboard = () => {
             <Grid grow>
                 <Grid.Col span={8}>
                     <div className="dropdown-chart">
-                        <div className="machine-dropdown">
-                            <Select
-                                label="Production Line"
-                                allowDeselect={false}
-                                placeholder="Pick value"
-                                data={line.map((device) => ({
-                                    value: device.id.toString(),
-                                    label: device.name,
-                                }))}
-                                value={productionLineMenu}
-                                onChange={setProductionLineMenu}
-                            />
-                        </div>
-                        <div className="sensor-dropdown">
-                            <Select
-                                label="Machine"
-                                allowDeselect={false}
-                                placeholder="Pick value"
-                                data={machine.map((device) => ({
-                                    value: device.id.toString(),
-                                    label: device.name,
-                                }))}
-                                value={machineMenu}
-                                onChange={setMachineMenu}
-                            />
-                        </div>
-                        <div className="sensor-dropdown">
-                            <Select
-                                label="Parameter"
-                                allowDeselect={false}
-                                placeholder="Pick value"
-                                data={deviceTags.map((tag) => ({
-                                    value: tag.id.toString(),
-                                    label: tag.name,
-                                }))}
-                                value={tagMenu}
-                                onChange={setTagMenu}
-                            />
-                        </div>
+                        <Select
+                            label="Production Line"
+                            allowDeselect={false}
+                            placeholder="Pick value"
+                            data={productionLines.map((line) => ({
+                                value: line.id.toString(),
+                                label: line.name,
+                            }))}
+                            value={productionLineMenu}
+                            onChange={setProductionLineMenu}
+                            className="machine-dropdown"
+                        />
+                        <Select
+                            label="Machine"
+                            allowDeselect={false}
+                            placeholder="Pick value"
+                            data={
+                                selectedLine?.machines.map((machine) => ({
+                                    value: machine.id.toString(),
+                                    label: machine.name,
+                                })) || []
+                            }
+                            value={machineMenu}
+                            onChange={setMachineMenu}
+                            disabled={!selectedLine?.machines.length}
+                            className="sensor-dropdown"
+                        />
+                        <Select
+                            label="Parameter"
+                            allowDeselect={false}
+                            placeholder="Pick value"
+                            data={
+                                selectedLine?.machines
+                                    .find(
+                                        (machine) =>
+                                            machine.id.toString() ===
+                                            machineMenu
+                                    )
+                                    ?.tags.map((tag) => ({
+                                        value: tag.id.toString(),
+                                        label: tag.name,
+                                    })) || []
+                            }
+                            value={tagMenu}
+                            onChange={setTagMenu}
+                            disabled={
+                                !selectedLine?.machines.find(
+                                    (machine) =>
+                                        machine.id.toString() === machineMenu
+                                )?.tags.length
+                            }
+                            className="sensor-dropdown"
+                        />
                         <div>
-                            {line.length > 0 && (
+                            {productionLines.length > 0 && (
                                 <>
                                     <label className="m_8fdc1311">
                                         Line Status
                                     </label>
                                     <div
                                         className="line-status"
-                                        style={{
-                                            color: statusStyles.color,
-                                            backgroundColor:
-                                                statusStyles.background,
-                                            borderColor:
-                                                statusStyles.borderColor,
-                                        }}
+                                        style={getStatusStyles(lineStatus)}
                                     >
                                         {lineStatus}
                                     </div>
@@ -312,7 +285,7 @@ const MODashboard = () => {
                     <Chart data={filteredChartData} />
                 </Grid.Col>
                 <Grid.Col span={{ base: 12, md: 4 }} className="notes">
-                    <Text p={"sm"} size="xl">
+                    <Text p="sm" size="xl">
                         Alerts
                     </Text>
                     <ScrollArea style={{ height: 450 }}>
@@ -333,12 +306,7 @@ const MODashboard = () => {
                         gap: "1rem",
                     }}
                 >
-                    <div
-                        style={{
-                            flex: 1,
-                            borderRight: "1px solid #dee2e6",
-                        }}
-                    >
+                    <div style={{ flex: 1, borderRight: "1px solid #dee2e6" }}>
                         <Text size="sm" fw={500}>
                             Start Date
                         </Text>
@@ -346,10 +314,10 @@ const MODashboard = () => {
                             placeholder="Pick start date"
                             value={customDateRange.start}
                             onChange={(date) =>
-                                setCustomDateRange({
-                                    ...customDateRange,
+                                setCustomDateRange((prev) => ({
+                                    ...prev,
                                     start: date,
-                                })
+                                }))
                             }
                         />
                     </div>
@@ -361,10 +329,10 @@ const MODashboard = () => {
                             placeholder="Pick end date"
                             value={customDateRange.end}
                             onChange={(date) =>
-                                setCustomDateRange({
-                                    ...customDateRange,
+                                setCustomDateRange((prev) => ({
+                                    ...prev,
                                     end: date,
-                                })
+                                }))
                             }
                         />
                     </div>

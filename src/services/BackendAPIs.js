@@ -1,47 +1,51 @@
 import { cards } from "../data";
+import { getDateRange } from "../utils/Dates";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-const formatISODate = (date, time) => {
-    return date.toISOString().split("T")[0] + time;
+// Remove this is future
+export const fetchDevicesAndTags = async (setDevices, setMachineMenu, setDeviceTags) => {
+    try {
+        const lineResponse = await fetch(`${BACKEND_URL}/api/lines/`);
+        const machineResponse = await fetch(`${BACKEND_URL}/api/machines/`);
+        const tagResponse = await fetch(`${BACKEND_URL}/api/sensortags/`);
+
+        if (!lineResponse.ok || !tagResponse.ok || !machineResponse.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const linesData = await lineResponse.json();
+        const sensorsOpt = await tagResponse.json();
+        const machineData = await machineResponse.json();
+
+        setDevices(linesData);
+        setDeviceTags(sensorsOpt);
+        setMachineMenu(machineData);
+    } catch (error) {
+        console.error("Error fetching devices or tags:", error);
+    }
 };
 
-export const fetchData = async (setStaticCards, setTopCards, setFilteredChartData, customDateRange, productionLineMenu, tagMenu, rangeMenu) => {
-    if (productionLineMenu && tagMenu) {
-        try {
-            let startDate = new Date().toISOString();
-            let endDate = new Date().toISOString();
+export const fetchProductionLineDetails = async () => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/production-line-details/`);
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching production line details:", error);
+        return [];
+    }
+};
 
-            switch (rangeMenu) {
-                case "Today":
-                    startDate = formatISODate(new Date(), "T00:00:00Z");
-                    endDate = formatISODate(new Date(), "T23:59:59Z");
-                    break;
-                case "Yesterday":
-                    var yesterday = new Date();
-                    yesterday.setDate(yesterday.getDate() - 1);
-                    startDate = formatISODate(yesterday, "T00:00:00Z");
-                    endDate = formatISODate(yesterday, "T23:59:59Z");
-                    break;
-                case "Last 7 Days":
-                    var lastWeek = new Date();
-                    lastWeek.setDate(lastWeek.getDate() - 6);
-                    startDate = formatISODate(lastWeek, "T00:00:00Z");
-                    endDate = formatISODate(new Date(), "T23:59:59Z");
-                    break;
-                case "Custom":
-                    if (customDateRange.start && customDateRange.end) {
-                        startDate = formatISODate(customDateRange.start, "T00:00:00Z");
-                        endDate = formatISODate(customDateRange.end, "T23:59:59Z");
-                    }
-                    console.log(startDate, endDate);
-                    break;
-                default:
-                    break;
-            }
+export const fetchChartData = async (setStaticCards, setTopCards, setFilteredChartData, customDateRange, productionLineMenu, machineMenu, tagMenu, rangeMenu) => {
+    if (productionLineMenu && machineMenu && tagMenu) {
+        try {
+            const { startDate, endDate } = getDateRange(rangeMenu, customDateRange);
 
             const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/daqlogs/?LineId=${productionLineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
+                `${import.meta.env.VITE_BACKEND_URL}/api/daqlogs/?LineId=${productionLineMenu}&MachineId=${machineMenu}&TagId=${tagMenu}&StartDate=${startDate}&EndDate=${endDate}`
             );
 
             const MPresponse = await fetch(
@@ -75,27 +79,5 @@ export const fetchData = async (setStaticCards, setTopCards, setFilteredChartDat
             console.error("Error fetching data:", error);
             setFilteredChartData([]);
         }
-    }
-};
-
-export const fetchDevicesAndTags = async (setDevices, setMachineMenu ,setDeviceTags) => {
-    try {
-        const lineResponse = await fetch(`${BACKEND_URL}/api/lines/`);
-        const machineResponse = await fetch(`${BACKEND_URL}/api/machines/`);
-        const tagResponse = await fetch(`${BACKEND_URL}/api/sensortags/`);
-
-        if (!lineResponse.ok || !tagResponse.ok || !machineResponse.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const linesData = await lineResponse.json();
-        const sensorsOpt = await tagResponse.json();
-        const machineData = await machineResponse.json();
-
-        setDevices(linesData);
-        setDeviceTags(sensorsOpt);
-        setMachineMenu(machineData);
-    } catch (error) {
-        console.error("Error fetching devices or tags:", error);
     }
 };

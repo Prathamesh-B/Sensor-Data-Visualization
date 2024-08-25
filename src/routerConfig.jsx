@@ -17,6 +17,7 @@ import Sim from "./components/Simulator/Sim";
 import Users from "./components/Master/Users";
 import TagsPage from "./components/Master/Tags";
 import MachinesPage from "./components/Master/Machines";
+import LinesPage from "./components/Master/Lines";
 
 const AppRoutes = () => (
     <Routes>
@@ -139,6 +140,14 @@ const AppRoutes = () => (
             element={
                 <ProtectedRoute>
                     <MachinesPage />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/lines"
+            element={
+                <ProtectedRoute>
+                    <LinesPage />
                 </ProtectedRoute>
             }
         />

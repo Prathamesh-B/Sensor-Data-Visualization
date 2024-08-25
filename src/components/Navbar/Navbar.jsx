@@ -138,7 +138,7 @@ const Navbar = () => {
                             />
                             <NavLink
                                 label="Tags"
-                                to="/tag"
+                                to="/tags"
                                 leftSection={<Tag strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}
@@ -146,7 +146,7 @@ const Navbar = () => {
                             />
                             <NavLink
                                 label="Machines"
-                                to="/machine"
+                                to="/machines"
                                 leftSection={<Cog strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}
@@ -154,7 +154,7 @@ const Navbar = () => {
                             />
                             <NavLink
                                 label="Lines"
-                                to="/line"
+                                to="/lines"
                                 leftSection={<Factory strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}

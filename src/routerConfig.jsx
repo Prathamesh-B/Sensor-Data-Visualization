@@ -15,6 +15,7 @@ import OEE from "./components/OEE/OEE";
 import Cp from "./components/Control Panel/CP";
 import Sim from "./components/Simulator/Sim";
 import Users from "./components/Master/Users";
+import Tags from "./components/Master/Tags";
 
 const AppRoutes = () => (
     <Routes>
@@ -121,6 +122,14 @@ const AppRoutes = () => (
             element={
                 <ProtectedRoute>
                     <Users />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/tags"
+            element={
+                <ProtectedRoute>
+                    <Tags />
                 </ProtectedRoute>
             }
         />

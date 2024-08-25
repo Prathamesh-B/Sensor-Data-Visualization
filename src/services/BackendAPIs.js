@@ -80,3 +80,29 @@ export const fetchChartData = async (setMetrics, setFilteredChartData, customDat
         }
     }
 };
+
+export const fetchTagTypes = async () => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/tag-types/`);
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching production line details:", error);
+        return [];
+    }
+};
+
+export const fetchMachines = async () => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/machines/`);
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching production line details:", error);
+        return [];
+    }
+};

@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button, Chip, Container, Grid, Select, Table } from "@mantine/core";
-import { fetchDevicesAndTags } from "../../services/BackendAPIs";
+import { fetchProductionLineDetails } from "../../services/BackendAPIs";
 import { TriangleAlert } from 'lucide-react';
 
 const Sim = () => {
-    const [productionLineMenu, setProductionLineMenu] = useState("G2 Tandem");
-    const [machineMenu, setMachineMenu] = useState("1");
-    const [line, setLine] = useState([]);
-    const [machine, setMachine] = useState([]);
+    const [productionLines, setProductionLines] = useState([]);
+    const [productionLineMenu, setProductionLineMenu] = useState("");
+    const [machineMenu, setMachineMenu] = useState("");
     const [checked, setChecked] = useState(true);
     const [collapse, setCollapse] = useState({});
 
@@ -20,29 +19,39 @@ const Sim = () => {
             { machine: "Robotic Loader", sensor: "Voltage", min: 220, nominal: 250, max: 440, simulated: 250, frequency: 5 },
             { machine: "Robotic Loader", sensor: "Load Cells", min: 10, nominal: 60, max: 100, simulated: 40, frequency: 5 },
         ],
-        "250T Mini Tandem": [
-            { machine: "Flaring Press", sensor: "Pressure", min: 20, nominal: 30, max: 40, simulated: 35, frequency: 5 },
-            { machine: "Welding Machine", sensor: "Current", min: 25, nominal: 35, max: 45, simulated: 40, frequency: 5 },
-        ],
     };
 
-    const handleToggle = () => {
-        setChecked(!checked);
-    };
-
-    const [sensorData, setSensorData] = useState(initialMachineData[productionLineMenu]);
+    const [sensorData, setSensorData] = useState(initialMachineData["G2 Tandem"]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            fetchDevicesAndTags(setLine, setMachine);
+        const fetchAndUpdateData = async () => {
+            const lineData = await fetchProductionLineDetails();
+            setProductionLines(lineData);
+
+            const currentLine = lineData.find(
+                (line) => line.id.toString() === productionLineMenu
+            );
+            const machines = currentLine?.machines || [];
+
+            if (!machines.some((machine) => machine.id.toString() === machineMenu)) {
+                setMachineMenu(machines[0]?.id.toString() || "");
+            }
         };
 
-        fetchData();
-    }, []);
+        fetchAndUpdateData();
+    }, [productionLineMenu, machineMenu]);
+
+    const selectedLine = useMemo(
+        () =>
+            productionLines.find(
+                (line) => line.id.toString() === productionLineMenu
+            ),
+        [productionLines, productionLineMenu]
+    );
 
     const handleProductionLineChange = (value) => {
         setProductionLineMenu(value);
-        setSensorData(initialMachineData[value]); // Update sensor data based on selected line
+        setSensorData(initialMachineData[value]);
     };
 
     const handleToggleCollapse = (machine) => {
@@ -50,6 +59,28 @@ const Sim = () => {
             ...prevState,
             [machine]: !prevState[machine],
         }));
+    };
+
+    useEffect(() => {
+        let interval;
+
+        if (checked) {
+            interval = setInterval(() => {
+                setSensorData(prevData => 
+                    prevData.map(sensor => ({
+                        ...sensor,
+                        simulated: getRandomValue(sensor.min, sensor.max),
+                    }))
+                );
+            }, 1000);
+        }
+
+        // Cleanup interval on component unmount or when checked changes
+        return () => clearInterval(interval);
+    }, [checked]);
+
+    const getRandomValue = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
     const groupedData = sensorData?.reduce((acc, curr) => {
@@ -77,9 +108,13 @@ const Sim = () => {
                                 label="Production Line"
                                 allowDeselect={false}
                                 placeholder="Pick a value"
-                                data={Object.keys(initialMachineData)}
+                                data={productionLines.map((line) => ({
+                                    value: line.id.toString(),
+                                    label: line.name,
+                                }))}
                                 value={productionLineMenu}
-                                onChange={handleProductionLineChange}
+                                // onChange={handleProductionLineChange}
+                                onChange={setProductionLineMenu}
                             />
                         </div>
                     </Grid.Col>
@@ -95,10 +130,12 @@ const Sim = () => {
                                 label="Machine"
                                 allowDeselect={false}
                                 placeholder="Pick a value"
-                                data={machine.map((device) => ({
-                                    value: device.id.toString(),
-                                    label: device.name,
-                                }))}
+                                data={
+                                    selectedLine?.machines.map((machine) => ({
+                                        value: machine.id.toString(),
+                                        label: machine.name,
+                                    })) || []
+                                }
                                 value={machineMenu}
                                 onChange={setMachineMenu}
                             />
@@ -110,7 +147,7 @@ const Sim = () => {
                                 checked={checked}
                                 color={checked ? "green" : "grey"}
                                 size="xl"
-                                onClick={handleToggle}
+                                onClick={() => setChecked(!checked)}
                             >
                                 {checked ? "ON" : "OFF"}
                             </Chip>
@@ -119,6 +156,7 @@ const Sim = () => {
                     </Grid.Col>
                 </Grid>
 
+                {/* Table is always visible */}
                 {groupedData && Object.entries(groupedData).map(([machine, sensors]) => (
                     <Table.ScrollContainer key={machine} mt={"md"} minWidth={800}>
                         <Table withTableBorder withColumnBorders verticalSpacing={"sm"}>

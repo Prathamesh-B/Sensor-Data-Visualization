@@ -11,6 +11,8 @@ import {
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const MachinesPage = () => {
     const [machines, setMachines] = useState([]);
     const [lines, setLines] = useState([]);
@@ -28,13 +30,13 @@ const MachinesPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             const machinesResponse = await fetch(
-                "http://127.0.0.1:8000/api/machines/"
+                `${BACKEND_URL}/api/machines/`
             );
             const machinesData = await machinesResponse.json();
             setMachines(machinesData);
 
             const linesResponse = await fetch(
-                "http://127.0.0.1:8000/api/lines/"
+                `${BACKEND_URL}/api/lines/`
             );
             const linesData = await linesResponse.json();
             setLines(linesData);
@@ -58,7 +60,7 @@ const MachinesPage = () => {
         let response;
         if (editingMachine) {
             response = await fetch(
-                `http://127.0.0.1:8000/api/machines/${editingMachine.id}/`,
+                `${BACKEND_URL}/api/machines/${editingMachine.id}/`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -66,7 +68,7 @@ const MachinesPage = () => {
                 }
             );
         } else {
-            response = await fetch("http://127.0.0.1:8000/api/machines/", {
+            response = await fetch(`${BACKEND_URL}/api/machines/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(machinePayload),
@@ -108,7 +110,7 @@ const MachinesPage = () => {
     const handleDeleteMachine = async () => {
         if (machineToDelete) {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/machines/${machineToDelete.id}/`,
+                `${BACKEND_URL}/api/machines/${machineToDelete.id}/`,
                 {
                     method: "DELETE",
                 }

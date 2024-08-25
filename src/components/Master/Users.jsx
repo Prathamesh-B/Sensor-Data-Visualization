@@ -10,6 +10,8 @@ import {
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const UsersPage = () => {
     const [users, setUsers] = useState([]);
     const [name, setName] = useState("");
@@ -22,7 +24,7 @@ const UsersPage = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch("http://127.0.0.1:8000/api/users/");
+            const response = await fetch(`${BACKEND_URL}/api/users/`);
             const data = await response.json();
             setUsers(data);
         };
@@ -41,7 +43,7 @@ const UsersPage = () => {
 
         if (editingUser) {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/${editingUser.id}/`,
+                `${BACKEND_URL}/api/users/${editingUser.id}/`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -60,7 +62,7 @@ const UsersPage = () => {
                 setEditingUser(null);
             }
         } else {
-            const response = await fetch("http://127.0.0.1:8000/api/users/", {
+            const response = await fetch(`${BACKEND_URL}/api/users/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userPayload),
@@ -89,7 +91,7 @@ const UsersPage = () => {
     const handleDeleteUser = async () => {
         if (userToDelete) {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/users/${userToDelete.id}/`,
+                `${BACKEND_URL}/api/users/${userToDelete.id}/`,
                 {
                     method: "DELETE",
                 }

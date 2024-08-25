@@ -11,6 +11,8 @@ import {
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const LinesPage = () => {
     const [lines, setLines] = useState([]);
     const [blocks, setBlocks] = useState([]);
@@ -24,11 +26,11 @@ const LinesPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const linesResponse = await fetch("http://127.0.0.1:8000/api/lines/");
+            const linesResponse = await fetch(`${BACKEND_URL}/api/lines/`);
             const linesData = await linesResponse.json();
             setLines(linesData);
 
-            const blocksResponse = await fetch("http://127.0.0.1:8000/api/blocks/");
+            const blocksResponse = await fetch(`${BACKEND_URL}/api/blocks/`);
             const blocksData = await blocksResponse.json();
             setBlocks(blocksData);
         };
@@ -48,7 +50,7 @@ const LinesPage = () => {
         let response;
         if (editingLine) {
             response = await fetch(
-                `http://127.0.0.1:8000/api/lines/${editingLine.id}/`,
+                `${BACKEND_URL}/api/lines/${editingLine.id}/`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -56,7 +58,7 @@ const LinesPage = () => {
                 }
             );
         } else {
-            response = await fetch("http://127.0.0.1:8000/api/lines/", {
+            response = await fetch(`${BACKEND_URL}/api/lines/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(linePayload),
@@ -89,7 +91,7 @@ const LinesPage = () => {
     const handleDeleteLine = async () => {
         if (lineToDelete) {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/lines/${lineToDelete.id}/`,
+                `${BACKEND_URL}/api/lines/${lineToDelete.id}/`,
                 {
                     method: "DELETE",
                 }

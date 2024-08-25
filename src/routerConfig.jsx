@@ -15,7 +15,8 @@ import OEE from "./components/OEE/OEE";
 import Cp from "./components/Control Panel/CP";
 import Sim from "./components/Simulator/Sim";
 import Users from "./components/Master/Users";
-import Tags from "./components/Master/Tags";
+import TagsPage from "./components/Master/Tags";
+import MachinesPage from "./components/Master/Machines";
 
 const AppRoutes = () => (
     <Routes>
@@ -129,7 +130,15 @@ const AppRoutes = () => (
             path="/tags"
             element={
                 <ProtectedRoute>
-                    <Tags />
+                    <TagsPage />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/machines"
+            element={
+                <ProtectedRoute>
+                    <MachinesPage />
                 </ProtectedRoute>
             }
         />

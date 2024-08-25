@@ -12,6 +12,8 @@ import {
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const TagsPage = () => {
     const [tags, setTags] = useState([]);
     const [machines, setMachines] = useState([]);
@@ -32,19 +34,19 @@ const TagsPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             const tagsResponse = await fetch(
-                "http://127.0.0.1:8000/api/sensortags/"
+                `${BACKEND_URL}/api/sensortags/`
             );
             const tagsData = await tagsResponse.json();
             setTags(tagsData);
 
             const machinesResponse = await fetch(
-                "http://127.0.0.1:8000/api/machines/"
+                `${BACKEND_URL}/api/machines/`
             );
             const machinesData = await machinesResponse.json();
             setMachines(machinesData);
 
             const tagTypesResponse = await fetch(
-                "http://127.0.0.1:8000/api/tag-types/"
+                `${BACKEND_URL}/api/tag-types/`
             );
             const tagTypesData = await tagTypesResponse.json();
             setTagTypes(tagTypesData);
@@ -69,7 +71,7 @@ const TagsPage = () => {
 
         if (editingTag) {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/sensortags/${editingTag.id}/`,
+                `${BACKEND_URL}/api/sensortags/${editingTag.id}/`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
@@ -89,7 +91,7 @@ const TagsPage = () => {
             }
         } else {
             const response = await fetch(
-                "http://127.0.0.1:8000/api/sensortags/",
+                `${BACKEND_URL}/api/sensortags/`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -122,7 +124,7 @@ const TagsPage = () => {
     const handleDeleteTag = async () => {
         if (tagToDelete) {
             const response = await fetch(
-                `http://127.0.0.1:8000/api/sensortags/${tagToDelete.id}/`,
+                `${BACKEND_URL}/api/sensortags/${tagToDelete.id}/`,
                 {
                     method: "DELETE",
                 }

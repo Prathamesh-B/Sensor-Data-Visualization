@@ -251,56 +251,56 @@ const TagsPage = () => {
                 </form>
             </Card>
 
-            <Table striped highlightOnHover mt="md">
-                <thead>
-                    <tr>
-                        <th style={{ textAlign: "center" }}>ID</th>
-                        <th style={{ textAlign: "center" }}>Name</th>
-                        <th style={{ textAlign: "center" }}>Min Value</th>
-                        <th style={{ textAlign: "center" }}>Max Value</th>
-                        <th style={{ textAlign: "center" }}>Nominal Value</th>
-                        <th style={{ textAlign: "center" }}>Threshold Alert</th>
-                        <th style={{ textAlign: "center" }}>
+            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Min Value</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Max Value</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Nominal Value</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Threshold Alert</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>
                             Continuous Record
-                        </th>
-                        <th style={{ textAlign: "center" }}>Frequency</th>
-                        <th style={{ textAlign: "center" }}>Machine</th>
-                        <th style={{ textAlign: "center" }}>Tag Type</th>
-                        <th style={{ textAlign: "center" }}>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+                        </Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Frequency</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Machine</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Tag Type</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                     {tags.map((tag) => (
-                        <tr key={tag.id}>
-                            <td style={{ textAlign: "center" }}>{tag.id}</td>
-                            <td style={{ textAlign: "center" }}>{tag.name}</td>
-                            <td style={{ textAlign: "center" }}>
+                        <Table.Tr key={tag.id}>
+                            <Table.Td style={{ textAlign: "center" }}>{tag.id}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>{tag.name}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {tag.min_val}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {tag.max_val}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {tag.nominal_val}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {tag.threshold_alert}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {tag.continuous_record ? "Yes" : "No"}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {tag.frequency}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machines.find((m) => m.id === tag.machine)
                                     ?.name || tag.machine}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {tagTypes.find((t) => t.id === tag.tag_type)
                                     ?.name || tag.tag_type}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 <Button
                                     onClick={() => handleEditTag(tag)}
                                     variant="subtle"
@@ -318,10 +318,10 @@ const TagsPage = () => {
                                 >
                                     <Trash size={16} />
                                 </Button>
-                            </td>
-                        </tr>
+                            </Table.Td>
+                        </Table.Tr>
                     ))}
-                </tbody>
+                </Table.Tbody>
             </Table>
 
             <Modal

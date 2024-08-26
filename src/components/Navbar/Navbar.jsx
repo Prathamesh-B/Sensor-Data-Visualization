@@ -15,6 +15,7 @@ import {
     Tag,
     Cog,
     Factory,
+    Warehouse,
 } from "lucide-react";
 import "./Navbar.css";
 import { Link, useLocation } from "react-router-dom";
@@ -134,7 +135,7 @@ const Navbar = () => {
                                 leftSection={<Users strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}
-                                active={location.pathname === "/user"}
+                                active={location.pathname === "/users"}
                             />
                             <NavLink
                                 label="Tags"
@@ -142,7 +143,7 @@ const Navbar = () => {
                                 leftSection={<Tag strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}
-                                active={location.pathname === "/tag"}
+                                active={location.pathname === "/tags"}
                             />
                             <NavLink
                                 label="Machines"
@@ -150,15 +151,23 @@ const Navbar = () => {
                                 leftSection={<Cog strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}
-                                active={location.pathname === "/machine"}
+                                active={location.pathname === "/machines"}
                             />
                             <NavLink
                                 label="Lines"
                                 to="/lines"
+                                leftSection={<Warehouse strokeWidth={1} />}
+                                mt="sm"
+                                component={Link}
+                                active={location.pathname === "/lines"}
+                            />
+                            <NavLink
+                                label="Locations"
+                                to="/locations"
                                 leftSection={<Factory strokeWidth={1} />}
                                 mt="sm"
                                 component={Link}
-                                active={location.pathname === "/line"}
+                                active={location.pathname === "/locations"}
                             />
                         </NavLink>
                         {/* <NavLink

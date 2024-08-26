@@ -214,48 +214,48 @@ const MachinesPage = () => {
                 </form>
             </Card>
 
-            <Table striped highlightOnHover mt="md">
-                <thead>
-                    <tr>
-                        <th style={{ textAlign: "center" }}>ID</th>
-                        <th style={{ textAlign: "center" }}>Name</th>
-                        <th style={{ textAlign: "center" }}>Status</th>
-                        <th style={{ textAlign: "center" }}>Height (px)</th>
-                        <th style={{ textAlign: "center" }}>Width (px)</th>
-                        <th style={{ textAlign: "center" }}>X Coordinate</th>
-                        <th style={{ textAlign: "center" }}>Y Coordinate</th>
-                        <th style={{ textAlign: "center" }}>Line</th>
-                        <th style={{ textAlign: "center" }}>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Status</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Height (px)</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Width (px)</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>X Coordinate</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Y Coordinate</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Line</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                     {machines.map((machine) => (
-                        <tr key={machine.id}>
-                            <td style={{ textAlign: "center" }}>
+                        <Table.Tr key={machine.id}>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.id}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.name}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.status}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.height_px}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.width_px}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.x_coordinate}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.y_coordinate}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {machine.line.name}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 <Button
                                     onClick={() => handleEditMachine(machine)}
                                     variant="subtle"
@@ -273,10 +273,10 @@ const MachinesPage = () => {
                                 >
                                     <Trash size={16} />
                                 </Button>
-                            </td>
-                        </tr>
+                            </Table.Td>
+                        </Table.Tr>
                     ))}
-                </tbody>
+                </Table.Tbody>
             </Table>
 
             <Modal

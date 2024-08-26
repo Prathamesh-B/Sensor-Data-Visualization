@@ -162,28 +162,28 @@ const LinesPage = () => {
                 </form>
             </Card>
 
-            <Table striped highlightOnHover mt="md">
-                <thead>
-                    <tr>
-                        <th style={{ textAlign: "center" }}>ID</th>
-                        <th style={{ textAlign: "center" }}>Name</th>
-                        <th style={{ textAlign: "center" }}>Target Production</th>
-                        <th style={{ textAlign: "center" }}>Status</th>
-                        <th style={{ textAlign: "center" }}>Block</th>
-                        <th style={{ textAlign: "center" }}>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Target Production</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Status</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Block</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                     {lines.map((line) => (
-                        <tr key={line.id}>
-                            <td style={{ textAlign: "center" }}>{line.id}</td>
-                            <td style={{ textAlign: "center" }}>{line.name}</td>
-                            <td style={{ textAlign: "center" }}>{line.target_production}</td>
-                            <td style={{ textAlign: "center" }}>{line.status}</td>
-                            <td style={{ textAlign: "center" }}>
+                        <Table.Tr key={line.id}>
+                            <Table.Td style={{ textAlign: "center" }}>{line.id}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>{line.name}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>{line.target_production}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>{line.status}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {blocks.find((b) => b.id === line.block)?.name || line.block}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 <Button
                                     onClick={() => handleEditLine(line)}
                                     variant="subtle"
@@ -201,10 +201,10 @@ const LinesPage = () => {
                                 >
                                     <Trash size={16} />
                                 </Button>
-                            </td>
-                        </tr>
+                            </Table.Td>
+                        </Table.Tr>
                     ))}
-                </tbody>
+                </Table.Tbody>
             </Table>
 
             <Modal

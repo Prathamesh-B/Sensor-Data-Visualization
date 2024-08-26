@@ -18,6 +18,7 @@ import Users from "./components/Master/Users";
 import TagsPage from "./components/Master/Tags";
 import MachinesPage from "./components/Master/Machines";
 import LinesPage from "./components/Master/Lines";
+import LocationsPage from "./components/Master/Locations";
 
 const AppRoutes = () => (
     <Routes>
@@ -148,6 +149,14 @@ const AppRoutes = () => (
             element={
                 <ProtectedRoute>
                     <LinesPage />
+                </ProtectedRoute>
+            }
+        />
+        <Route
+            path="/locations"
+            element={
+                <ProtectedRoute>
+                    <LocationsPage />
                 </ProtectedRoute>
             }
         />

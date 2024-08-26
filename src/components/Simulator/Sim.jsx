@@ -1,27 +1,18 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Button, Chip, Container, Grid, Select, Table } from "@mantine/core";
-import { fetchProductionLineDetails } from "../../services/BackendAPIs";
-import { TriangleAlert } from 'lucide-react';
+import { TriangleAlert } from "lucide-react";
+import {
+    fetchProductionLineDetails,
+    sendDaqLogs,
+} from "../../services/BackendAPIs";
 
 const Sim = () => {
     const [productionLines, setProductionLines] = useState([]);
     const [productionLineMenu, setProductionLineMenu] = useState("");
     const [machineMenu, setMachineMenu] = useState("");
-    const [checked, setChecked] = useState(true);
+    const [checked, setChecked] = useState(false);
     const [collapse, setCollapse] = useState({});
-
-    const initialMachineData = {
-        "G2 Tandem": [
-            { machine: "Destacker", sensor: "Temperature", min: 10, nominal: 40, max: 100, simulated: 25, frequency: 5 },
-            { machine: "Destacker", sensor: "Pressure", min: 10, nominal: 40, max: 100, simulated: 55, frequency: 5 },
-            { machine: "Destacker", sensor: "Voltage", min: 220, nominal: 250, max: 440, simulated: 330, frequency: 5 },
-            { machine: "Robotic Loader", sensor: "Proximity", min: 0, nominal: 100, max: 300, simulated: 150, frequency: 5 },
-            { machine: "Robotic Loader", sensor: "Voltage", min: 220, nominal: 250, max: 440, simulated: 250, frequency: 5 },
-            { machine: "Robotic Loader", sensor: "Load Cells", min: 10, nominal: 60, max: 100, simulated: 40, frequency: 5 },
-        ],
-    };
-
-    const [sensorData, setSensorData] = useState(initialMachineData["G2 Tandem"]);
+    const [simulatedValues, setSimulatedValues] = useState({});
 
     useEffect(() => {
         const fetchAndUpdateData = async () => {
@@ -33,7 +24,11 @@ const Sim = () => {
             );
             const machines = currentLine?.machines || [];
 
-            if (!machines.some((machine) => machine.id.toString() === machineMenu)) {
+            if (
+                !machines.some(
+                    (machine) => machine.id.toString() === machineMenu
+                )
+            ) {
                 setMachineMenu(machines[0]?.id.toString() || "");
             }
         };
@@ -49,50 +44,56 @@ const Sim = () => {
         [productionLines, productionLineMenu]
     );
 
-    const handleProductionLineChange = (value) => {
-        setProductionLineMenu(value);
-        setSensorData(initialMachineData[value]);
-    };
-
     const handleToggleCollapse = (machine) => {
-        setCollapse(prevState => ({
+        setCollapse((prevState) => ({
             ...prevState,
             [machine]: !prevState[machine],
         }));
     };
 
-    useEffect(() => {
-        let interval;
-
-        if (checked) {
-            interval = setInterval(() => {
-                setSensorData(prevData => 
-                    prevData.map(sensor => ({
-                        ...sensor,
-                        simulated: getRandomValue(sensor.min, sensor.max),
-                    }))
-                );
-            }, 1000);
-        }
-
-        // Cleanup interval on component unmount or when checked changes
-        return () => clearInterval(interval);
-    }, [checked]);
-
-    const getRandomValue = (min, max) => {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+    const generateRandomValue = (min, max) => {
+        return Math.random() * (max - min) + min;
     };
 
-    const groupedData = sensorData?.reduce((acc, curr) => {
-        acc[curr.machine] = acc[curr.machine] || [];
-        acc[curr.machine].push(curr);
-        return acc;
-    }, {});
+    const simulateAndSendData = useCallback(() => {
+        const newSimulatedValues = {};
+
+        selectedLine?.machines.forEach((machine) => {
+            machine.tags.forEach((tag) => {
+                const value = generateRandomValue(tag.min_val, tag.max_val);
+                newSimulatedValues[tag.id] = value.toFixed(2);
+
+                // Send each DaqLog entry individually
+                const daqlog = {
+                    timestamp: new Date().toISOString(),
+                    tag: tag.id,
+                    value: value,
+                };
+
+                sendDaqLogs(daqlog);
+            });
+        });
+
+        setSimulatedValues(newSimulatedValues);
+    }, [selectedLine]);
+
+    useEffect(() => {
+        let interval;
+        if (checked && selectedLine) {
+            simulateAndSendData();
+            interval = setInterval(() => {
+                simulateAndSendData();
+            }, 5000);
+        }
+        return () => clearInterval(interval);
+    }, [checked, selectedLine, simulateAndSendData]);
 
     return (
         <>
             <div>
-                <h2 style={{ display: "flex", justifyContent: "center" }}>Simulator</h2>
+                <h2 style={{ display: "flex", justifyContent: "center" }}>
+                    Simulator
+                </h2>
             </div>
             <Container>
                 <Grid>
@@ -113,7 +114,6 @@ const Sim = () => {
                                     label: line.name,
                                 }))}
                                 value={productionLineMenu}
-                                // onChange={handleProductionLineChange}
                                 onChange={setProductionLineMenu}
                             />
                         </div>
@@ -138,11 +138,17 @@ const Sim = () => {
                                 }
                                 value={machineMenu}
                                 onChange={setMachineMenu}
+                                disabled={!selectedLine?.machines.length}
                             />
                         </div>
                     </Grid.Col>
                     <Grid.Col span={4}>
-                        <div style={{ display: "flex", justifyContent: "space-around" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                            }}
+                        >
                             <Chip
                                 checked={checked}
                                 color={checked ? "green" : "grey"}
@@ -151,70 +157,86 @@ const Sim = () => {
                             >
                                 {checked ? "ON" : "OFF"}
                             </Chip>
-                            <Button variant="filled" color="red" size="lg" radius="xl">STOP</Button>
+                            <Button
+                                variant="filled"
+                                color="red"
+                                size="lg"
+                                radius="xl"
+                            >
+                                STOP
+                            </Button>
                         </div>
                     </Grid.Col>
                 </Grid>
 
-                {/* Table is always visible */}
-                {groupedData && Object.entries(groupedData).map(([machine, sensors]) => (
-                    <Table.ScrollContainer key={machine} mt={"md"} minWidth={800}>
-                        <Table withTableBorder withColumnBorders verticalSpacing={"sm"}>
-                            <Table.Thead>
-                                <Table.Tr>
-                                    <Table.Th colSpan={7} style={{ textAlign: "center", cursor: "pointer" }} onClick={() => handleToggleCollapse(machine)}>
-                                        {machine} {collapse[machine] ? "▲" : "▼"}
-                                    </Table.Th>
-                                </Table.Tr>
-                            </Table.Thead>
-                            <Table.Thead style={{ display: collapse[machine] ? "none" : "table-header-group" }}>
-                                <Table.Tr>
-                                    <Table.Th>
-                                        <div style={{ display: "flex", alignItems: "center" }}>
-                                            <img
-                                                style={{ width: "1.5rem", marginRight: "0.5rem" }}
-                                                src="./images/sensor.png"
-                                                alt="Production Rate Icon"
-                                            />
-                                            Sensor
-                                        </div>
-                                    </Table.Th>
-                                    <Table.Th>Min.</Table.Th>
-                                    <Table.Th>Nom.</Table.Th>
-                                    <Table.Th>Max.</Table.Th>
-                                    <Table.Th>Freq.</Table.Th>
-                                    <Table.Th>Simu.</Table.Th>
-                                    <Table.Th>
-                                        <div style={{ display: "flex", alignItems: "center" }}>
-                                            <img
-                                                style={{ width: "1.3rem", marginRight: "0.5rem" }}
-                                                src="./images/threshold.png"
-                                                alt="Production Rate Icon"
-                                            />
-                                            Threshold
-                                        </div>
-                                    </Table.Th>
-                                </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody style={{ display: collapse[machine] ? "none" : "table-row-group" }}>
-                                {sensors.map((sensor, index) => (
-                                    <Table.Tr key={index}>
-                                        <Table.Td>{sensor.sensor}</Table.Td>
-                                        <Table.Td>{sensor.min}</Table.Td>
-                                        <Table.Td>{sensor.nominal}</Table.Td>
-                                        <Table.Td>{sensor.max}</Table.Td>
-                                        <Table.Td>{sensor.frequency}</Table.Td>
-                                        <Table.Td>{sensor.simulated}</Table.Td>
-                                        <Table.Td>
-                                            <Button variant="outline" color="orange">
-                                                <TriangleAlert />
-                                            </Button>
-                                        </Table.Td>
+                {/* Table to display tags */}
+                {selectedLine?.machines.map((machine) => (
+                    <Table
+                        key={machine.id}
+                        mt={"md"}
+                        withTableBorder
+                        withColumnBorders
+                    >
+                        <Table.Thead>
+                            <Table.Tr>
+                                <Table.Th
+                                    colSpan={7}
+                                    style={{
+                                        textAlign: "center",
+                                        cursor: "pointer",
+                                    }}
+                                    onClick={() =>
+                                        handleToggleCollapse(machine.id)
+                                    }
+                                >
+                                    {machine.name}{" "}
+                                    {collapse[machine.id] ? "▲" : "▼"}
+                                </Table.Th>
+                            </Table.Tr>
+                        </Table.Thead>
+                        {!collapse[machine.id] && (
+                            <>
+                                <Table.Thead>
+                                    <Table.Tr>
+                                        <Table.Th>Sensor</Table.Th>
+                                        <Table.Th>Min.</Table.Th>
+                                        <Table.Th>Nom.</Table.Th>
+                                        <Table.Th>Max.</Table.Th>
+                                        <Table.Th>Freq.</Table.Th>
+                                        <Table.Th>Sim.</Table.Th>
+                                        <Table.Th>Threshold</Table.Th>
                                     </Table.Tr>
-                                ))}
-                            </Table.Tbody>
-                        </Table>
-                    </Table.ScrollContainer>
+                                </Table.Thead>
+                                <Table.Tbody>
+                                    {machine.tags.map((tag) => (
+                                        <Table.Tr key={tag.id}>
+                                            <Table.Td>{tag.name}</Table.Td>
+                                            <Table.Td>{tag.min_val}</Table.Td>
+                                            <Table.Td>
+                                                {tag.nominal_val}
+                                            </Table.Td>
+                                            <Table.Td>{tag.max_val}</Table.Td>
+                                            <Table.Td>
+                                                {tag.frequency || "N/A"}
+                                            </Table.Td>
+                                            <Table.Td>
+                                                {simulatedValues[tag.id] ||
+                                                    tag.nominal_val}
+                                            </Table.Td>
+                                            <Table.Td>
+                                                <Button
+                                                    variant="outline"
+                                                    color="orange"
+                                                >
+                                                    <TriangleAlert />
+                                                </Button>
+                                            </Table.Td>
+                                        </Table.Tr>
+                                    ))}
+                                </Table.Tbody>
+                            </>
+                        )}
+                    </Table>
                 ))}
             </Container>
         </>

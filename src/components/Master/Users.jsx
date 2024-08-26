@@ -149,42 +149,38 @@ const UsersPage = () => {
                 </form>
             </Card>
 
-            <Table striped highlightOnHover mt="md">
-                <thead>
-                    <tr>
-                        <th style={{ textAlign: "center" }}>ID</th>
-                        <th style={{ textAlign: "center" }}>Name</th>
-                        <th style={{ textAlign: "center" }}>Email</th>
-                        <th style={{ textAlign: "center" }}>Last Login</th>
-                        <th style={{ textAlign: "center" }}>Created At</th>
-                        <th style={{ textAlign: "center" }}>Updated At</th>
-                        <th style={{ textAlign: "center" }}>Inactive</th>
-                        <th style={{ textAlign: "center" }}>Role</th>
-                        <th style={{ textAlign: "center" }}>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Email</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Last Login</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Created At</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Updated At</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Role</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
                     {users.map((user) => (
-                        <tr key={user.id}>
-                            <td style={{ textAlign: "center" }}>{user.id}</td>
-                            <td style={{ textAlign: "center" }}>{user.name}</td>
-                            <td style={{ textAlign: "center" }}>
+                        <Table.Tr key={user.id}>
+                            <Table.Td style={{ textAlign: "center" }}>{user.id}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>{user.name}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {user.email}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {new Date(user.last_login).toLocaleString()}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {new Date(user.created_at).toLocaleString()}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 {new Date(user.updated_at).toLocaleString()}
-                            </td>
-                            <td style={{ textAlign: "center" }}>
-                                {user.inactive ? "Yes" : "No"}
-                            </td>
-                            <td style={{ textAlign: "center" }}>{user.role}</td>
-                            <td style={{ textAlign: "center" }}>
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>{user.role}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
                                 <Button
                                     onClick={() => handleEditUser(user)}
                                     compact
@@ -204,10 +200,10 @@ const UsersPage = () => {
                                 >
                                     <Trash size={16} />
                                 </Button>
-                            </td>
-                        </tr>
+                            </Table.Td>
+                        </Table.Tr>
                     ))}
-                </tbody>
+                </Table.Tbody>
             </Table>
 
             <Modal

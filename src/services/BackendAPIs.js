@@ -2,29 +2,6 @@ import { getDateRange } from "../utils/Dates";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-// Remove this is future
-export const fetchDevicesAndTags = async (setDevices, setMachineMenu, setDeviceTags) => {
-    try {
-        const lineResponse = await fetch(`${BACKEND_URL}/api/lines/`);
-        const machineResponse = await fetch(`${BACKEND_URL}/api/machines/`);
-        const tagResponse = await fetch(`${BACKEND_URL}/api/sensortags/`);
-
-        if (!lineResponse.ok || !tagResponse.ok || !machineResponse.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        const linesData = await lineResponse.json();
-        const sensorsOpt = await tagResponse.json();
-        const machineData = await machineResponse.json();
-
-        setDevices(linesData);
-        setDeviceTags(sensorsOpt);
-        setMachineMenu(machineData);
-    } catch (error) {
-        console.error("Error fetching devices or tags:", error);
-    }
-};
-
 export const fetchProductionLineDetails = async () => {
     try {
         const response = await fetch(`${BACKEND_URL}/api/production-line-details/`);
@@ -104,5 +81,67 @@ export const fetchMachines = async () => {
     } catch (error) {
         console.error("Error fetching production line details:", error);
         return [];
+    }
+};
+
+export const fetchDevicesAndTags = async (setLines, setMachines) => {
+    try {
+        const linesResponse = await fetch('http://127.0.0.1:8000/api/lines/');
+        const lines = await linesResponse.json();
+        setLines(lines);
+
+        const machinesResponse = await fetch('http://127.0.0.1:8000/api/machines/');
+        const machines = await machinesResponse.json();
+        setMachines(machines);
+    } catch (error) {
+        console.error('Error fetching devices and tags:', error);
+    }
+};
+
+export const fetchSensorTags = async (machineId, setSensorTags) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/sensortags/?machine=${machineId}`);
+        const tags = await response.json();
+        setSensorTags(tags.map(tag => ({ ...tag, simulated_value: tag.nominal_val })));
+    } catch (error) {
+        console.error('Error fetching sensor tags:', error);
+    }
+};
+
+export const updateSensorTag = async (tagId, data) => {
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/api/sensortags/${tagId}/`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to update sensor tag');
+        }
+    } catch (error) {
+        console.error('Error updating sensor tag:', error);
+    }
+};
+
+export const sendDaqLogs = async (data) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/daqlogs/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error sending DAQ logs:", error);
+        return null;
     }
 };

@@ -1,138 +1,181 @@
 import { useEffect, useState } from "react";
-import { Button, FileInput, TextInput, Select } from "@mantine/core";
+import { Button, Select, TextInput, FileInput } from "@mantine/core";
 import { Rnd } from "react-rnd";
 import "./FloorMap.css";
-import { getStatusStyles } from "./MapFunctions";
+import { getStatusStyles } from "./MapStyles";
+import Legend from "./Legend";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const EditMap = () => {
-    const [devices, setDevices] = useState([]);
-    const [positions, setPositions] = useState({});
-    const [selectedDevice, setSelectedDevice] = useState(null);
+    const [productionLines, setProductionLines] = useState([]);
+    const [selectedLineId, setSelectedLineId] = useState(null);
+    const [machines, setMachines] = useState([]);
+    const [selectedMachine, setSelectedMachine] = useState(null);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
     useEffect(() => {
-        fetchDevices();
-    }, []);
+        fetchProductionLines();
+    }, [selectedLineId]);
 
-    const fetchDevices = async () => {
+    useEffect(() => {
+        if (selectedLineId) {
+            const selectedLine = productionLines.find(
+                (line) => line.id === selectedLineId
+            );
+            if (selectedLine) {
+                setMachines(selectedLine.machines);
+            }
+        }
+    }, [selectedLineId, productionLines]);
+
+    const fetchProductionLines = async () => {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/lines/`
+                `${BACKEND_URL}/api/production-line-details/`
             );
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            setDevices(data);
-            const savedPositions =
-                JSON.parse(localStorage.getItem("devicePositions")) || {};
-            const initialPositions = {};
-            data.forEach((device) => {
-                initialPositions[device.id] = savedPositions[device.id] || {
-                    x: 0,
-                    y: 0,
-                    width: 200,
-                    height: 100,
-                };
-            });
-            setPositions(initialPositions);
+            setProductionLines(data);
         } catch (error) {
-            console.error("Error fetching devices:", error);
+            console.error("Error fetching production lines:", error);
         }
     };
 
     const onDragStop = (id, d) => {
-        setPositions((prevPositions) => {
-            const newPositions = {
-                ...prevPositions,
-                [id]: {
-                    ...prevPositions[id],
-                    x: d.x,
-                    y: d.y,
-                },
-            };
-            setHasUnsavedChanges(true);
-            return newPositions;
-        });
+        setMachines((prevMachines) =>
+            prevMachines.map((machine) =>
+                machine.id === id
+                    ? {
+                          ...machine,
+                          x_coordinate: Math.round(d.x),
+                          y_coordinate: Math.round(d.y),
+                      }
+                    : machine
+            )
+        );
+        setHasUnsavedChanges(true);
     };
 
     const onResizeStop = (id, ref, position) => {
-        setPositions((prevPositions) => {
-            const newPositions = {
-                ...prevPositions,
-                [id]: {
-                    ...prevPositions[id],
-                    width: ref.style.width,
-                    height: ref.style.height,
-                    ...position,
-                },
-            };
-            setHasUnsavedChanges(true);
-            return newPositions;
-        });
+        setMachines((prevMachines) =>
+            prevMachines.map((machine) =>
+                machine.id === id
+                    ? {
+                          ...machine,
+                          width_px: Math.round(parseInt(ref.style.width)),
+                          height_px: Math.round(parseInt(ref.style.height)),
+                          x_coordinate: Math.round(position.x),
+                          y_coordinate: Math.round(position.y),
+                      }
+                    : machine
+            )
+        );
+        setHasUnsavedChanges(true);
+    };
+
+    const handleMachineClick = (machine, e) => {
+        e.stopPropagation();
+        setSelectedMachine(machine);
+    };
+
+    const handleEditChange = (field, value) => {
+        setSelectedMachine((prevMachine) => ({
+            ...prevMachine,
+            [field]: value,
+        }));
+        setHasUnsavedChanges(true);
+    };
+
+    const saveChanges = async () => {
+        try {
+            const updatePromises = machines.map((machine) =>
+                fetch(`${BACKEND_URL}/api/machines/${machine.id}/`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        line_id: machine.line.id,
+                        x_coordinate: machine.x_coordinate,
+                        y_coordinate: machine.y_coordinate,
+                        width_px: machine.width_px,
+                        height_px: machine.height_px,
+                        name: machine.name,
+                        status: machine.status,
+                    }),
+                })
+            );
+
+            await Promise.all(updatePromises);
+
+            setHasUnsavedChanges(false);
+            alert("Changes saved successfully!");
+        } catch (error) {
+            console.error("Error saving machine locations:", error);
+            alert("Failed to save changes. Please try again.");
+        }
+    };
+
+    const handleMapClick = () => {
+        setSelectedMachine(null);
     };
 
     const exportMap = () => {
         const dataStr =
             "data:text/json;charset=utf-8," +
-            encodeURIComponent(JSON.stringify(positions));
+            encodeURIComponent(JSON.stringify(machines));
         const downloadAnchorNode = document.createElement("a");
         downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "floor_map_positions.json");
-        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.setAttribute(
+            "download",
+            `floor_map_line_${selectedLineId}.json`
+        );
+        document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
     };
 
-    const importMap = (event) => {
-        const file = event;
+    const importMap = (file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const importedPositions = JSON.parse(e.target.result);
-            setPositions(importedPositions);
-            savePositions(importedPositions);
+            try {
+                const importedMachines = JSON.parse(e.target.result);
+                setMachines(importedMachines);
+                setHasUnsavedChanges(true);
+                alert("Map imported successfully!");
+            } catch (error) {
+                console.error("Error parsing imported file:", error);
+                alert("Failed to import map. Please check the file format.");
+            }
         };
         reader.readAsText(file);
-    };
-
-    const handleDeviceClick = (device, e) => {
-        e.stopPropagation();
-        setSelectedDevice(device);
-    };
-
-    const handleEditChange = (field, value) => {
-        setSelectedDevice((prevDevice) => ({
-            ...prevDevice,
-            [field]: value,
-        }));
-    };
-
-    const handleSaveEdit = () => {
-        setDevices((prevDevices) =>
-            prevDevices.map((device) =>
-                device.id === selectedDevice.id ? selectedDevice : device
-            )
-        );
-    };
-
-    const savePositions = () => {
-        localStorage.setItem("devicePositions", JSON.stringify(positions));
-        handleSaveEdit();
-        setHasUnsavedChanges(false);
-    };
-
-    const handleMapClick = () => {
-        setSelectedDevice(null);
     };
 
     return (
         <>
             <div className="edit-menu">
+                <Select
+                    label="Select Production Line"
+                    placeholder="Choose a production line"
+                    data={productionLines.map((line) => ({
+                        value: line.id.toString(),
+                        label: line.name,
+                    }))}
+                    value={selectedLineId ? selectedLineId.toString() : null}
+                    onChange={(value) =>
+                        setSelectedLineId(value ? parseInt(value) : null)
+                    }
+                    style={{ marginBottom: "10px" }}
+                />
                 <Button
-                    onClick={savePositions}
+                    onClick={saveChanges}
                     variant="outline"
                     color="green"
                     disabled={!hasUnsavedChanges}
+                    style={{ marginRight: "10px" }}
                 >
                     Save Changes
                 </Button>
@@ -140,23 +183,22 @@ const EditMap = () => {
                     onClick={exportMap}
                     variant="outline"
                     color="blue"
+                    disabled={!selectedLineId}
                     style={{ marginRight: "10px" }}
                 >
                     Export Map
                 </Button>
                 <FileInput
-                    accept=".json"
                     placeholder="Import Map"
-                    onChange={(file) => importMap(file)}
-                    style={{ width: "fit-content" }}
-                    variant="outline"
-                    color="blue"
+                    accept=".json"
+                    onChange={importMap}
+                    style={{ display: "inline-block", width: "auto" }}
                 />
-                {selectedDevice && (
+                {selectedMachine && (
                     <>
                         <TextInput
                             label="Name"
-                            value={selectedDevice.name}
+                            value={selectedMachine.name}
                             onChange={(e) =>
                                 handleEditChange("name", e.currentTarget.value)
                             }
@@ -164,7 +206,7 @@ const EditMap = () => {
                         />
                         <Select
                             label="Status"
-                            value={selectedDevice.status}
+                            value={selectedMachine.status}
                             onChange={(value) =>
                                 handleEditChange("status", value)
                             }
@@ -185,32 +227,29 @@ const EditMap = () => {
                 )}
             </div>
             <div className="floor-map" onClick={handleMapClick}>
-                {devices.map((device) => {
-                    const statusStyles = getStatusStyles(device.status);
-                    const position = positions[device.id] || {
-                        x: 0,
-                        y: 0,
-                        width: 200,
-                        height: 100,
-                    };
+                {machines.map((machine) => {
+                    const statusStyles = getStatusStyles(machine.status);
                     const isSelected =
-                        selectedDevice && selectedDevice.id === device.id;
+                        selectedMachine && selectedMachine.id === machine.id;
                     return (
                         <Rnd
-                            key={device.id}
+                            key={machine.id}
                             size={{
-                                width: position.width,
-                                height: position.height,
+                                width: machine.width_px,
+                                height: machine.height_px,
                             }}
-                            position={{ x: position.x, y: position.y }}
-                            onDragStop={(e, d) => onDragStop(device.id, d)}
+                            position={{
+                                x: machine.x_coordinate,
+                                y: machine.y_coordinate,
+                            }}
+                            onDragStop={(e, d) => onDragStop(machine.id, d)}
                             onResizeStop={(
                                 e,
                                 direction,
                                 ref,
                                 delta,
                                 position
-                            ) => onResizeStop(device.id, ref, position)}
+                            ) => onResizeStop(machine.id, ref, position)}
                             bounds="parent"
                             style={{
                                 backgroundColor: statusStyles.background,
@@ -223,71 +262,15 @@ const EditMap = () => {
                                 borderStyle: isSelected ? "dashed" : "none",
                                 cursor: "pointer",
                             }}
-                            onClick={(e) => handleDeviceClick(device, e)}
+                            onClick={(e) => handleMachineClick(machine, e)}
                         >
                             <div className="floor-map-item">
-                                {device.name} - {device.status}
+                                {machine.name} - {machine.status}
                             </div>
                         </Rnd>
                     );
                 })}
-                <div className="legend">
-                    <h3>Legend</h3>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#28a745", color: "white" }}
-                    >
-                        Running
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#ffc107", color: "white" }}
-                    >
-                        Running Slow
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#005682", color: "white" }}
-                    >
-                        Scheduled Down
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#fd7e14", color: "white" }}
-                    >
-                        Just Went Down
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#dc3545", color: "white" }}
-                    >
-                        Down
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#6c757d", color: "white" }}
-                    >
-                        No Data
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#adb5bd", color: "white" }}
-                    >
-                        Not Scheduled
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#007bff", color: "white" }}
-                    >
-                        Tool Change
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#e83e8c", color: "white" }}
-                    >
-                        Andon is Active
-                    </div>
-                </div>
+                <Legend />
             </div>
         </>
     );

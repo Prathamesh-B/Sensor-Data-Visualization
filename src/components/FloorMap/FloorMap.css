@@ -21,25 +21,33 @@
     border-radius: 0.25rem;
 }
 
-.legend {
+.legend-container {
     position: absolute;
     top: 20px;
     right: 20px;
+    z-index: 100;
+}
+
+.legend-toggle-button {
+    margin-bottom: 10px;
+}
+
+.legend {
     background-color: white;
     border: 1px solid #ccc;
     padding: 10px;
-    z-index: 100;
+    border-radius: 4px;
 }
 
 .legend h3 {
     font-size: 16px;
-    margin-top: 0px;
+    margin-top: 0;
+    margin-bottom: 10px;
 }
 
 .legend-item {
     margin-bottom: 5px;
     padding: 5px;
-    border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
 }

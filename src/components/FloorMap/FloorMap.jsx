@@ -1,137 +1,120 @@
 import { useEffect, useState } from "react";
 import { Rnd } from "react-rnd";
+import { Select, Button } from "@mantine/core";
 import "./FloorMap.css";
-import { getStatusStyles } from "./MapFunctions";
+import { getStatusStyles } from "./MapStyles";
+import EditMap from "./EditMap";
+import Legend from "./Legend";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 const FloorMap = () => {
-    const [devices, setDevices] = useState([]);
-    const [positions, setPositions] = useState({});
+    const [productionLines, setProductionLines] = useState([]);
+    const [selectedLineId, setSelectedLineId] = useState(null);
+    const [selectedLine, setSelectedLine] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
 
     useEffect(() => {
-        fetchDevices();
+        fetchProductionLines();
     }, []);
 
-    const fetchDevices = async () => {
+    useEffect(() => {
+        if (selectedLineId) {
+            const line = productionLines.find(
+                (line) => line.id === selectedLineId
+            );
+            setSelectedLine(line);
+        } else {
+            setSelectedLine(null);
+        }
+    }, [selectedLineId, productionLines]);
+
+    const fetchProductionLines = async () => {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/lines/`
+                `${BACKEND_URL}/api/production-line-details/`
             );
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            setDevices(data);
-            const savedPositions =
-                JSON.parse(localStorage.getItem("devicePositions")) || {};
-            const initialPositions = {};
-            data.forEach((device) => {
-                initialPositions[device.id] = savedPositions[device.id] || {
-                    x: 0,
-                    y: 0,
-                    width: 200,
-                    height: 100,
-                };
-            });
-            setPositions(initialPositions);
+            setProductionLines(data);
         } catch (error) {
-            console.error("Error fetching devices:", error);
+            console.error("Error fetching production lines:", error);
         }
     };
 
+    if (isEditMode) {
+        return (
+            <EditMap
+                lineId={selectedLineId}
+                onClose={() => setIsEditMode(false)}
+            />
+        );
+    }
+
     return (
         <>
-        <div className="edit-menu"></div>
+            <div className="edit-menu">
+                <Select
+                    label="Select Production Line"
+                    placeholder="Choose a production line"
+                    data={productionLines.map((line) => ({
+                        value: line.id.toString(),
+                        label: line.name,
+                    }))}
+                    value={selectedLineId ? selectedLineId.toString() : null}
+                    onChange={(value) =>
+                        setSelectedLineId(value ? parseInt(value) : null)
+                    }
+                    style={{
+                        marginBottom: "10px",
+                        marginRight: "10px",
+                        display: "inline-block",
+                    }}
+                />
+                <Button
+                    onClick={() => setIsEditMode(true)}
+                    variant="outline"
+                    color="blue"
+                    disabled={!selectedLineId}
+                >
+                    Edit
+                </Button>
+            </div>
             <div className="floor-map">
-                {devices.map((device) => {
-                    const statusStyles = getStatusStyles(device.status);
-                    const position = positions[device.id] || {
-                        x: 0,
-                        y: 0,
-                        width: 200,
-                        height: 100,
-                    };
-                    return (
-                        <Rnd
-                            key={device.id}
-                            size={{
-                                width: position.width,
-                                height: position.height,
-                            }}
-                            position={{ x: position.x, y: position.y }}
-                            enableResizing={false}
-                            disableDragging={true}
-                            bounds="parent"
-                            style={{
-                                backgroundColor: statusStyles.background,
-                                borderRadius: "0.25rem",
-                                borderColor: statusStyles.borderColor,
-                                color: statusStyles.color,
-                                ...statusStyles,
-                            }}
-                        >
-                            <div className="floor-map-item">
-                                {device.name} - {device.status}
-                            </div>
-                        </Rnd>
-                    );
-                })}
-                <div className="legend">
-                    <h3>Legend</h3>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#28a745", color: "white" }}
-                    >
-                        Running
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#ffc107", color: "white" }}
-                    >
-                        Running Slow
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#005682", color: "white" }}
-                    >
-                        Scheduled Down
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#fd7e14", color: "white" }}
-                    >
-                        Just Went Down
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#dc3545", color: "white" }}
-                    >
-                        Down
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#6c757d", color: "white" }}
-                    >
-                        No Data
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#adb5bd", color: "white" }}
-                    >
-                        Not Scheduled
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#007bff", color: "white" }}
-                    >
-                        Tool Change
-                    </div>
-                    <div
-                        className="legend-item"
-                        style={{ backgroundColor: "#e83e8c", color: "white" }}
-                    >
-                        Andon is Active
-                    </div>
-                </div>
+                {selectedLine &&
+                    selectedLine.machines.map((machine) => {
+                        const statusStyles = getStatusStyles(machine.status);
+                        return (
+                            <Rnd
+                                key={machine.id}
+                                size={{
+                                    width: machine.width_px,
+                                    height: machine.height_px,
+                                }}
+                                position={{
+                                    x: machine.x_coordinate,
+                                    y: machine.y_coordinate,
+                                }}
+                                enableResizing={false}
+                                disableDragging={true}
+                                bounds="parent"
+                                style={{
+                                    backgroundColor: statusStyles.background,
+                                    borderRadius: "0.25rem",
+                                    borderColor: statusStyles.borderColor,
+                                    color: statusStyles.color,
+                                    ...statusStyles,
+                                }}
+                            >
+                                <div className="floor-map-item">
+                                    {machine.name} - {machine.status}
+                                </div>
+                            </Rnd>
+                        );
+                    })}
+                <Legend />
             </div>
         </>
     );

@@ -185,6 +185,7 @@ const TagsPage = () => {
                                 onChange={(e) =>
                                     setThresholdAlert(e.target.value)
                                 }
+                                required
                             />
                         </Grid.Col>
                         <Grid.Col span={3}>
@@ -256,14 +257,14 @@ const TagsPage = () => {
                     <Table.Tr>
                         <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
                         <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Min Value</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Max Value</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Nominal Value</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Min.</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Max.</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Nom.</Table.Th>
                         <Table.Th style={{ textAlign: "center" }}>Threshold Alert</Table.Th>
                         <Table.Th style={{ textAlign: "center" }}>
                             Continuous Record
                         </Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Frequency</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Freq.</Table.Th>
                         <Table.Th style={{ textAlign: "center" }}>Machine</Table.Th>
                         <Table.Th style={{ textAlign: "center" }}>Tag Type</Table.Th>
                         <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>

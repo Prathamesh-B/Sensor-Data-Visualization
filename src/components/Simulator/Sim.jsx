@@ -9,7 +9,7 @@ import {
 const Sim = () => {
     const [productionLines, setProductionLines] = useState([]);
     const [productionLineMenu, setProductionLineMenu] = useState("");
-    const [machineMenu, setMachineMenu] = useState("");
+    const [machineMenu, setMachineMenu] = useState("all");
     const [checked, setChecked] = useState(false);
     const [collapse, setCollapse] = useState({});
     const [simulatedValues, setSimulatedValues] = useState({});
@@ -24,12 +24,10 @@ const Sim = () => {
             );
             const machines = currentLine?.machines || [];
 
-            if (
-                !machines.some(
-                    (machine) => machine.id.toString() === machineMenu
-                )
-            ) {
-                setMachineMenu(machines[0]?.id.toString() || "");
+            if (machineMenu !== "all" && !machines.some(
+                (machine) => machine.id.toString() === machineMenu
+            )) {
+                setMachineMenu("all");
             }
         };
 
@@ -52,28 +50,34 @@ const Sim = () => {
     };
 
     const generateRandomValue = (min, max) => {
-        return Math.random() * (max - min) + min;
+        if (min === 0 && max === 1) {
+            return Math.round(Math.random());
+        } else {
+            return Math.random() * (max - min) + min;
+        }
     };
 
     const simulateAndSendData = useCallback(() => {
         const newSimulatedValues = {};
-
+    
         selectedLine?.machines.forEach((machine) => {
             machine.tags.forEach((tag) => {
                 const value = generateRandomValue(tag.min_val, tag.max_val);
-                newSimulatedValues[tag.id] = value.toFixed(2);
-
-                // Send each DaqLog entry individually
+                
+                newSimulatedValues[tag.id] = tag.min_val === 0 && tag.max_val === 1 
+                    ? value 
+                    : value.toFixed(2);
+    
                 const daqlog = {
                     timestamp: new Date().toISOString(),
                     tag: tag.id,
                     value: value,
                 };
-
+    
                 sendDaqLogs(daqlog);
             });
         });
-
+    
         setSimulatedValues(newSimulatedValues);
     }, [selectedLine]);
 
@@ -130,12 +134,13 @@ const Sim = () => {
                                 label="Machine"
                                 allowDeselect={false}
                                 placeholder="Pick a value"
-                                data={
-                                    selectedLine?.machines.map((machine) => ({
+                                data={[
+                                    { value: "all", label: "All Machines" },
+                                    ...(selectedLine?.machines.map((machine) => ({
                                         value: machine.id.toString(),
                                         label: machine.name,
-                                    })) || []
-                                }
+                                    })) || [])
+                                ]}
                                 value={machineMenu}
                                 onChange={setMachineMenu}
                                 disabled={!selectedLine?.machines.length}
@@ -150,6 +155,7 @@ const Sim = () => {
                             }}
                         >
                             <Chip
+                                mt={20}
                                 checked={checked}
                                 color={checked ? "green" : "grey"}
                                 size="xl"
@@ -157,20 +163,18 @@ const Sim = () => {
                             >
                                 {checked ? "ON" : "OFF"}
                             </Chip>
-                            <Button
-                                variant="filled"
-                                color="red"
-                                size="lg"
-                                radius="xl"
-                            >
-                                STOP
-                            </Button>
+                            <img
+                                style={{ width: "4rem", cursor: "pointer" }}
+                                src="./images/emergencyStop.png"
+                                alt="Emergency Stop Icon"
+                            />
                         </div>
                     </Grid.Col>
                 </Grid>
 
-                {/* Table to display tags */}
-                {selectedLine?.machines.map((machine) => (
+                {selectedLine?.machines
+                    .filter(machine => machineMenu === "all" || machine.id.toString() === machineMenu)
+                    .map((machine) => (
                     <Table
                         key={machine.id}
                         mt={"md"}

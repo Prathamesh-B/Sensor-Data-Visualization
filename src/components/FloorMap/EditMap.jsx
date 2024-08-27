@@ -24,7 +24,10 @@ const EditMap = () => {
                 (line) => line.id === selectedLineId
             );
             if (selectedLine) {
-                setMachines(selectedLine.machines);
+                setMachines(
+                    selectedLine.machines.map((machine) => ({ ...machine }))
+                );
+                setSelectedMachine(null);
             }
         }
     }, [selectedLineId, productionLines]);
@@ -78,7 +81,7 @@ const EditMap = () => {
 
     const handleMachineClick = (machine, e) => {
         e.stopPropagation();
-        setSelectedMachine(machine);
+        setSelectedMachine({ ...machine });
     };
 
     const handleEditChange = (field, value) => {
@@ -86,6 +89,13 @@ const EditMap = () => {
             ...prevMachine,
             [field]: value,
         }));
+        setMachines((prevMachines) =>
+            prevMachines.map((machine) =>
+                machine.id === selectedMachine.id
+                    ? { ...machine, [field]: value }
+                    : machine
+            )
+        );
         setHasUnsavedChanges(true);
     };
 

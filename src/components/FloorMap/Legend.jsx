@@ -22,7 +22,7 @@ const Legend = () => {
 
     return (
         <div className="legend-container">
-            <Button onClick={toggleVisibility} className="legend-toggle-button">
+            <Button onClick={toggleVisibility} className="legend-toggle-button" variant="light" color="gray">
                 {isVisible ? "Hide Legend" : "Show Legend"}
             </Button>
             {isVisible && (

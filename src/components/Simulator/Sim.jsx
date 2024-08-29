@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { Button, Chip, Container, Grid, Select, Table } from "@mantine/core";
+import { Button, Chip, Container, Grid, MultiSelect, Select, Table } from "@mantine/core";
 import { TriangleAlert } from "lucide-react";
 import {
     fetchProductionLineDetails,
@@ -9,10 +9,11 @@ import {
 const Sim = () => {
     const [productionLines, setProductionLines] = useState([]);
     const [productionLineMenu, setProductionLineMenu] = useState("");
-    const [machineMenu, setMachineMenu] = useState("all");
+    const [selectedMachines, setSelectedMachines] = useState([]);
     const [checked, setChecked] = useState(false);
     const [collapse, setCollapse] = useState({});
     const [simulatedValues, setSimulatedValues] = useState({});
+
 
     useEffect(() => {
         const fetchAndUpdateData = async () => {
@@ -24,15 +25,15 @@ const Sim = () => {
             );
             const machines = currentLine?.machines || [];
 
-            if (machineMenu !== "all" && !machines.some(
-                (machine) => machine.id.toString() === machineMenu
-            )) {
-                setMachineMenu("all");
-            }
+            setSelectedMachines(prevSelected => 
+                prevSelected.filter(machineId => 
+                    machines.some(machine => machine.id.toString() === machineId)
+                )
+            );
         };
 
         fetchAndUpdateData();
-    }, [productionLineMenu, machineMenu]);
+    }, [productionLineMenu]);
 
     const selectedLine = useMemo(
         () =>
@@ -57,10 +58,15 @@ const Sim = () => {
         }
     };
 
+    const getPlaceholder = (selectedMachines) => {
+        return selectedMachines.length > 0 ? null : "Select a machine";
+    };
+
     const simulateAndSendData = useCallback(() => {
         const newSimulatedValues = {};
     
-        selectedLine?.machines.forEach((machine) => {
+        selectedLine?.machines.filter(machine => selectedMachines.includes(machine.id.toString()))
+        .forEach((machine) => {
             machine.tags.forEach((tag) => {
                 const value = generateRandomValue(tag.min_val, tag.max_val);
                 
@@ -79,18 +85,25 @@ const Sim = () => {
         });
     
         setSimulatedValues(newSimulatedValues);
-    }, [selectedLine]);
+    }, [selectedLine, selectedMachines]);
 
     useEffect(() => {
         let interval;
-        if (checked && selectedLine) {
+        if (checked && selectedLine && selectedMachines.length > 0) {
             simulateAndSendData();
             interval = setInterval(() => {
                 simulateAndSendData();
             }, 5000);
         }
         return () => clearInterval(interval);
-    }, [checked, selectedLine, simulateAndSendData]);
+    }, [checked, selectedLine, selectedMachines, simulateAndSendData]);
+
+    const handleEmergencyStop = () => {
+        setChecked(false);
+        setSimulatedValues({});
+        // clearInterval(interval);
+        alert("Emergency Button Pressed.!");
+    };
 
     return (
         <>
@@ -99,20 +112,22 @@ const Sim = () => {
                     Simulator
                 </h2>
             </div>
-            <Container>
-                <Grid>
+            <Grid gutter="xs">
                     <Grid.Col span={4}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <div 
+                        style={{ display: "flex", alignItems:"center" }}
+                        >
                             <img
-                                style={{ width: "3rem" }}
+                                style={{ width: "3.5rem" }}
                                 src="./images/production-rate.png"
                                 alt="Production Rate Icon"
                             />
                             <Select
+                            size="md"
                                 ml={"0.5rem"}
                                 label="Production Line"
                                 allowDeselect={false}
-                                placeholder="Pick a value"
+                                placeholder="Select a Line"
                                 data={productionLines.map((line) => ({
                                     value: line.id.toString(),
                                     label: line.name,
@@ -123,27 +138,32 @@ const Sim = () => {
                         </div>
                     </Grid.Col>
                     <Grid.Col span={4}>
-                        <div style={{ display: "flex", alignItems: "center" }}>
+                        <div 
+                        style={{ display: "flex", alignItems: "center" }}
+                        >
                             <img
-                                style={{ width: "3rem" }}
+                                style={{ width: "3.5rem" }}
                                 src="./images/engineering.png"
-                                alt="Production Rate Icon"
+                                alt="Machine Icon"
                             />
-                            <Select
+                            <MultiSelect
+                                size="md"
                                 ml={"0.5rem"}
-                                label="Machine"
-                                allowDeselect={false}
-                                placeholder="Pick a value"
-                                data={[
-                                    { value: "all", label: "All Machines" },
-                                    ...(selectedLine?.machines.map((machine) => ({
-                                        value: machine.id.toString(),
-                                        label: machine.name,
-                                    })) || [])
-                                ]}
-                                value={machineMenu}
-                                onChange={setMachineMenu}
+                                label="Machines"
+                                placeholder={getPlaceholder(selectedMachines)}
+                                data={selectedLine?.machines.map((machine) => ({
+                                    value: machine.id.toString(),
+                                    label: machine.name,
+                                })) || []}
+                                value={selectedMachines}
+                                onChange={setSelectedMachines}
                                 disabled={!selectedLine?.machines.length}
+                                hidePickedOptions
+                                clearable
+                                defaultValue={selectedLine?.machines.map((machine) => ({
+                                    value: machine.id.toString(),
+                                    label: machine.name,
+                                })) || []}
                             />
                         </div>
                     </Grid.Col>
@@ -151,29 +171,34 @@ const Sim = () => {
                         <div
                             style={{
                                 display: "flex",
-                                justifyContent: "space-around",
+                                alignItems:"flex-end",
+                                justifyContent: "left",
                             }}
                         >
                             <Chip
+                                ml={30}
+                                mr={30}
                                 mt={20}
                                 checked={checked}
                                 color={checked ? "green" : "grey"}
-                                size="xl"
+                                size="lg"
                                 onClick={() => setChecked(!checked)}
                             >
                                 {checked ? "ON" : "OFF"}
                             </Chip>
                             <img
-                                style={{ width: "4rem", cursor: "pointer" }}
+                                style={{ width: "3rem", cursor: "pointer",  }}
                                 src="./images/emergencyStop.png"
                                 alt="Emergency Stop Icon"
+                                onClick={() => handleEmergencyStop()}
                             />
                         </div>
                     </Grid.Col>
                 </Grid>
+            <Container>
 
                 {selectedLine?.machines
-                    .filter(machine => machineMenu === "all" || machine.id.toString() === machineMenu)
+                    .filter(machine => selectedMachines.includes(machine.id.toString()))
                     .map((machine) => (
                     <Table
                         key={machine.id}

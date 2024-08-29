@@ -4,10 +4,13 @@ import {
     TextInput,
     Button,
     Grid,
-    Card,
     Modal,
     Select,
     Switch,
+    Text,
+    Group,
+    // Pagination,
+    Textarea,
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
@@ -24,6 +27,7 @@ const LocationsPage = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [currentTab, setCurrentTab] = useState("blocks"); // "blocks" or "plants"
+    const [showFormModal, setShowFormModal] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -81,6 +85,7 @@ const LocationsPage = () => {
                 }
             }
             resetForm();
+            setShowFormModal(false);
         } else {
             const errorData = await response.json();
             console.error(`Failed to save ${currentTab.slice(0, -1)}:`, errorData);
@@ -96,6 +101,7 @@ const LocationsPage = () => {
         } else {
             setAddress(item.address);
         }
+        setShowFormModal(true);
     };
 
     const handleDelete = async () => {
@@ -127,8 +133,14 @@ const LocationsPage = () => {
         setEditingItem(null);
     };
 
+    const openAddItemModal = () => {
+        resetForm();
+        setShowFormModal(true);
+    };
+
     return (
         <div>
+            <Text size="xl" fw={500} mt={10} mb={10}>Manage Locations</Text>
             <Button.Group mb="md">
                 <Button
                     variant={currentTab === "blocks" ? "filled" : "light"}
@@ -143,62 +155,19 @@ const LocationsPage = () => {
                     Plants
                 </Button>
             </Button.Group>
+            <Group mb="lg" align="flex-end" gap="lg">
+                <TextInput 
+                    label="Search"
+                    placeholder="Enter a value to search"
+                />
+                <Button onClick={openAddItemModal}>
+                    Add New {currentTab === "blocks" ? "Block" : "Plant"}
+                </Button>
+                <Button variant="outline" color="green">
+                    Reset
+                </Button>
+            </Group>
 
-            <Card withBorder padding="lg" radius="md" shadow="sm">
-                <form onSubmit={handleAddOrUpdate}>
-                    <Grid>
-                        <Grid.Col span={4}>
-                            <TextInput
-                                label="Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                            />
-                        </Grid.Col>
-                        {currentTab === "blocks" && (
-                            <Grid.Col span={4}>
-                                <Select
-                                    label="Plant"
-                                    placeholder="Select a plant"
-                                    data={plants.map((p) => ({
-                                        value: p.id.toString(),
-                                        label: p.name,
-                                    }))}
-                                    value={plant}
-                                    onChange={(value) => setPlant(value)}
-                                    required
-                                />
-                            </Grid.Col>
-                        )}
-                        {currentTab === "plants" && (
-                            <Grid.Col span={4}>
-                                <TextInput
-                                    label="Address"
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    required
-                                />
-                            </Grid.Col>
-                        )}
-                        <Grid.Col span={4}>
-                            <label className="m_8fdc1311">
-                                Inactive
-                            </label>
-                            <div>
-                                <Switch
-                                    size="xl"
-                                    radius="sm"
-                                    checked={inactive}
-                                    onChange={(event) => setInactive(event.currentTarget.checked)}
-                                />
-                            </div>
-                        </Grid.Col>
-                    </Grid>
-                    <Button type="submit" mt="md" fullWidth>
-                        {editingItem ? `Update ${currentTab.slice(0, -1)}` : `Add ${currentTab.slice(0, -1)}`}
-                    </Button>
-                </form>
-            </Card>
 
             <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
                 <Table.Thead>
@@ -252,6 +221,80 @@ const LocationsPage = () => {
                     ))}
                 </Table.Tbody>
             </Table>
+            {/* <Pagination.Root total={1} mt={25}>
+                <Group gap={5} justify="center">
+                    <Pagination.Previous />
+                    <Pagination.Items />
+                    <Pagination.Next />
+                </Group>
+            </Pagination.Root> */}
+            
+
+            <Modal
+                centered
+                size={"lg"}
+                opened={showFormModal}
+                onClose={() => {
+                    setShowFormModal(false);
+                    resetForm();
+                }}
+                title={editingItem ? `Edit ${currentTab.slice(0, -1)}` : `Add New ${currentTab.slice(0, -1)}`}
+            >
+                <form onSubmit={handleAddOrUpdate}>
+                    <Grid>
+                        <Grid.Col span={6}>
+                            <TextInput
+                                label="Name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <label className="m_8fdc1311">
+                                Inactive
+                            </label>
+                            <div>
+                                <Switch
+                                    size="xl"
+                                    radius="sm"
+                                    checked={inactive}
+                                    onChange={(event) => setInactive(event.currentTarget.checked)}
+                                />
+                            </div>
+                        </Grid.Col>
+                        {currentTab === "blocks" && (
+                            <Grid.Col span={6}>
+                                <Select
+                                    label="Plant"
+                                    placeholder="Select a plant"
+                                    data={plants.map((p) => ({
+                                        value: p.id.toString(),
+                                        label: p.name,
+                                    }))}
+                                    value={plant}
+                                    onChange={(value) => setPlant(value)}
+                                    required
+                                />
+                            </Grid.Col>
+                        )}
+                        {currentTab === "plants" && (
+                            <Grid.Col span={12}>
+                                <Textarea
+                                    label="Address"
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                    required
+                                />
+                            </Grid.Col>
+                        )}
+                    </Grid>
+                    
+                    <Button type="submit" mt="md" fullWidth>
+                        {editingItem ? `Update ${currentTab.slice(0, -1)}` : `Add ${currentTab.slice(0, -1)}`}
+                    </Button>
+                </form>
+            </Modal>
 
             <Modal
                 opened={showConfirmModal}

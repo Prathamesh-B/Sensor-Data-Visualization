@@ -5,9 +5,11 @@ import {
     NumberInput,
     Button,
     Grid,
-    Card,
     Modal,
     Select,
+    Text,
+    Group,
+    // Pagination,
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
@@ -26,6 +28,7 @@ const MachinesPage = () => {
     const [editingMachine, setEditingMachine] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [machineToDelete, setMachineToDelete] = useState(null);
+    const [showFormModal, setShowFormModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -90,6 +93,7 @@ const MachinesPage = () => {
                 setMachines([...machines, updatedMachine]);
             }
             resetForm();
+            setShowFormModal(false)
         } else {
             const errorData = await response.json();
             console.error("Failed to save machine:", errorData);
@@ -105,6 +109,7 @@ const MachinesPage = () => {
         setXCoordinate(machine.x_coordinate);
         setYCoordinate(machine.y_coordinate);
         setLine(machine.line.id.toString());
+        setShowFormModal(true)
     };
 
     const handleDeleteMachine = async () => {
@@ -139,10 +144,111 @@ const MachinesPage = () => {
         setEditingMachine(null);
     };
 
+    const openAddMachineModal = () => {
+        resetForm();
+        setShowFormModal(true);
+    };
+
     return (
         <div>
-            <Card withBorder padding="lg" radius="md" shadow="sm">
-                <form onSubmit={handleAddOrUpdateMachine}>
+            <Text size="xl" fw={500} mt={10} mb={10}>Manage Machines</Text>
+            <Group mb="lg" align="flex-end" gap="lg">
+                <TextInput 
+                    label="Search"
+                    placeholder="Enter a value to search"
+                />
+                <Button onClick={openAddMachineModal}>
+                    Add New Machine
+                </Button>
+                <Button variant="outline" color="green">
+                    Reset
+                </Button>
+            </Group>
+
+            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Status</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Height (px)</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Width (px)</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>X Coordinate</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Y Coordinate</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Line</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                    {machines.map((machine) => (
+                        <Table.Tr key={machine.id}>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.id}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.name}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.status}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.height_px}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.width_px}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.x_coordinate}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.y_coordinate}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machine.line.name}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                <Button
+                                    onClick={() => handleEditMachine(machine)}
+                                    variant="subtle"
+                                    style={{ marginRight: "0.5rem" }}
+                                >
+                                    <Edit size={16} />
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setMachineToDelete(machine);
+                                        setShowConfirmModal(true);
+                                    }}
+                                    variant="subtle"
+                                    color="red"
+                                >
+                                    <Trash size={16} />
+                                </Button>
+                            </Table.Td>
+                        </Table.Tr>
+                    ))}
+                </Table.Tbody>
+            </Table>
+            {/* <Pagination.Root total={1} mt={25}>
+                <Group gap={5} justify="center">
+                    <Pagination.Previous />
+                    <Pagination.Items />
+                    <Pagination.Next />
+                </Group>
+            </Pagination.Root> */}
+
+
+            <Modal
+                centered
+                size={"lg"}
+                opened={showFormModal}
+                onClose={() => {
+                    setShowFormModal(false);
+                    resetForm();
+                }}
+                title={editingMachine ? "Edit Machine" : "Add New Machine"}
+            >
+            <form onSubmit={handleAddOrUpdateMachine}>
                     <Grid>
                         <Grid.Col span={6}>
                             <TextInput
@@ -212,72 +318,7 @@ const MachinesPage = () => {
                         {editingMachine ? "Update Machine" : "Add Machine"}
                     </Button>
                 </form>
-            </Card>
-
-            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
-                <Table.Thead>
-                    <Table.Tr>
-                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Status</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Height (px)</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Width (px)</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>X Coordinate</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Y Coordinate</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Line</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
-                    </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                    {machines.map((machine) => (
-                        <Table.Tr key={machine.id}>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.id}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.name}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.status}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.height_px}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.width_px}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.x_coordinate}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.y_coordinate}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machine.line.name}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                <Button
-                                    onClick={() => handleEditMachine(machine)}
-                                    variant="subtle"
-                                    style={{ marginRight: "0.5rem" }}
-                                >
-                                    <Edit size={16} />
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        setMachineToDelete(machine);
-                                        setShowConfirmModal(true);
-                                    }}
-                                    variant="subtle"
-                                    color="red"
-                                >
-                                    <Trash size={16} />
-                                </Button>
-                            </Table.Td>
-                        </Table.Tr>
-                    ))}
-                </Table.Tbody>
-            </Table>
+            </Modal>
 
             <Modal
                 opened={showConfirmModal}

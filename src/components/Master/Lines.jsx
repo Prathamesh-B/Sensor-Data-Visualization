@@ -5,9 +5,11 @@ import {
     NumberInput,
     Button,
     Grid,
-    Card,
     Modal,
     Select,
+    Text,
+    Group,
+    // Pagination,
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
@@ -23,6 +25,7 @@ const LinesPage = () => {
     const [editingLine, setEditingLine] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [lineToDelete, setLineToDelete] = useState(null);
+    const [showFormModal, setShowFormModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,6 +77,7 @@ const LinesPage = () => {
                 setLines([...lines, updatedLine]);
             }
             resetForm();
+            setShowFormModal(false);
         } else {
             const errorData = await response.json();
             console.error("Failed to save line:", errorData);
@@ -86,6 +90,7 @@ const LinesPage = () => {
         setTargetProduction(line.target_production);
         setStatus(line.status);
         setBlock(line.block.toString());
+        setShowFormModal(true);
     };
 
     const handleDeleteLine = async () => {
@@ -113,54 +118,26 @@ const LinesPage = () => {
         setEditingLine(null);
     };
 
+    const openAddLineModal = () => {
+        resetForm();
+        setShowFormModal(true);
+    };
+
     return (
         <div>
-            <Card withBorder padding="lg" radius="md" shadow="sm">
-                <form onSubmit={handleAddOrUpdateLine}>
-                    <Grid>
-                        <Grid.Col span={6}>
-                            <TextInput
-                                label="Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                            <NumberInput
-                                label="Target Production"
-                                value={targetProduction}
-                                onChange={(val) => setTargetProduction(val)}
-                                required
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                            <TextInput
-                                label="Status"
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                                required
-                            />
-                        </Grid.Col>
-                        <Grid.Col span={6}>
-                            <Select
-                                label="Block"
-                                placeholder="Select a block"
-                                data={blocks.map((b) => ({
-                                    value: b.id.toString(),
-                                    label: b.name,
-                                }))}
-                                value={block}
-                                onChange={(value) => setBlock(value)}
-                                required
-                            />
-                        </Grid.Col>
-                    </Grid>
-                    <Button type="submit" mt="md" fullWidth>
-                        {editingLine ? "Update Line" : "Add Line"}
-                    </Button>
-                </form>
-            </Card>
+            <Text size="xl" fw={500} mt={10} mb={10}>Manage Lines</Text>
+            <Group mb="lg" align="flex-end" gap="lg">
+                <TextInput 
+                    label="Search"
+                    placeholder="Enter a value to search"
+                />
+                <Button onClick={openAddLineModal}>
+                    Add New Line
+                </Button>
+                <Button variant="outline" color="green">
+                    Reset
+                </Button>
+            </Group>
 
             <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
                 <Table.Thead>
@@ -206,6 +183,70 @@ const LinesPage = () => {
                     ))}
                 </Table.Tbody>
             </Table>
+            {/* <Pagination.Root total={1} mt={25}>
+                <Group gap={5} justify="center">
+                    <Pagination.Previous />
+                    <Pagination.Items />
+                    <Pagination.Next />
+                </Group>
+            </Pagination.Root> */}
+
+
+            <Modal
+                centered
+                size="lg"
+                opened={showFormModal}
+                onClose={() => {
+                    setShowFormModal(false);
+                    resetForm();
+                }}
+                title={editingLine ? "Edit Line" : "Add New Line"}
+            >
+                <form onSubmit={handleAddOrUpdateLine}>
+                    <Grid>
+                        <Grid.Col span={6}>
+                            <TextInput
+                                label="Name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <NumberInput
+                                label="Target Production"
+                                value={targetProduction}
+                                onChange={(val) => setTargetProduction(val)}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <TextInput
+                                label="Status"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value)}
+                                required
+                            />
+                        </Grid.Col>
+                        <Grid.Col span={6}>
+                            <Select
+                                label="Block"
+                                placeholder="Select a block"
+                                data={blocks.map((b) => ({
+                                    value: b.id.toString(),
+                                    label: b.name,
+                                }))}
+                                value={block}
+                                onChange={(value) => setBlock(value)}
+                                required
+                            />
+                        </Grid.Col>
+                    </Grid>
+                    <Button type="submit" mt="md" fullWidth>
+                        {editingLine ? "Update Line" : "Add Line"}
+                    </Button>
+                </form>
+            </Modal>
 
             <Modal
                 opened={showConfirmModal}
@@ -213,7 +254,12 @@ const LinesPage = () => {
                 title="Confirm Delete"
             >
                 <p>Are you sure you want to delete this line?</p>
-                <Button onClick={handleDeleteLine} color="red" fullWidth mt="md">
+                <Button
+                    onClick={handleDeleteLine}
+                    color="red"
+                    fullWidth
+                    mt="md"
+                >
                     Delete
                 </Button>
             </Modal>

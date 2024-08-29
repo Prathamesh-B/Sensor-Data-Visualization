@@ -6,9 +6,11 @@ import {
     Switch,
     Button,
     Grid,
-    Card,
     Modal,
     Select,
+    Text,
+    Group,
+    // Pagination,
 } from "@mantine/core";
 import { Edit, Trash } from "lucide-react";
 
@@ -30,6 +32,7 @@ const TagsPage = () => {
     const [editingTag, setEditingTag] = useState(null);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [tagToDelete, setTagToDelete] = useState(null);
+    const [showFormModal, setShowFormModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -106,6 +109,7 @@ const TagsPage = () => {
         }
 
         resetForm();
+        setShowFormModal(false)
     };
 
     const handleEditTag = (tag) => {
@@ -119,6 +123,7 @@ const TagsPage = () => {
         setFrequency(tag.frequency);
         setMachine(tag.machine.toString());
         setTagType(tag.tag_type.toString());
+        setShowFormModal(true)
     };
 
     const handleDeleteTag = async () => {
@@ -149,10 +154,119 @@ const TagsPage = () => {
         setTagType(null);
     };
 
+    const openAddTagModal = () => {
+        resetForm();
+        setShowFormModal(true);
+    };
+
     return (
         <div>
-            <Card withBorder padding="lg" radius="md" shadow="sm">
-                <form onSubmit={handleAddOrUpdateTag}>
+            <Text size="xl" fw={500} mt={10} mb={10}>Manage Tags</Text>
+            <Group mb="lg" align="flex-end" gap="lg">
+                <TextInput 
+                    label="Search"
+                    placeholder="Enter a value to search"
+                />
+                <Button onClick={openAddTagModal}>
+                    Add New Tag
+                </Button>
+                <Button variant="outline" color="green">
+                    Reset
+                </Button>
+            </Group>
+            
+            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
+                <Table.Thead>
+                    <Table.Tr>
+                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Min.</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Max.</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Nom.</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Threshold Alert</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>
+                            Continuous Record
+                        </Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Freq.</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Machine</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Tag Type</Table.Th>
+                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
+                    </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                    {tags.map((tag) => (
+                        <Table.Tr key={tag.id}>
+                            <Table.Td style={{ textAlign: "center" }}>{tag.id}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>{tag.name}</Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {tag.min_val}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {tag.max_val}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {tag.nominal_val}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {tag.threshold_alert}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {tag.continuous_record ? "Yes" : "No"}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {tag.frequency}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {machines.find((m) => m.id === tag.machine)
+                                    ?.name || tag.machine}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                {tagTypes.find((t) => t.id === tag.tag_type)
+                                    ?.name || tag.tag_type}
+                            </Table.Td>
+                            <Table.Td style={{ textAlign: "center" }}>
+                                <Button
+                                    onClick={() => handleEditTag(tag)}
+                                    variant="subtle"
+                                    style={{ marginRight: "0.1rem" }}
+                                >
+                                    <Edit size={16} />
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setTagToDelete(tag);
+                                        setShowConfirmModal(true);
+                                    }}
+                                    variant="subtle"
+                                    color="red"
+                                >
+                                    <Trash size={16} />
+                                </Button>
+                            </Table.Td>
+                        </Table.Tr>
+                    ))}
+                </Table.Tbody>
+            </Table>
+            {/* <Pagination.Root total={1} mt={25}>
+                <Group gap={5} justify="center">
+                    <Pagination.Previous />
+                    <Pagination.Items />
+                    <Pagination.Next />
+                </Group>
+            </Pagination.Root> */}
+
+
+            <Modal
+                centered
+                size={"lg"}
+                opened={showFormModal}
+                onClose={() => {
+                    setShowFormModal(false);
+                    resetForm();
+                }}
+                title={editingTag ? "Edit Tag" : "Add New Tag"}
+            >
+            <form onSubmit={handleAddOrUpdateTag}>
                     <Grid>
                         <Grid.Col span={6}>
                             <TextInput
@@ -250,80 +364,7 @@ const TagsPage = () => {
                         {editingTag ? "Update Tag" : "Add Tag"}
                     </Button>
                 </form>
-            </Card>
-
-            <Table striped highlightOnHover mt="md" withColumnBorders withTableBorder>
-                <Table.Thead>
-                    <Table.Tr>
-                        <Table.Th style={{ textAlign: "center" }}>ID</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Name</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Min.</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Max.</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Nom.</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Threshold Alert</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>
-                            Continuous Record
-                        </Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Freq.</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Machine</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Tag Type</Table.Th>
-                        <Table.Th style={{ textAlign: "center" }}>Actions</Table.Th>
-                    </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                    {tags.map((tag) => (
-                        <Table.Tr key={tag.id}>
-                            <Table.Td style={{ textAlign: "center" }}>{tag.id}</Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>{tag.name}</Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {tag.min_val}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {tag.max_val}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {tag.nominal_val}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {tag.threshold_alert}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {tag.continuous_record ? "Yes" : "No"}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {tag.frequency}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {machines.find((m) => m.id === tag.machine)
-                                    ?.name || tag.machine}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                {tagTypes.find((t) => t.id === tag.tag_type)
-                                    ?.name || tag.tag_type}
-                            </Table.Td>
-                            <Table.Td style={{ textAlign: "center" }}>
-                                <Button
-                                    onClick={() => handleEditTag(tag)}
-                                    variant="subtle"
-                                    style={{ marginRight: "0.1rem" }}
-                                >
-                                    <Edit size={16} />
-                                </Button>
-                                <Button
-                                    onClick={() => {
-                                        setTagToDelete(tag);
-                                        setShowConfirmModal(true);
-                                    }}
-                                    variant="subtle"
-                                    color="red"
-                                >
-                                    <Trash size={16} />
-                                </Button>
-                            </Table.Td>
-                        </Table.Tr>
-                    ))}
-                </Table.Tbody>
-            </Table>
+            </Modal>
 
             <Modal
                 opened={showConfirmModal}
